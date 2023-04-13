@@ -17,13 +17,19 @@
     {{-- Styles --}}
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     @stack('style')
+    <style>
+        body {
+            font-family: 'noto-naskh';
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
+            <div class="container-fluid">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    {{ __('(( خطتي ))') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -77,6 +83,55 @@
         <main class="py-4">
             @yield('content')
         </main>
+
+        <footer class="text-center bg-dark text-white">
+            <!-- Grid container -->
+            <div class="container p-4">
+                <!-- Section: Social media -->
+                <section>
+                    <!-- Facebook -->
+                    <a class="btn btn-link btn-floating btn-lg text-white m-1" href="#!" role="button"
+                        data-mdb-ripple-color="dark">
+                        <i class="fa fa-facebook-f"></i>
+                    </a>
+
+                    <!-- Twitter -->
+                    <a class="btn btn-link btn-floating btn-lg text-white m-1" href="#!" role="button"
+                        data-mdb-ripple-color="dark">
+                        <i class="fa fa-twitter"></i>
+                    </a>
+
+                    <!-- Google -->
+                    <a class="btn btn-link btn-floating btn-lg text-white m-1" href="#!" role="button"
+                        data-mdb-ripple-color="dark">
+                        <i class="fa fa-google"></i>
+                    </a>
+
+                    <!-- Instagram -->
+                    <a class="btn btn-link btn-floating btn-lg text-white m-1" href="#!" role="button"
+                        data-mdb-ripple-color="dark">
+                        <i class="fa fa-instagram"></i>
+                    </a>
+                </section>
+                <!-- Section: Social media -->
+                <hr>
+                <!-- Copyright -->
+                <div class="text-center text-white pt-3">
+                    <div class="float-start d-none d-sm-inline-block">
+                        <strong>@lang('site.copyRight') &copy; 2023 </strong>
+                    </div>
+                    <a dir="rtl" style="color: white;text-decoration: none;" href="https://twitter.com/yaser95"
+                        target="_blank">حقوق النشر محفوظة لموقع https://sweeklyplan.com</a>
+                    <div class="float-end d-none d-sm-inline-block">
+                        <b>الإصدار</b> 1.0.0
+                    </div>
+                </div>
+                <!-- End Copyright -->
+            </div>
+            <!-- Grid container -->
+
+        </footer>
+        
     </div>
 
     <!-- Scripts -->
