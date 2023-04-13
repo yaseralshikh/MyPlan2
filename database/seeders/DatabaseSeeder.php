@@ -18,5 +18,16 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        $this->call(OfficeSeeder::class);
+        $this->call(LevelSeeder::class);
+        $this->call(SpecializationSeeder::class);
+        $this->call(LaratrustSeeder::class);
+        $this->call(SectionTypeSeeder::class);
+        $this->call(JobTypeSeeder::class);
+        $this->call(UserSeeder::class);
+        $this->call(SemesterSeeder::class);
+        $this->call(WeekSeeder::class);
+        $this->call(TaskSeeder::class);
     }
 }

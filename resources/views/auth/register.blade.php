@@ -62,6 +62,25 @@
                         </span>
                         @enderror
                     </div>
+                    <!-- Office -->
+                    <div class="input-group mb-3">
+                        <select name="office_id" class="custom-select @error('office_id') is-invalid @enderror"
+                            id="inputGroupSelect02">
+                            <option disabled selected>@lang('site.office')</option>
+                            @foreach ($offices as $office)
+                            <option value="{{ $office->id }}">{{ $office->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="input-group-append">
+                            <label class="input-group-text" for="inputGroupSelect02"><i class="fa fa-briefcase"
+                                    aria-hidden="true"></i></label>
+                        </div>
+                        @error('office_id')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
                     <!-- Specialization -->
                     <div class="input-group mb-3">
                         <select name="specialization_id"
@@ -77,25 +96,6 @@
                                     aria-hidden="true"></i></label>
                         </div>
                         @error('specialization_id')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                    </div>
-                    <!-- Office -->
-                    <div class="input-group mb-3">
-                        <select name="office_id" class="custom-select @error('office_id') is-invalid @enderror"
-                            id="inputGroupSelect02">
-                            <option disabled selected>@lang('site.office')</option>
-                            @foreach ($offices as $office)
-                            <option value="{{ $office->id }}">{{ $office->name }}</option>
-                            @endforeach
-                        </select>
-                        <div class="input-group-append">
-                            <label class="input-group-text" for="inputGroupSelect02"><i class="fa fa-briefcase"
-                                    aria-hidden="true"></i></label>
-                        </div>
-                        @error('office_id')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>

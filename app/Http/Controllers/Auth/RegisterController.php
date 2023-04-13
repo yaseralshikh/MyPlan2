@@ -51,8 +51,13 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'specialization_id' => ['required',],
+            'office_id'         => ['required',],
+            'job_type_id'       => ['required'],
+            'section_type_id'   => ['required'],
+            'gender'            => ['required'],
+            'email'             => ['required', 'string', 'email', 'regex:/@moe\.gov.sa$/i', 'max:255', 'unique:users'],
+            'password'          => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
 
@@ -64,10 +69,20 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'email'             => $data['email'],
+            'specialization_id' => $data['specialization_id'],
+            'office_id'         => $data['office_id'],
+            'job_type_id'       => $data['job_type_id'],
+            'section_type_id'   => $data['section_type_id'],
+            'gender'            => $data['gender'],
+            'password'          => Hash::make($data['password']),
+            'status'            => 0
         ]);
+
+        $user->addRole('user');
+
+        return $user;
     }
 }
