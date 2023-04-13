@@ -1,0 +1,22 @@
+php artisan view:clear
+php artisan route:clear
+php artisan route:cache
+php artisan config:clear
+php artisan config:cache
+php artisan clear-compiled
+php artisan cache:clear
+php artisan optimize
+--------------
+composer dump-autoload
+--------------
+git add .
+git commit -m "Constructed index Dashboard"
+git push -u origin Dashboard
+git status
+
+git checkout .    ------> for cancel all change
+
+
+--------------------------------------
+sql for copy data between 2 table :
+INSERT INTO fullcalendar3.users_new SELECT * from fullcalendar2.users
