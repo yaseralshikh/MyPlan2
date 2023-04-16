@@ -17,7 +17,6 @@ return new class extends Migration
             $table->date('start');
             $table->date('end');
             $table->foreignId('semester_id')->constrained();
-            $table->unsignedTinyInteger('active')->default(0);
             $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
         });

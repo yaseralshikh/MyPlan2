@@ -16,6 +16,7 @@
 
     {{-- Styles --}}
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    @livewireStyles
     @stack('style')
     <style>
         body {
@@ -123,7 +124,7 @@
                     <a dir="rtl" style="color: white;text-decoration: none;" href="https://twitter.com/yaser95"
                         target="_blank">حقوق النشر محفوظة لموقع https://sweeklyplan.com</a>
                     <div class="float-end d-none d-sm-inline-block">
-                        <b>الإصدار</b> 1.0.0
+                        <b>الإصدار</b> 2.0.0
                     </div>
                 </div>
                 <!-- End Copyright -->
@@ -131,7 +132,7 @@
             <!-- Grid container -->
 
         </footer>
-        
+
     </div>
 
     <!-- Scripts -->
@@ -139,6 +140,7 @@
     <script src="{{ asset('js/popper.min.js') }}" integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
+    @livewireScripts
     @stack('script')
 </body>
 </html>

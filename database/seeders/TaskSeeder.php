@@ -14,7 +14,7 @@ class TaskSeeder extends Seeder
      */
     public function run(): void
     {
-        $offices = Office::all();
+        $offices = Office::whereIN('id',[1,2,3,4,5,6,7,8,9,10,11,12])->get();
         $tasks = [
             [
                 'name' => 'يوم مكتبي',
@@ -35,7 +35,7 @@ class TaskSeeder extends Seeder
                 Task::create([
                     'name' => $task['name'],
                     'office_id' => $office->id,
-                    'level_id' => 5,
+                    'level_id' => 7,
                     'status' => 1,
                 ]);
             };

@@ -8,6 +8,7 @@ use Laratrust\Contracts\LaratrustUser;
 use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\HasRolesAndPermissions;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -67,6 +68,11 @@ class User extends Authenticatable implements LaratrustUser , MustVerifyEmail
     public function gender(): string
     {
         return $this->status ? __('site.male') : __('site.female');
+    }
+
+    public function events(): HasMany
+    {
+        return $this->hasMany(Event ::class);
     }
 
     public function specialization(): BelongsTo

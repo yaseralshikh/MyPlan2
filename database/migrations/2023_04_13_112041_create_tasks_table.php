@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('level_id')->constrained();
             $table->foreignId('office_id')->constrained()->onDelete('cascade');
+            $table->unsignedTinyInteger('need_care')->default(0);
             $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
         });

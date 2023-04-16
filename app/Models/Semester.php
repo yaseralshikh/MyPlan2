@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Semester extends Model
 {
@@ -17,6 +18,16 @@ class Semester extends Model
         'active',
         'status',
     ];
+
+    public function weeks(): HasMany
+    {
+        return $this->hasMany(Week ::class);
+    }
+
+    public function events(): HasMany
+    {
+        return $this->hasMany(Event ::class);
+    }
 
     public function status(): string
     {

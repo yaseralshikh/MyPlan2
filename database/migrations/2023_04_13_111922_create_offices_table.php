@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('director');
+            $table->unsignedTinyInteger('allowed_overlap')->default(0);
+            $table->unsignedTinyInteger('allowed_create_plans')->default(1);
             $table->string('director_signature_path', 2048)->nullable();
             $table->string('assistant_signature_path', 2048)->nullable();
             $table->string('assistant2_signature_path', 2048)->nullable();
