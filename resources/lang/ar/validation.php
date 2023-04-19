@@ -145,7 +145,10 @@ return [
         'specialization_id' => [
             'required' => 'التخصص مطلوب',
         ],
-        'type' => [
+        'office_id' => [
+            'required' => 'الإدارة / مكتب التعليم مطلوب',
+        ],
+        'job_type_id' => [
             'required' => 'العمل الحالي مطلوب',
         ],
         'section ' => [
@@ -154,7 +157,7 @@ return [
         'director ' => [
             'required' => 'اسم المدير الرباعي مطلوب',
         ],
-        'edu_type' => [
+        'section_type_id' => [
             'required' => 'المرجع الإداري مطلوب',
         ],
         'title' => [

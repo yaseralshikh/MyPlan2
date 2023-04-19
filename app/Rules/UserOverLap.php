@@ -23,10 +23,12 @@ class UserOverLap implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $event = Event::where('start', $this->start)->where('user_id', auth()->user()->id)->count();
+        $event = Event::where('start', $this->start)->where('user_id', auth()->user()->id)->count() == 0;
 
-        if ($event  >= 0 ) {
-            $fail = 'لا يمكن ادخال اكثر من مهمة لنفس المستخدم بنفس اليوم.';
+        if (!$event) {
+
+            $fail('لا يمكن ادخال اكثر من مهمة لنفس المستخدم بنفس اليوم.');
+            
         }
     }
 }

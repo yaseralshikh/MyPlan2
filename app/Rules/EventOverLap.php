@@ -25,10 +25,12 @@ class EventOverLap implements ValidationRule
     {
         $event = Event::where('task_id', $value)->where('start', $this->start)
             ->whereHas('task', function ($q) {$q->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة']);})
-            ->count();
+            ->count() <= auth()->user()->office->allowed_overlap ;
 
-        if (!$event  <= auth()->user()->office->allowed_overlap ) {
+        if (!$event) {
+
             $fail('تم حجز الزيارة في هذا الموعد لنفس المدرسة من قبل مشرف أخر.');
+            
         }
     }
 }

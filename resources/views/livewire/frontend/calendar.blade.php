@@ -7,7 +7,9 @@
                 flex-wrap: wrap;
                 /* justify-content: center; */
                 font-size: 14px;
-                background-color: rgb(243, 243, 243);
+                border-radius: 5px;
+                padding: 5px 15px 5px 15px;
+                background-color: rgb(225, 245, 247);
             }
 
             .fc .fc-col-header {
@@ -32,7 +34,7 @@
 
     @endpush
 
-    <div class="alert alert-success" dir="rtl" role="alert">
+    <div class="alert {{ auth()->user()->gender ? 'alert-success' : 'alert-danger' }} " dir="rtl" role="alert">
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
             <button class="btn btn-dark" wire:click.prevent="editProfile({{ auth()->user()->id }})">@lang('site.profile')</button>
         </div>
@@ -64,7 +66,7 @@
         data-bs-backdrop="static" data-bs-keyboard="false" wire:ignore.self>
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-body-tertiary">
                     <h1 class="modal-title fs-5" id="createModalLabel">@lang('site.addRecord', ['name' => 'خطة'])</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -150,7 +152,7 @@
                         </div>
 
                         {{-- Action --}}
-                        <div class="d-flex justify-content-between align-items-center modal-footer">
+                        <div class="d-flex justify-content-between align-items-center modal-footer bg-body-tertiary">
                             <div>
                                 <button type="button" class="btn btn-secondary" wire:click="resetErrorMsg"
                                     data-bs-dismiss="modal">@lang('site.cancel')</button>

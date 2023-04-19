@@ -12,6 +12,7 @@ use Livewire\Component;
 use App\Models\Semester;
 use App\Rules\UserOverLap;
 use App\Rules\EventOverLap;
+use App\Rules\DateOutService;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Calendar extends Component
@@ -38,7 +39,7 @@ class Calendar extends Component
     {
         return ([
             'level_id' => ['required'],
-            'task_id' => ['required', new EventOverLap($this->start), new UserOverLap($this->start)],
+            'task_id' => ['required', new EventOverLap($this->start), new UserOverLap($this->start) , new DateOutService($this->start, $this->end)],
         ]);
     }
 
@@ -75,30 +76,14 @@ class Calendar extends Component
         $semester_Id = Semester::where('start', '<=', $this->start)->where('end', '>=', $this->end)->pluck('id')->first();
         $week_Id = Week::where('start', '<=', $this->start)->where('end', '>=', $this->end)->pluck('id')->first();
 
-        if ($semester_Id && $week_Id) {
-            if ($this->all_user) {
+        if ($this->all_user) {
 
-                $users = User::where('office_id', auth()->user()->office_id)->whereStatus(1)->get();
+            $users = User::where('office_id', auth()->user()->office_id)->whereStatus(1)->get();
 
-                foreach ($users as $user) {
-                    Event::create([
-                        'user_id' => $user->id,
-                        'office_id' => $user->office_id,
-                        'semester_id' => $semester_Id,
-                        'week_id' => $week_Id,
-                        'task_id' => $this->task_id,
-                        'note' => $this->note,
-                        'start' => $this->start,
-                        'end' => $this->end,
-                        'color' => $color,
-                        'status' => 1,
-                    ]);
-                }
-            } else {
-
+            foreach ($users as $user) {
                 Event::create([
-                    'user_id' => auth()->user()->id,
-                    'office_id' => auth()->user()->office_id,
+                    'user_id' => $user->id,
+                    'office_id' => $user->office_id,
                     'semester_id' => $semester_Id,
                     'week_id' => $week_Id,
                     'task_id' => $this->task_id,
@@ -106,34 +91,37 @@ class Calendar extends Component
                     'start' => $this->start,
                     'end' => $this->end,
                     'color' => $color,
+                    'status' => 1,
                 ]);
             }
-
-            $this->reset();
-            $this->resetErrorBag();
-            $this->dispatchBrowserEvent('closeModalCreate', ['close' => true]);
-            $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true]);
-            $this->dispatchBrowserEvent('swal', [
-                'title' => __('site.saveSuccessfully'),
-                'timer' => 2000,
-                'timerProgressBar' => true,
-                'icon' => 'success',
-                'showConfirmButton' => false,
-                'toast' => true,
-                'position' => 'center',
-            ]);
-
         } else {
-            $this->dispatchBrowserEvent('swal', [
-                'title' => 'اليوم المحدد غير مطابق للفصل الدراسي',
-                'timer' => 3500,
-                'timerProgressBar' => true,
-                'icon' => 'error',
-                'toast' => true,
-                'showConfirmButton' => false,
-                'position' => 'center',
+
+            Event::create([
+                'user_id' => auth()->user()->id,
+                'office_id' => auth()->user()->office_id,
+                'semester_id' => $semester_Id,
+                'week_id' => $week_Id,
+                'task_id' => $this->task_id,
+                'note' => $this->note,
+                'start' => $this->start,
+                'end' => $this->end,
+                'color' => $color,
             ]);
         }
+
+        $this->reset();
+        $this->resetErrorBag();
+        $this->dispatchBrowserEvent('closeModalCreate', ['close' => true]);
+        $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true]);
+        $this->dispatchBrowserEvent('swal', [
+            'title' => __('site.saveSuccessfully'),
+            'timer' => 2000,
+            'timerProgressBar' => true,
+            'icon' => 'success',
+            'showConfirmButton' => false,
+            'toast' => true,
+            'position' => 'center',
+        ]);
     }
 
     public function updated()
