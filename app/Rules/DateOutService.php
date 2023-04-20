@@ -31,7 +31,7 @@ class DateOutService implements ValidationRule
 
         if (!$semester_Id || !$week_Id) {
 
-            $fail('اليوم المحدد غير مطابق للفصل الدراسي');
+            $fail('اليوم المحدد غير مطابق لتقويم الفصل الدراسي');
 
         }
 

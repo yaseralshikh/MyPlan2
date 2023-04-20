@@ -153,14 +153,14 @@ class Calendar extends Component
     public function render()
     {
         if (auth()->user()->gender == 1) {
-            $office_gender = [1,2,3,4,5,6];
+            $office_gender = [1,2,3,4,5,6,auth()->user()->office->id];
         } else {
-            $office_gender = [7,8,9,10,12];
+            $office_gender = [7,8,9,10,12,auth()->user()->office->id];
         }
 
         $offices = Office::whereStatus(true)->whereIn('id', $office_gender)->get();
 
-        $levels = Level::all();
+        $levels = Level::with('tasks')->get();
 
         $tasks = $this->getTaskesData();
 

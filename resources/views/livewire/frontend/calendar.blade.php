@@ -215,7 +215,7 @@
                         displayEventTime : false,
                         hiddenDays: [ 5,6 ],
                         dayMaxEvents: 5, // allow "more" link when too many events
-                        selectable: true,
+                        selectable: false,
                         droppable: true, // this allows things to be dropped onto the calendar
                         editable: true,
                         selectOverlap: false,
