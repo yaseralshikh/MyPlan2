@@ -160,7 +160,7 @@ class Calendar extends Component
 
         $offices = Office::whereStatus(true)->whereIn('id', $office_gender)->get();
 
-        $levels = Level::with('tasks')->get();
+        $levels = Level::all();
 
         $tasks = $this->getTaskesData();
 

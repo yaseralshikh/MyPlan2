@@ -81,7 +81,7 @@
                                     class="form-control fw-bold @error('office_id') is-invalid @enderror" id="office_id">
                                     <option value="" hidden selected>@lang('site.choise', ['name' => 'مكتب التعليم']) :</option>
                                     @foreach ($offices as $office)
-                                        <option class="fw-bold" value="{{ $office->id }}">{{ $office->name }}</option>
+                                        <option class="fw-bold {{ $loop->last ? 'bg-body-tertiary text-primary' : '' }}" value="{{ $office->id }}">{{ $office->name }}</option>
                                     @endforeach
                                 </select>
 
@@ -152,7 +152,7 @@
                         </div>
 
                         {{-- Action --}}
-                        <div class="d-flex justify-content-between align-items-center modal-footer bg-body-tertiary">
+                        <div class="d-flex justify-content-between align-items-center modal-footer bg-body-tertiary border">
                             <div>
                                 <button type="button" class="btn btn-secondary" wire:click="resetErrorMsg"
                                     data-bs-dismiss="modal">@lang('site.cancel')</button>
