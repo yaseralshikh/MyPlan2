@@ -2,18 +2,18 @@
 
 namespace App\Http\Livewire\Frontend;
 
-use App\Models\Task;
-use App\Models\User;
-use App\Models\Week;
 use App\Models\Event;
 use App\Models\Level;
 use App\Models\Office;
-use Livewire\Component;
 use App\Models\Semester;
-use App\Rules\UserOverLap;
-use App\Rules\EventOverLap;
+use App\Models\Task;
+use App\Models\User;
+use App\Models\Week;
 use App\Rules\DateOutService;
+use App\Rules\EventOverLap;
+use App\Rules\UserOverLap;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class Calendar extends Component
 {
@@ -21,6 +21,7 @@ class Calendar extends Component
 
     public $data = [];
     public $tasks = [];
+    public $levels = [];
 
     public $officeId = null;
 
@@ -39,7 +40,7 @@ class Calendar extends Component
     {
         return ([
             'level_id' => ['required'],
-            'task_id' => ['required', new EventOverLap($this->start), new UserOverLap($this->start) , new DateOutService($this->start, $this->end)],
+            'task_id' => ['required', new EventOverLap($this->start), new UserOverLap($this->start), new DateOutService($this->start, $this->end)],
         ]);
     }
 
@@ -127,11 +128,13 @@ class Calendar extends Component
     public function updated()
     {
         $this->getTaskesData();
+        $this->getLevelsData();
     }
 
     public function OfficeOption($id)
     {
         $this->officeId = $id;
+        $this->getLevelsData();
     }
 
     public function LevelOption()
@@ -139,31 +142,37 @@ class Calendar extends Component
         $this->getTaskesData();
     }
 
+    public function getLevelsData()
+    {
+        $officeId = $this->office_id ? $this->office_id : auth()->user()->office_id;
+
+        $this->levels = Level::with('tasks')->whereHas('tasks', function ($query) use ($officeId) {$query->where('office_id', $officeId);})->get();
+    }
+
     public function getTaskesData()
     {
         $officeId = $this->office_id ? $this->office_id : auth()->user()->office_id;
 
         $this->tasks = Task::where('office_id', $officeId)
-        ->whereStatus(1)->where('level_id' , $this->level_id)
-        ->orderBy('level_id', 'asc')
-        ->orderBy('name', 'asc')
-        ->get();
+            ->whereStatus(1)->where('level_id', $this->level_id)
+            ->orderBy('level_id', 'asc')
+            ->orderBy('name', 'asc')
+            ->get();
     }
 
     public function render()
     {
         if (auth()->user()->gender == 1) {
-            $office_gender = [1,2,3,4,5,6,auth()->user()->office->id];
+            $office_gender = [1, 2, 3, 4, 5, 6, auth()->user()->office->id];
         } else {
-            $office_gender = [7,8,9,10,12,auth()->user()->office->id];
+            $office_gender = [7, 8, 9, 10, 12, auth()->user()->office->id];
         }
 
         $offices = Office::whereStatus(true)->whereIn('id', $office_gender)->get();
 
-        $levels = Level::all();
+        $levels = $this->getLevelsData();
 
         $tasks = $this->getTaskesData();
-
 
         return view('livewire.frontend.calendar', compact(
             'offices',
@@ -173,29 +182,29 @@ class Calendar extends Component
     }
 }
 
-        // Retrieve task name, need_care, and count
-        // $taskData = Task::selectRaw('name, need_care, count(*) as count')
-        // ->groupBy('name', 'need_care')
-        // ->get();
+// Retrieve task name, need_care, and count
+// $taskData = Task::selectRaw('name, need_care, count(*) as count')
+// ->groupBy('name', 'need_care')
+// ->get();
 
-        // $title=[];
-        // $need_care=[];
-        // $count=[];
+// $title=[];
+// $need_care=[];
+// $count=[];
 
-        // foreach ($taskData as $task) {
-        //     array_push($title, $task->name);
-        //     array_push($need_care, $task->need_care ? 'red' : '');
-        //     array_push($count, $task->count);
-        // }
+// foreach ($taskData as $task) {
+//     array_push($title, $task->name);
+//     array_push($need_care, $task->need_care ? 'red' : '');
+//     array_push($count, $task->count);
+// }
 
-        // dd($title,$need_care,$count);
+// dd($title,$need_care,$count);
 
-        // $this->dispatchBrowserEvent('swal', [
-        //     'title' => 'هل تريد الاستمرار؟',
-        //     'timer' => 2000,
-        //     'timerProgressBar' => true,
-        //     'icon' => 'success',
-        //     'toast' => true,
-        //     'showConfirmButton' => false,
-        //     'position' => 'top-end',
-        // ]);
+// $this->dispatchBrowserEvent('swal', [
+//     'title' => 'هل تريد الاستمرار؟',
+//     'timer' => 2000,
+//     'timerProgressBar' => true,
+//     'icon' => 'success',
+//     'toast' => true,
+//     'showConfirmButton' => false,
+//     'position' => 'top-end',
+// ]);
