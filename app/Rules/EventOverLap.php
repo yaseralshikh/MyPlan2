@@ -29,7 +29,7 @@ class EventOverLap implements ValidationRule
 
         if (!$event) {
 
-            $fail('تم حجز الزيارة في هذا الموعد لنفس المدرسة من قبل مشرف أخر.');
+            $fail('تم حجز الزيارة في هذا الموعد لنفس المدرسة من قبل مشرف أخر');
 
         }
     }

@@ -41,7 +41,7 @@ class WeekSeeder extends Seeder
             ],
             [
                 'name'          => 'ف3 - الأسبوع السادس',
-                'start'         => '2023-04-23',
+                'start'         => '2023-04-26',
                 'end'           => '2023-04-27' ,
             ],
             [
