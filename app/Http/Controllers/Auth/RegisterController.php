@@ -9,9 +9,6 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-
 class RegisterController extends Controller
 {
     /*
