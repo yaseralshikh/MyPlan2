@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Office extends Model
@@ -19,6 +20,7 @@ class Office extends Model
         'director_signature_path',
         'assistant_signature_path',
         'assistant2_signature_path',
+        'education_id',
         'status',
     ];
 
@@ -42,9 +44,9 @@ class Office extends Model
         return $this->hasMany(Subtask ::class);
     }
 
-    public function features(): HasMany
+    public function education(): BelongsTo
     {
-        return $this->hasMany(Feature ::class);
+        return $this->belongsTo(Education::class);
     }
 
     public function status(): string

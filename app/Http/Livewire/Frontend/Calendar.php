@@ -403,7 +403,7 @@ class Calendar extends Component
             $office_gender = [7, 8, 9, 10, 12, auth()->user()->office->id];
         }
 
-        $offices = Office::whereStatus(true)->whereIn('id', $office_gender)->get();
+        $offices = Office::whereStatus(true)->whereIn('id', $office_gender)->where('education_id', auth()->user()->office->education->id)->get();
 
         $levels = $this->getLevelsData();
 

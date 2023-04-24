@@ -2,6 +2,7 @@
 
 namespace Illuminate\Foundation\Auth;
 
+use App\Models\Education;
 use App\Models\Office;
 use App\Models\JobType;
 use App\Models\SectionType;
@@ -22,10 +23,11 @@ trait RegistersUsers
      */
     public function showRegistrationForm()
     {
-        $specializations = Specialization::where('status', true)->get();
-        $offices = Office::where('status', true)->get();
-        $job_types = JobType::whereStatus(true)->get();
-        $section_types = SectionType::whereStatus(true)->get();
+        $educations         = Education::where('status', true)->get();
+        $offices            = Office::where('status', true)->get();
+        $specializations    = Specialization::where('status', true)->get();
+        $job_types          = JobType::whereStatus(true)->get();
+        $section_types      = SectionType::whereStatus(true)->get();
 
         $genders = [
             [
@@ -38,7 +40,15 @@ trait RegistersUsers
             ]
         ];
 
-        return view('auth.register', compact('specializations','offices', 'job_types', 'section_types','genders'));
+        return view('auth.register', compact(
+            'educations',
+            'specializations',
+            'offices',
+            'job_types',
+            'section_types',
+            'genders'
+            )
+        );
     }
 
     /**

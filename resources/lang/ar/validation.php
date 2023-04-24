@@ -145,6 +145,9 @@ return [
         'specialization_id' => [
             'required' => 'التخصص مطلوب',
         ],
+        'education_id' => [
+            'required' => 'إدارة التعليم مطلوبة',
+        ],
         'office_id' => [
             'required' => 'الإدارة / مكتب التعليم مطلوب',
         ],

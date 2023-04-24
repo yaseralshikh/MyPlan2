@@ -79,7 +79,7 @@
                                 <label for="office_id" class="col-form-label">@lang('site.offices') :</label>
                                 <select wire:model.defer="office_id" id="office_id" wire:change="OfficeOption($event.target.value)"
                                     class="form-control fw-bold @error('office_id') is-invalid @enderror">
-                                    <option value="" hidden selected>@lang('site.choise', ['name' => 'مكتب التعليم']) :</option>
+                                    <option value="" hidden selected>@lang('site.choise', ['name' => 'مكتب التعليم / إدارة']) :</option>
                                     @foreach ($offices as $office)
                                         <option class="fw-bold {{ $loop->last ? 'bg-body-tertiary text-primary' : '' }}" value="{{ $office->id }}">{{ $office->name }}</option>
                                     @endforeach

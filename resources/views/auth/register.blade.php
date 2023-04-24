@@ -62,13 +62,48 @@
                         </span>
                         @enderror
                     </div>
+                    <!-- education -->
+                    <div class="input-group mb-3">
+                        <select name="education_id" class="custom-select @error('education_id') is-invalid @enderror"
+                            id="education">
+                            <option disabled selected>@lang('site.education')</option>
+                            @foreach ($educations as $education)
+                                <option value="{{ $education->id }}">{{ $education->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="input-group-append">
+                            <label class="input-group-text" for="education"><i class="fa fa-briefcase"
+                                    aria-hidden="true"></i></label>
+                        </div>
+                        @error('education_id')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
                     <!-- Office -->
                     <div class="input-group mb-3">
+                        <select name="office_id" class="custom-select @error('office_id') is-invalid @enderror"
+                            id="office">
+                            <option disabled selected>@lang('site.office')</option>
+                        </select>
+                        <div class="input-group-append">
+                            <label class="input-group-text" for="office"><i class="fa fa-briefcase"
+                                    aria-hidden="true"></i></label>
+                        </div>
+                        @error('office_id')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <!-- Office -->
+                    {{-- <div class="input-group mb-3">
                         <select name="office_id" class="custom-select @error('office_id') is-invalid @enderror"
                             id="inputGroupSelect02">
                             <option disabled selected>@lang('site.office')</option>
                             @foreach ($offices as $office)
-                            <option value="{{ $office->id }}">{{ $office->name }}</option>
+                                <option value="{{ $office->id }}">{{ $office->name }}</option>
                             @endforeach
                         </select>
                         <div class="input-group-append">
@@ -80,19 +115,19 @@
                             <strong>{{ $message }}</strong>
                         </span>
                         @enderror
-                    </div>
+                    </div> --}}
                     <!-- Specialization -->
                     <div class="input-group mb-3">
                         <select name="specialization_id"
                             class="custom-select @error('specialization_id') is-invalid @enderror"
-                            id="inputGroupSelect02">
+                            id="inputGroupSelectSpecialization">
                             <option disabled selected>@lang('site.specialization')</option>
                             @foreach ($specializations as $specialization)
                             <option value="{{ $specialization->id }}">{{ $specialization->name }}</option>
                             @endforeach
                         </select>
                         <div class="input-group-append">
-                            <label class="input-group-text" for="inputGroupSelect02"><i class="fa fa-briefcase"
+                            <label class="input-group-text" for="inputGroupSelectSpecialization"><i class="fa fa-briefcase"
                                     aria-hidden="true"></i></label>
                         </div>
                         @error('specialization_id')
@@ -104,14 +139,14 @@
                     <!-- Job Type -->
                     <div class="input-group mb-3">
                         <select name="job_type_id" class="custom-select @error('job_type_id') is-invalid @enderror"
-                            id="inputGroupSelect02">
+                            id="inputGroupSelectjob_type">
                             <option disabled selected>@lang('site.jobType')</option>
                             @foreach ($job_types as $job)
                             <option value="{{ $job->id }}">{{ $job->name }}</option>
                             @endforeach
                         </select>
                         <div class="input-group-append">
-                            <label class="input-group-text" for="inputGroupSelect02"><i class="fa fa-briefcase"
+                            <label class="input-group-text" for="inputGroupSelectjob_type"><i class="fa fa-briefcase"
                                     aria-hidden="true"></i></label>
                         </div>
                         @error('job_type_id')
@@ -123,14 +158,14 @@
                     <!-- Section Type -->
                     <div class="input-group mb-3">
                         <select name="section_type_id" class="custom-select @error('section_type_id') is-invalid @enderror"
-                            id="inputGroupSelect02">
+                            id="inputGroupSelectsection_type">
                             <option disabled selected>@lang('site.selectSectionType')</option>
                             @foreach ($section_types as $section)
                             <option value="{{ $section->id }}">{{ $section->name }}</option>
                             @endforeach
                         </select>
                         <div class="input-group-append">
-                            <label class="input-group-text" for="inputGroupSelect02"><i class="fa fa-briefcase"
+                            <label class="input-group-text" for="inputGroupSelectsection_type"><i class="fa fa-briefcase"
                                     aria-hidden="true"></i></label>
                         </div>
                         @error('section_type_id')
@@ -142,14 +177,14 @@
                     <!-- Gender -->
                     <div class="input-group mb-3">
                         <select name="gender" class="custom-select @error('gender') is-invalid @enderror"
-                            id="inputGroupSelect02">
+                            id="inputGroupSelectgender">
                             <option disabled selected>@lang('site.gender')</option>
                             @foreach ($genders as $gender)
                             <option value="{{ $gender['id'] }}">{{ $gender['name'] }}</option>@json($gender['id'])
                             @endforeach
                         </select>
                         <div class="input-group-append">
-                            <label class="input-group-text" for="inputGroupSelect02"><i class="fa fa-briefcase"
+                            <label class="input-group-text" for="inputGroupSelectgender"><i class="fa fa-venus-mars"
                                     aria-hidden="true"></i></label>
                         </div>
                         @error('gender')
@@ -214,6 +249,34 @@
     <script src="{{ asset('backend/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('backend/js/adminlte.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+
+            $('#education').change(function() {
+                var education_id = $(this).val();
+                if (education_id) {
+                    $.ajax({
+                        url: '/getOffices/' + education_id,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            $('#office').empty();
+                            $.each(data.offices, function(key, value) {
+                                $('#office').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+                        },
+                        error: function(){
+                            alert('failure');
+                        },
+                    });
+                } else {
+                    $('#office').empty();
+                }
+            });
+
+        });
+    </script>
 </body>
 
 </html>
