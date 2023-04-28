@@ -83,7 +83,6 @@
         <script src="{{ asset('backend/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <!-- AdminLTE App -->
         <script src="{{ asset('backend/js/adminlte.min.js') }}"></script>
-        {{-- <script src="{{ asset('backend/js/demo.js')}}"></script> ********--}}
         <!-- Select2 -->
         <script src="{{ asset('backend/plugins/select2/js/select2.full.min.js') }}"></script>
         @yield('alpine-plugins')
@@ -94,8 +93,8 @@
         <x-livewire-alert::scripts />
         <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
         {{-- sortable-tablesort --}}
-        <script src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@latest/sortable.min.js"></script>
+        {{-- <script src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@latest/sortable.min.js"></script> --}}
         @yield('script')
-        @livewireChartsScripts
+        {{-- @livewireChartsScripts --}}
     </body>
 </html>

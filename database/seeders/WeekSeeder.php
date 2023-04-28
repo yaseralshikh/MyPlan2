@@ -91,7 +91,7 @@ class WeekSeeder extends Seeder
                 'name'          => $week['name'],
                 'start'         => $week['start'] ,
                 'end'           => $week['end'] ,
-                'semester_id'   => 2,
+                'semester_id'   => 3,
                 'status'        => 1
             ]);
         }

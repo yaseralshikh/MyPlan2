@@ -419,20 +419,3 @@ class Calendar extends Component
         ));
     }
 }
-
-// Retrieve task name, need_care, and count
-// $taskData = Task::selectRaw('name, need_care, count(*) as count')
-// ->groupBy('name', 'need_care')
-// ->get();
-
-// $title=[];
-// $need_care=[];
-// $count=[];
-
-// foreach ($taskData as $task) {
-//     array_push($title, $task->name);
-//     array_push($need_care, $task->need_care ? 'red' : '');
-//     array_push($count, $task->count);
-// }
-
-// dd($title,$need_care,$count);

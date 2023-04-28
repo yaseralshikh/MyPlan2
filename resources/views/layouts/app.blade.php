@@ -69,6 +69,12 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+
+                                    @role(['admin|superadmin'])
+                                        <a class="dropdown-item" href="{{ route('admin.dashboard') }}">@lang('site.dashboard')</a>
+                                        <div class="dropdown-divider"></div>
+                                    @endrole
+
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
