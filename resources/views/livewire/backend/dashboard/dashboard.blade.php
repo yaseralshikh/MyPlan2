@@ -54,7 +54,7 @@
             <!-- Small boxes (Stat box) -->
             <div class="row">
                 <div class="col-lg-3 col-3">
-                    <!-- small box -->
+                    <!-- Total Schools Count -->
                     <div class="small-box bg-info">
                         <div class="inner">
                             <h3>{{ $schoolsCount }}</h3>
@@ -70,7 +70,7 @@
                 </div>
                 <!-- ./col -->
                 <div class="col-lg-3 col-3">
-                    <!-- small box -->
+                    <!-- Total Users Count -->
                     <div class="small-box bg-warning">
                         <div class="inner">
                             <h3>{{ $usersCount }}</h3>
@@ -86,21 +86,13 @@
                 </div>
                 <!-- ./col -->
                 <div class="col-lg-3 col-3">
-                    <!-- small box -->
+                    <!-- Total Events Count -->
                     <div class="small-box" style="background-color:rgba(38, 248, 255, 0.784);">
                         <div class="inner">
                             <div class="d-sm-inline-flex">
                                 <h3>{{ $eventsCount }}</h3>
-                                {{-- <div class="form-group pt-1 pl-4">
-                                    <select wire:change="getEventsCount($event.target.value)" id="semesterID"
-                                        class="form-control form-control-sm">
-                                        @foreach ($semesters as $semester)
-                                        <option value="{{ $semester->id }}" {{ $semester->active ? 'selected' : '' }}>{{
-                                            $semester->title . ' ' . $semester->school_year }}</option>
-                                        @endforeach
-                                    </select>
-                                </div> --}}
                             </div>
+
                             <p>@lang('site.events')</p>
                         </div>
                         <div class="icon">
@@ -112,7 +104,7 @@
                 </div>
                 <!-- ./col -->
                 <div class="col-lg-3 col-3">
-                    <!-- small box -->
+                    <!--  Total Weeks Count -->
                     <div class="small-box bg-primary">
                         <div class="inner">
                             <h3>{{ $weeksCount }}</h3>
@@ -128,7 +120,7 @@
                 </div>
                 <!-- ./col -->
                 <div class="col-lg-3 col-3">
-                    <!-- small box -->
+                    <!-- Events Schools Count -->
                     <div class="small-box bg-success">
                         <div class="inner">
                             <h3>{{ $eventsSchoolCount }}</h3>
@@ -145,7 +137,7 @@
                 </div>
                 <!-- ./col -->
                 <div class="col-lg-3 col-3">
-                    <!-- small box -->
+                    <!-- Events Office Count -->
                     <div class="small-box text-white bg-secondary">
                         <div class="inner">
                             <h3>{{ $eventsOfficeCount }}</h3>
@@ -162,7 +154,7 @@
                 </div>
                 <!-- ./col -->
                 <div class="col-lg-3 col-3">
-                    <!-- small box -->
+                    <!-- Events Training Count -->
                     <div class="small-box" style="background-color:rgb(239, 117, 47);">
                         <div class="inner">
                             <h3>{{ $eventsTrainingCount }}</h3>
@@ -179,7 +171,7 @@
                 </div>
                 <!-- ./col -->
                 <div class="col-lg-3 col-3">
-                    <!-- small box -->
+                    <!-- Events Task Count -->
                     <div class="small-box" style="background-color:rgba(24, 37, 88, 0.342);">
                         <div class="inner">
                             <h3>{{ $eventsTaskCount }}</h3>
@@ -216,6 +208,7 @@
                         <div class="card-body">
                             <div class="table-responsive">
                                 <div class="shadow rounded p-4 border text-center" style="height: 31rem;">
+                                    {{-- Leevel tabs Filters --}}
                                     <div class="form-group clearfix">
                                         @foreach ($levels as $level)
                                             <div class="icheck-primary d-inline">
@@ -227,6 +220,7 @@
                                         @endforeach
                                     </div><hr>
 
+                                    {{-- highchart --}}
                                     <div id="highchart"></div>
 
                                 </div>
@@ -236,10 +230,8 @@
                     <!-- /.card -->
                 </section>
 
-                {{-- Empty Tasks --}}
-
+                {{-- Empty Tasks Table --}}
                 <section class="col-lg-12 connectedSortable">
-                    <!-- Custom tabs (Charts with tabs)-->
                     <div class="card card-primary card-outline">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -275,6 +267,7 @@
                                     <div class="card-tools">
                                         <div class="btn-group pr-2">
                                             <div class="pl-5">
+                                                {{-- Export Excel --}}
                                                 <a href="#"
                                                     class="btn btn-outline-light hover-item"
                                                     data-toggle="tooltip"
@@ -283,6 +276,7 @@
                                                     wire:click.prevent="emptySchoolsExportExcel">
                                                     <i class="fa fa-file-excel text-success"></i>
                                                 </a>
+                                                {{-- Export PDF --}}
                                                 <a href="#" class="btn btn-outline-light hover-item"
                                                     data-toggle="tooltip"
                                                     data-placement="top"
@@ -294,6 +288,7 @@
                                         </div>
                                     </div>
 
+                                    {{-- search text box --}}
                                     <input type="search" wire:model="emptySchoolSearchString" class="form-control"
                                     placeholder="@lang('site.searchFor')" value="">
                                     <div class="input-group-append">
@@ -306,6 +301,7 @@
 
                             </div>
 
+                            {{-- Details Tasks Table --}}
                             <div class="table-responsive" dir="rtl">
                                 <div class="shadow rounded p-4 border">
                                     <div class="table-responsive">
@@ -353,10 +349,8 @@
                     <!-- /.card -->
                 </section>
 
-                <!-- users Events plan -->
-
+                <!-- Table for users Events plan -->
                 <section class="col-lg-12 connectedSortable">
-                    <!-- Custom tabs (Charts with tabs)-->
                     <div class="card card-primary card-outline">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -376,6 +370,7 @@
                                     @lang('site.totalRecord', ['name' => 'المستخدمين']) : &nbsp{{ $users->total() }}
                                 </label>
 
+                                {{-- Paginate Filter --}}
                                 <div>
                                     <select dir="rtl" wire:model="paginateValue" class="form-control">
                                         <option value="20" selected>20</option>
@@ -391,6 +386,7 @@
                                     <div class="card-tools">
                                         <div class="btn-group pr-2">
                                             <div class="pl-5">
+                                                {{-- Export EXCEL --}}
                                                 <a href="#"
                                                     class="btn btn-outline-light hover-item"
                                                     data-toggle="tooltip"
@@ -399,6 +395,7 @@
                                                     wire:click.prevent="exportExcel">
                                                     <i class="fa fa-file-excel text-success"></i>
                                                 </a>
+                                                {{-- Export PDF --}}
                                                 <a href="#" class="btn btn-outline-light hover-item"
                                                     data-toggle="tooltip"
                                                     data-placement="top"
@@ -410,6 +407,7 @@
                                         </div>
                                     </div>
 
+                                    {{-- search text box --}}
                                     <input type="search" wire:model="searchTerm" class="form-control"
                                         placeholder="@lang('site.searchFor')" value="">
                                     <div class="input-group-append">
@@ -421,6 +419,7 @@
 
                             </div>
 
+                            {{-- Details statistics Users Event Table --}}
                             <div class="table-responsive" dir="rtl">
                                 <div class="shadow rounded p-4 border">
                                     <div class="table-responsive">
@@ -495,7 +494,7 @@
 
                 const [names, counts, need_cares] = chart_data;
 
-                const colors = [];
+                const colors = []; // Array to storage schools color if the school need care
 
                 for (const [key, value] of Object.entries(need_cares)) {
                     colors.push(value ? '#f8a0a9' : '#99ceff');
