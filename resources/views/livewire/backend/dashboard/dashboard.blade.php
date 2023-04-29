@@ -1,4 +1,9 @@
 <div>
+    @push('style')
+        <style>
+            /*  */
+        </style>
+    @endpush
     <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container-fluid">
@@ -490,6 +495,12 @@
 
                 const [names, counts, need_cares] = chart_data;
 
+                const colors = [];
+
+                for (const [key, value] of Object.entries(need_cares)) {
+                    colors.push(value ? '#f8a0a9' : '#99ceff');
+                }
+
                 const chart = Highcharts.chart('highchart', {
                     chart: {
                         type: 'column',
@@ -517,9 +528,12 @@
                         useHTML: true,
                     },
                     tooltip: {
-                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                            '<td style="padding:0"><b>{point.y: 1f}</b></td></tr>',
+                        backgroundColor: '#FCFFC5',
+                        borderWidth: 2,
+                        // borderColor: '#AAA',
+                        headerFormat: '<span style="font-size:12px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="padding:0">{series.name}: </td>' +
+                            '<td style="color:green;"><b>{point.y: 1f}</b></td></tr>',
                         footerFormat: '</table>',
                         shared: true,
                         format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
@@ -533,10 +547,17 @@
                         format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
                         useHTML: true,
                     },
+                    colors: colors,
                     series: [{
-                        name: 'خطط المشرفين',
+                        name: 'التكرار ',
                         data: counts,
-                        //color: need_cares == 1 ? '#ffb3b3' : '#ccf5ff',
+                        cursor: 'pointer',
+                        events: {
+                            click: function () {
+                                window.open('http://myplan.test/');
+                            }
+                        },
+                        colorByPoint: true,
                         format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
                         useHTML: true,
                     }],
@@ -569,6 +590,12 @@
 
                         const [names, counts, need_cares] = chart_data2;
 
+                        const colors = [];
+
+                        for (const [key, value] of Object.entries(need_cares)) {
+                            colors.push(value ? '#f8a0a9' : '#99ceff');
+                        }
+
                         const chart = Highcharts.chart('highchart', {
                             chart: {
                                 type: 'column',
@@ -596,9 +623,12 @@
                                 useHTML: true,
                             },
                             tooltip: {
-                                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                                    '<td style="padding:0"><b>{point.y: 1f}</b></td></tr>',
+                                backgroundColor: '#FCFFC5',
+                                borderWidth: 2,
+                                // borderColor: '#AAA',
+                                headerFormat: '<span style="font-size:12px">{point.key}</span><table>',
+                                pointFormat: '<tr><td style="padding:0">{series.name}: </td>' +
+                                    '<td style="color:green;"><b>{point.y: 1f}</b></td></tr>',
                                 footerFormat: '</table>',
                                 shared: true,
                                 format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
@@ -612,10 +642,17 @@
                                 format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
                                 useHTML: true,
                             },
+                            colors: colors,
                             series: [{
-                                name: 'خطط المشرفين',
+                                name: 'التكرار ',
                                 data: counts,
-                                //color: need_cares == 1 ? '#ffb3b3' : '#ccf5ff',
+                                cursor: 'pointer',
+                                events: {
+                                    click: function () {
+                                        window.open('http://myplan.test/');
+                                    }
+                                },
+                                colorByPoint: true,
                                 format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
                                 useHTML: true,
                             }],
