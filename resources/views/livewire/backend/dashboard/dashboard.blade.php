@@ -392,7 +392,7 @@
                                                     data-toggle="tooltip"
                                                     data-placement="top"
                                                     title="@lang('site.exportExcel')"
-                                                    wire:click.prevent="exportExcel">
+                                                    wire:click.prevent="UsersPlansExportExcel">
                                                     <i class="fa fa-file-excel text-success"></i>
                                                 </a>
                                                 {{-- Export PDF --}}
@@ -400,7 +400,7 @@
                                                     data-toggle="tooltip"
                                                     data-placement="top"
                                                     title="@lang('site.exportPDF')"
-                                                    wire:click.prevent="exportPDF">
+                                                    wire:click.prevent="UsersPlansExportPDF">
                                                     <i class="fa fa-file-pdf text-danger"></i>
                                                 </a>
                                             </div>
