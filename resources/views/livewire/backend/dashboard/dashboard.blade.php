@@ -448,7 +448,7 @@
                                                     <td class="bg-light">{{ $loop->iteration }}</td>
                                                     <td>{{ $user->name }}</td>
                                                     <td>{{ $user->specialization->name }}</td>
-                                                    <td>{{ $user->type }}</td>
+                                                    <td>{{ $user->job_type->name }}</td>
                                                     <td>{{ $user->events->whereNotIn('task.name',['يوم مكتبي','برنامج تدريبي','إجازة','مكلف بمهمة'])->count() }}</td>
                                                     <td>{{ $user->events->where('task.name','يوم مكتبي')->count() }}</td>
                                                     <td>{{ $user->events->where('task.name','برنامج تدريبي')->count() }}</td>

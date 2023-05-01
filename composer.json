@@ -16,6 +16,7 @@
         "laravel/ui": "^4.2",
         "livewire/livewire": "^2.12",
         "maatwebsite/excel": "^3.1",
+        "mpdf/mpdf": "^8.1",
         "psr/log": "2.0",
         "santigarcor/laratrust": "^8.0"
     },

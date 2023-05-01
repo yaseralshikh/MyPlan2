@@ -14,6 +14,11 @@ class JobType extends Model
         'status',
     ];
 
+    public function users(): HasMany
+    {
+        return $this->hasMany(User ::class);
+    }
+
     public function status(): string
     {
         return $this->status ? __('site.active') : __('site.inActive');

@@ -37,7 +37,7 @@ class SemesterSeeder extends Seeder
                 'start'         => $semester['start'] ,
                 'end'           => $semester['end'] ,
                 'school_year'   => 1444,
-                'active'        => $index == 3 ? 1 : 0 ,
+                'active'        => $index == 2 ? 1 : 0 ,
                 'status'        => 1
             ]);
         }
