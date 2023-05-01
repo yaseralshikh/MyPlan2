@@ -19,3 +19,20 @@ git checkout .    ------> for cancel all change
 --------------------------------------
 sql for copy data between 2 table :
 INSERT INTO fullcalendar3.users_new SELECT * from fullcalendar2.users
+
+
+--------------------------------------
+git command :
+
+get clone https://github.com/yaseralshikh/laravel7_super_admin.git
+git clone -b Dashboard --single-branch https://github.com/yaseralshikh/laravel7_super_admin.git
+
+git branch --show-current
+git branch Dashboard
+git checkout Dashboard
+git branch -d checkout
+
+git status
+git add .
+git commit -m "Constructed index Dashboard"
+git push -u origin Laratrust
