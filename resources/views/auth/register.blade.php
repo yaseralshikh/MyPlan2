@@ -28,7 +28,7 @@
             <div class="card-body">
                 <p class="login-box-msg">@lang('site.registerNewMembership')</p>
 
-                <form method="POST" action="{{ route('register') }}">
+                <form method="POST" action="{{ route('register') }}" id="registerForm">
                     @csrf
                     <!-- Name -->
                     <div class="input-group mb-3">
@@ -225,14 +225,24 @@
                         </span>
                         @enderror
                     </div>
+                    {{-- g-recaptcha-response --}}
+                    <div class="input-group mb-3">
+                        <input type="hidden" class="form-control @error('g-recaptcha-response') is-invalid @enderror" name="g-recaptcha-response" id="g-recaptcha-response" required>
+
+                        @error('g-recaptcha-response')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                    {{-- Register Button --}}
                     <div class="row">
                         <div class="col-8">
                             <a href="{{ route('login') }}" class="text-center">@lang('site.alreadyMembership')</a>
                         </div>
                         <!-- /.col -->
                         <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block">{{ __('site.registerBtn')
-                                }}</button>
+                            <button type="button" onclick="onClick(event)" class="btn btn-primary btn-block">{{ __('site.registerBtn')}}</button>
                         </div>
                         <!-- /.col -->
                     </div>
@@ -249,7 +259,21 @@
     <script src="{{ asset('backend/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('backend/js/adminlte.min.js') }}"></script>
+    {{-- RECAPTCHA V3 --}}
+    <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+    <script>
+        function onClick(e) {
+          e.preventDefault();
+          grecaptcha.ready(function() {
+            grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: 'register'}).then(function(token) {
+                document.getElementById("g-recaptcha-response").value = token;
+                document.getElementById("registerForm").submit();
+            });
+          });
+        }
+    </script>
 
+    {{-- Get Offices By education_id --}}
     <script>
         $(document).ready(function() {
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
+use App\Rules\Recaptcha;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Providers\RouteServiceProvider;
@@ -51,14 +52,15 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'education_id'      => ['required',],
-            'office_id'         => ['required',],
-            'specialization_id' => ['required',],
-            'job_type_id'       => ['required'],
-            'section_type_id'   => ['required'],
-            'gender'            => ['required'],
-            'email'             => ['required', 'string', 'email', 'regex:/@moe\.gov.sa$/i', 'max:255', 'unique:users'],
-            'password'          => ['required', 'string', 'min:8', 'confirmed'],
+            'education_id'          => ['required',],
+            'office_id'             => ['required',],
+            'specialization_id'     => ['required',],
+            'job_type_id'           => ['required'],
+            'section_type_id'       => ['required'],
+            'gender'                => ['required'],
+            'email'                 => ['required', 'string', 'email', 'regex:/@moe\.gov.sa$/i', 'max:255', 'unique:users'],
+            'password'              => ['required', 'string', 'min:8', 'confirmed'],
+            'g-recaptcha-response'  => ['required', new Recaptcha],
         ]);
     }
 
