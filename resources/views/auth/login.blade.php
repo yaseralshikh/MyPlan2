@@ -39,7 +39,7 @@
                 @endif
                 <p class="login-box-msg">@lang('site.login_system')</p>
 
-                <form method="POST" action="{{ route('login') }}">
+                <form method="POST" action="{{ route('login') }}" id="registerForm">
                     @csrf
                     <div class="input-group mb-3">
                         <input type="email" class="form-control @error('email') is-invalid @enderror"
@@ -71,6 +71,17 @@
                         </span>
                         @enderror
                     </div>
+                    {{-- g-recaptcha-response --}}
+                    <div class="input-group mb-3">
+                        <input type="hidden" class="form-control @error('g-recaptcha-response') is-invalid @enderror" name="g-recaptcha-response" id="g-recaptcha-response" required>
+
+                        @error('g-recaptcha-response')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                    {{-- Register Button --}}
                     <div class="row">
                         <div class="col-8">
                             <div class="icheck-primary">
@@ -83,7 +94,7 @@
                         </div>
                         <!-- /.col -->
                         <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-sm btn-block">@lang('site.login')</button>
+                            <button type="button" onclick="onClick(event)" class="btn btn-primary btn-sm btn-block">@lang('site.login')</button>
                         </div>
                         <!-- /.col -->
                     </div>
@@ -120,6 +131,19 @@
     <script src="{{ asset('backend/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('backend/js/adminlte.min.js') }}"></script>
+    {{-- RECAPTCHA V3 --}}
+    <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+    <script>
+        function onClick(e) {
+            e.preventDefault();
+            grecaptcha.ready(function() {
+            grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: 'register'}).then(function(token) {
+                document.getElementById("g-recaptcha-response").value = token;
+                document.getElementById("registerForm").submit();
+            });
+            });
+        }
+    </script>
 </body>
 
 </html>
