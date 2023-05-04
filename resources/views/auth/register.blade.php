@@ -242,7 +242,7 @@
                         </div>
                         <!-- /.col -->
                         <div class="col-4">
-                            <button type="button" onclick="onClick(event)" class="btn btn-primary btn-block">{{ __('site.registerBtn')}}</button>
+                            <button type="button" onclick="onClick(event)" class="btn btn-primary btn-sm btn-block">{{ __('site.registerBtn')}}</button>
                         </div>
                         <!-- /.col -->
                     </div>
