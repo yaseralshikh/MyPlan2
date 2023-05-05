@@ -78,6 +78,9 @@ class Dashboard extends Component
                     $pdf = PDF::loadView('livewire.backend.dashboard.emptySchools_pdf',[
                         'tasks' => $tasks,
                         'semester' => $semester,
+                    ],[],[
+                        'format' => 'A4-P',
+                        'orientation' => 'P'
                     ]);
 
                     return $pdf->stream('tasks');
@@ -139,7 +142,10 @@ class Dashboard extends Component
 
                     $pdf = PDF::loadView('livewire.backend.dashboard.usersPlans_pdf',[
                         'users' => $users ,
-                        'semester' => $semester ,
+                        'semester' => $semester
+                    ],[],[
+                        'format' => 'A4-L',
+                        'orientation' => 'L'
                     ]);
 
                     return $pdf->stream('users');
