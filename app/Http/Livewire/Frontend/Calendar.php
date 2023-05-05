@@ -379,9 +379,13 @@ class Calendar extends Component
 
     public function getLevelsData()
     {
-        $officeId = $this->office_id ? $this->office_id : auth()->user()->office_id;
+        $user_office_id = auth()->user()->office_id;
+        $officeId = $this->office_id ? $this->office_id : $user_office_id;
 
-        $this->levels = Level::with('tasks')->whereHas('tasks', function ($query) use ($officeId) {$query->where('office_id', $officeId);})->get();
+        $this->levels = Level::whereIn('id', [1,2,3,4,5,6, $user_office_id == $officeId ? 7 : ''])
+            ->whereHas('tasks', function ($query) use ($officeId) {
+            $query->where('office_id', $officeId);})
+            ->get();
     }
 
     public function getTaskesData()
@@ -397,19 +401,23 @@ class Calendar extends Component
 
     public function render()
     {
-        if (auth()->user()->gender == 1) {
-            $office_gender = [1, 2, 3, 4, 5, 6, auth()->user()->office->id];
-        } else {
-            $office_gender = [7, 8, 9, 10, 12, auth()->user()->office->id];
-        }
+        $education_offices = Office::where('office_type', 1)
+            ->where('education_id', auth()->user()->office->education->id)
+            ->pluck('id')
+            ->toArray();
 
-        $offices = Office::whereStatus(true)->whereIn('id', $office_gender)->where('education_id', auth()->user()->office->education->id)->get();
+        $offices = Office::whereStatus(true)
+            ->where('gender', auth()->user()->gender)
+            ->whereIn('id', array_merge($education_offices, [auth()->user()->office->id]))
+            ->get();
 
         $levels = $this->getLevelsData();
 
         $tasks = $this->getTaskesData();
 
-        $specializations = Specialization::whereStatus(true)->orderBy('name', 'asc')->get();
+        $specializations = Specialization::whereStatus(true)
+            ->orderBy('name', 'asc')
+            ->get();
 
         return view('livewire.frontend.calendar', compact(
             'offices',

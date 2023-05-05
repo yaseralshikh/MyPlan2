@@ -242,15 +242,7 @@ class Dashboard extends Component
         $eventsTaskCount = Event::whereStatus(1)->where('office_id', $byOffice)->where('semester_id', $bySemester)->whereHas('task', function ($q) {$q->where('name','مكلف بمهمة' );})->count();
         $schoolsCount = Task::where('office_id', $byOffice)->whereStatus(1)->whereNotIn('level_id',[6,7])->count();
 
-        // for select optins
-
-        if (auth()->user()->gender == 1) {
-            $office_gender = [1, 2, 3, 4, 5, 6, auth()->user()->office->id];
-        } else {
-            $office_gender = [7, 8, 9, 10, 12, auth()->user()->office->id];
-        }
-
-        $offices = Office::whereStatus(true)->whereIn('id', $office_gender)->where('education_id', auth()->user()->office->education->id)->get();
+        $offices = Office::whereStatus(true)->where('gender', auth()->user()->gender)->where('education_id', auth()->user()->office->education->id)->get();
         $semesters =  Semester::whereStatus(true)->get();
         $levels = Level::all();
 

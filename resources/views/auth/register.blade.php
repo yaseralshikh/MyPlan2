@@ -32,7 +32,7 @@
                     @csrf
                     <!-- Name -->
                     <div class="input-group mb-3">
-                        <input type="text" id="name" class="form-control @error('name') is-invalid @enderror"
+                        <input dir="rtl" type="text" id="name" class="form-control @error('name') is-invalid @enderror"
                             placeholder="@lang('site.fullName')" name="name" value="{{ old('name') }}" required
                             autocomplete="name" autofocus>
                         <div class="input-group-append">

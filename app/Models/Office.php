@@ -21,6 +21,8 @@ class Office extends Model
         'assistant_signature_path',
         'assistant2_signature_path',
         'education_id',
+        'office_type',
+        'gender',
         'status',
     ];
 

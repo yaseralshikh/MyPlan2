@@ -72,8 +72,7 @@
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="save">
-
-                        @if(!in_array(auth()->user()->office->id, [1,2,3,4,5,6,7,8,9,10,11,12]))
+                        @if(auth()->user()->office->office_type == 0)
                             <!-- Modal offices -->
                             <div dir="rtl"  class="form-group mb-3" wire:ignore.self>
                                 <label for="office_id" class="col-form-label">@lang('site.offices') :</label>
@@ -186,7 +185,7 @@
                 <div class="modal-body">
                     <form wire:submit.prevent="update">
 
-                        @if(!in_array(auth()->user()->office->id, [1,2,3,4,5,6,7,8,9,10,11,12]))
+                        @if(auth()->user()->office->office_type == 0)
                             <!-- Modal-Edit offices -->
                             <div dir="rtl"  class="form-group mb-3" wire:ignore.self>
                                 <label for="office_id_edit" class="col-form-label">@lang('site.offices') :</label>
