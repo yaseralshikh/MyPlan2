@@ -49,7 +49,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="#"
+                    <a href="{{ route('admin.users') }}"
                         class="nav-link {{ request()->is('admin/users') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-users"></i>
                         <p>

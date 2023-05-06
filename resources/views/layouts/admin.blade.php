@@ -38,7 +38,9 @@
         <link rel="stylesheet" href="{{ asset('backend/css/dataTables.bootstrap4.min.css') }}">
         <link rel="stylesheet" href="{{ asset('backend/css/buttons.dataTables.min.css') }}">
         {{-- sortable-tablesort --}}
-        {{-- <link href="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@latest/sortable.min.css" rel="stylesheet" /> --}}
+        <!-- This will add arrows, as well as support for .no-sort and .indicator-left -->
+        <link href="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@latest/sortable-base.min.css" rel="stylesheet" />
+
         @yield('style')
         <style>
             body{
@@ -93,7 +95,7 @@
         <x-livewire-alert::scripts />
         <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
         {{-- sortable-tablesort --}}
-        {{-- <script src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@latest/sortable.min.js"></script> --}}
+        <script src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@latest/sortable.min.js"></script>
         @yield('script')
         {{-- @livewireChartsScripts --}}
     </body>

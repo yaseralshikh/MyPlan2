@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OfficeDropdownController;
+use App\Http\Livewire\Backend\Users\Users;
 use App\Http\Livewire\Backend\Dashboard\Dashboard;
 
 /*
@@ -33,4 +34,5 @@ Route::group(['middleware' => ['auth', 'verified']], function (){
 //Backend
 Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'role:admin|superadmin']], function (){
     Route::get('/', Dashboard::class)->name('dashboard');
+    Route::get('users', Users::class)->name('users');
 });
