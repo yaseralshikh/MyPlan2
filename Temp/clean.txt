@@ -9,7 +9,7 @@ php artisan optimize
 composer dump-autoload
 --------------
 git add .
-git commit -m "Constructed index Dashboard"
+git commit -m "Constructed index Dashboard"  / customize backend Dashboard system
 git push -u origin Dashboard
 git status
 

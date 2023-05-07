@@ -55,6 +55,7 @@ class Users extends Component
         $this->alert('success', __('site.updateRoleSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  1500,
+            'timerProgressBar' => true,
             'toast'  =>  true,
             'text'  =>  null,
             'showCancelButton'  =>  false,
@@ -96,6 +97,7 @@ class Users extends Component
         $this->alert('success', __('site.activeSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
+            'timerProgressBar' => true,
             'toast'  =>  true,
             'text'  =>  null,
             'showCancelButton'  =>  false,
@@ -114,6 +116,7 @@ class Users extends Component
         $this->alert('success', __('site.inActiveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
+            'timerProgressBar' => true,
             'toast'  =>  true,
             'text'  =>  null,
             'showCancelButton'  =>  false,
@@ -137,6 +140,7 @@ class Users extends Component
         $this->alert('success', __('site.deleteSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
+            'timerProgressBar' => true,
             'toast'  =>  true,
             'text'  =>  null,
             'showCancelButton'  =>  false,
@@ -221,6 +225,7 @@ class Users extends Component
             $this->alert('success', __('site.deleteSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
+                'timerProgressBar' => true,
                 'toast'  =>  true,
                 'text'  =>  null,
                 'showCancelButton'  =>  false,
@@ -230,6 +235,7 @@ class Users extends Component
             $message = $this->alert('error', $th->getMessage(), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
+                'timerProgressBar' => true,
                 'toast'  =>  true,
                 'text'  =>  null,
                 'showCancelButton'  =>  false,

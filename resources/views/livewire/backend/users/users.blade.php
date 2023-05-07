@@ -125,7 +125,7 @@
                     @endif
 
                     <div class="table-responsive">
-                        <table id="example2" class="table text-center table-bordered table-hover dataTable dtr-inline sortable"
+                        <table id="example2" class="table text-center table-bordered table-hover dtr-inline sortable"
                             aria-describedby="example2_info">
                             <thead class="bg-light">
                                 <tr>
@@ -218,7 +218,7 @@
 
                                 @empty
                                 <tr>
-                                    <td colspan="9" class="text-center">@lang('site.noDataFound')</td>
+                                    <td colspan="10" class="text-center">@lang('site.noDataFound')</td>
                                 </tr>
                                 @endforelse
                             </tbody>

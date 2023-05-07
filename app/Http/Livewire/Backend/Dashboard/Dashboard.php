@@ -92,6 +92,7 @@ class Dashboard extends Component
                 $this->alert('error', __('site.noDataFound'), [
                     'position'  =>  'center',
                     'timer'  =>  3000,
+                    'timerProgressBar' => true,
                     'toast'  =>  true,
                     'text'  =>  null,
                     'showCancelButton'  =>  false,
@@ -103,6 +104,7 @@ class Dashboard extends Component
             $message = $this->alert('error', $th->getMessage(), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
+                'timerProgressBar' => true,
                 'toast'  =>  true,
                 'text'  =>  null,
                 'showCancelButton'  =>  false,
@@ -157,6 +159,7 @@ class Dashboard extends Component
                 $this->alert('error', __('site.noDataFound'), [
                     'position'  =>  'center',
                     'timer'  =>  3000,
+                    'timerProgressBar' => true,
                     'toast'  =>  true,
                     'text'  =>  null,
                     'showCancelButton'  =>  false,
@@ -169,6 +172,7 @@ class Dashboard extends Component
             $message = $this->alert('error', $th->getMessage(), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
+                'timerProgressBar' => true,
                 'toast'  =>  true,
                 'text'  =>  null,
                 'showCancelButton'  =>  false,
