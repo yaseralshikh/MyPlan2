@@ -315,7 +315,7 @@
                                     <div class="shadow rounded p-4 border">
                                         <div class="table-responsive">
                                             <table id="example1"
-                                                class="table text-center table-bordered table-hover dataTable dtr-inline display nowrap"
+                                                class="table text-center table-bordered table-hover dtr-inline display nowrap"
                                                 aria-describedby="example1_info" style="width:100%">
                                                 <thead class="bg-light">
                                                     <tr>
@@ -434,7 +434,7 @@
                                 <div class="shadow rounded p-4 border">
                                     <div class="table-responsive">
                                         <table id="example2"
-                                            class="table text-center table-bordered table-hover dataTable dtr-inline display nowrap"
+                                            class="table text-center table-bordered table-hover dtr-inline display nowrap"
                                             aria-describedby="example2_info" style="width:100%">
                                             <thead class="bg-light">
                                                 <tr>
