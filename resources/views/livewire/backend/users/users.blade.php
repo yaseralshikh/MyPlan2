@@ -147,12 +147,12 @@
                                     <th class="align-middle">
                                         @lang('site.sectionType')
                                     </th>
-                                    <th class="align-middle">@lang('site.role')</th>
+                                    <th class="align-middle no-sort">@lang('site.role')</th>
                                     <th class="align-middle">@lang('site.emailVerified')</th>
                                     <th class="align-middle">
                                         @lang('site.status')
                                     </th>
-                                    <th class="align-middle" colspan="2">@lang('site.action')</th>
+                                    <th class="align-middle no-sort" colspan="2">@lang('site.action')</th>
                                 </tr>
                             </thead>
                             <tbody>

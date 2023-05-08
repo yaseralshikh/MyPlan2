@@ -35,7 +35,7 @@ class EmptyTasksExport implements FromCollection, WithHeadings, WithMapping, Sho
         $tasks = Task::whereStatus(true)->where('office_id', $this->office_id)->whereIn('level_id', [1, 2, 3, 4, 5, 6])
             ->withCount([
                 'events' => function ($query) use ($bySemester) {
-                    $query->where('semester_id', $bySemester);
+                    $query->where('semester_id', $bySemester)->where('office_id', $this->office_id);
                 },
             ])
             ->having('events_count', '=', 0)

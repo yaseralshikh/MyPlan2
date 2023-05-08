@@ -38,7 +38,7 @@ class Dashboard extends Component
     protected $emptySchoolQueryString = ['emptySchoolSearchString' => ['except' => '']];
 
     public $paginateValue = 20;
-    public $emptySchoolsPaginateValue = 50;
+    public $emptySchoolsPaginateValue = 30;
 
     public function semesterActive()
     {
@@ -49,7 +49,9 @@ class Dashboard extends Component
     public function emptySchoolsExportExcel()
     {
         $bySemester = $this->bySemester ? $this->bySemester : $this->semesterActive();
-        return Excel::download(new EmptyTasksExport($bySemester,$this->byOffice ? $this->byOffice : auth()->user()->office_id), 'tasks.xlsx');
+        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
+
+        return Excel::download(new EmptyTasksExport($bySemester, $byOffice), 'tasks.xlsx');
     }
 
     public function emptySchoolsExportPDF()
@@ -57,13 +59,14 @@ class Dashboard extends Component
         try {
 
             $bySemester = $this->bySemester  ? $this->bySemester : $this->semesterActive();
+            $byOffice   = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
 
             $semester = Semester::findOrFail($bySemester);
 
-            $tasks = Task::whereStatus(true)->where('office_id' , $this->byOffice ? $this->byOffice : auth()->user()->office_id)->whereIn('level_id', [1,2,3,4,5,6])
+            $tasks = Task::whereStatus(true)->where('office_id' , $byOffice)->whereIn('level_id', [1,2,3,4,5,6])
             ->withCount([
-                'events' => function ($query) use($bySemester) {
-                    $query->where('semester_id', $bySemester);
+                'events' => function ($query) use($bySemester, $byOffice) {
+                    $query->where('semester_id', $bySemester)->where('office_id' , $byOffice);
                 }
             ])
             ->having('events_count', '=', 0)
@@ -118,7 +121,9 @@ class Dashboard extends Component
     public function UsersPlansExportExcel()
     {
         $bySemester = $this->bySemester ? $this->bySemester : $this->semesterActive();
-        return Excel::download(new UsersPlansExport($bySemester,$this->byOffice ? $this->byOffice : auth()->user()->office_id), 'users.xlsx');
+        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
+
+        return Excel::download(new UsersPlansExport($bySemester, $byOffice), 'users.xlsx');
     }
 
     public function UsersPlansExportPDF()
@@ -228,6 +233,7 @@ class Dashboard extends Component
         $emptySchoolsPaginateValue = $this->emptySchoolsPaginateValue;
         $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
         $bySemester = $this->bySemester ? $this->bySemester : $this->semesterActive();
+        //$byLevel = $this->byLevel;
 
         // for users plans
         $users = User::whereStatus(true)->where('office_id', $byOffice)->with([
@@ -242,25 +248,35 @@ class Dashboard extends Component
         $chartData = $this->getChartData();
         $this->dispatchBrowserEvent('refreshEventChart', ['refresh' => true , 'data' => $chartData]);
 
-        // for counting dtat
+        // for counting Data
         $usersCount = User::where('office_id', $byOffice)->whereStatus(1)->count();
         $eventsCount = Event::whereStatus(1)->where('office_id', $byOffice)->where('semester_id', $bySemester)->count();
         $weeksCount = Week::whereStatus(1)->where('semester_id', $bySemester)->count();
-        $eventsSchoolCount = Event::whereStatus(1)->where('office_id', $byOffice)->where('semester_id', $bySemester)->whereHas('task', function ($q) {$q->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة']);})->count();
-        $eventsOfficeCount = Event::whereStatus(1)->where('office_id', $byOffice)->where('semester_id', $bySemester)->whereHas('task', function ($q) {$q->where('name','يوم مكتبي' );})->count();
-        $eventsTrainingCount = Event::whereStatus(1)->where('office_id', $byOffice)->where('semester_id', $bySemester)->whereHas('task', function ($q) {$q->where('name','برنامج تدريبي' );})->count();
-        $eventsTaskCount = Event::whereStatus(1)->where('office_id', $byOffice)->where('semester_id', $bySemester)->whereHas('task', function ($q) {$q->where('name','مكلف بمهمة' );})->count();
+        $eventsSchoolCount = Event::whereStatus(1)->where('office_id', $byOffice)->where('semester_id', $bySemester)
+            ->whereHas('task', function ($q) {$q->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة']);})->count();
+        $eventsOfficeCount = Event::whereStatus(1)->where('office_id', $byOffice)->where('semester_id', $bySemester)
+            ->whereHas('task', function ($q) {$q->where('name','يوم مكتبي' );})->count();
+        $eventsTrainingCount = Event::whereStatus(1)->where('office_id', $byOffice)->where('semester_id', $bySemester)
+            ->whereHas('task', function ($q) {$q->where('name','برنامج تدريبي' );})->count();
+        $eventsTaskCount = Event::whereStatus(1)->where('office_id', $byOffice)->where('semester_id', $bySemester)
+            ->whereHas('task', function ($q) {$q->where('name','مكلف بمهمة' );})->count();
         $schoolsCount = Task::where('office_id', $byOffice)->whereStatus(1)->whereNotIn('level_id',[6,7])->count();
 
-        $offices = Office::whereStatus(true)->where('gender', auth()->user()->gender)->where('education_id', auth()->user()->office->education->id)->get();
+        // for Data tables
+        $offices = Office::whereStatus(true)
+            ->where('gender', auth()->user()->gender)
+            ->where('education_id', auth()->user()->office->education->id)
+            ->get();
+
         $semesters =  Semester::whereStatus(true)->get();
         $levels = Level::all();
 
         // for schools not visited by supervisors
-        $empty_schools = Task::whereStatus(true)->where('office_id', $byOffice)->whereIn('level_id', [1,2,3,4,5,6])
+        $empty_schools = Task::whereStatus(true)->where('office_id', $byOffice)
+        ->whereIn('level_id', [1,2,3,4,5,6])
         ->withCount([
-            'events' => function ($query) use($bySemester) {
-                $query->where('semester_id', $bySemester)->whereStatus(true)->Where('task_done', true);
+            'events' => function ($query) use($bySemester, $byOffice) {
+                $query->where('semester_id', $bySemester)->where('office_id', $byOffice);
             }
         ])
         ->having('events_count', '=', 0)
