@@ -58,7 +58,7 @@
                     </div>
                     <div class="input-group mb-3">
                         <input type="password" class="form-control @error('password') is-invalid @enderror"
-                            placeholder="@lang('site.password')" name="password" required
+                            placeholder="@lang('site.password')" name="password"  id="password" required
                             autocomplete="current-password">
                         <div class="input-group-append">
                             <div class="input-group-text">
@@ -133,17 +133,37 @@
     <script src="{{ asset('backend/js/adminlte.min.js') }}"></script>
     {{-- RECAPTCHA V3 --}}
     <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+
     <script>
+        // On button submit clicked
         function onClick(e) {
-            console.log(e);
             e.preventDefault();
             grecaptcha.ready(function() {
-            grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: 'register'}).then(function(token) {
-                document.getElementById("g-recaptcha-response").value = token;
-                document.getElementById("registerForm").submit();
+                grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: 'register'}).then(function(token) {
+                    document.getElementById("g-recaptcha-response").value = token;
+                    document.getElementById("registerForm").submit();
+                });
             });
+        };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // On Textbox password pressed enter
+            const textBox = document.getElementById("password");
+
+            textBox.addEventListener("keyup", function(event) {
+                event.preventDefault();
+                // Check if the "Enter" key was pressed
+                if (event.key === "Enter") {
+                    grecaptcha.ready(function() {
+                        grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: 'register'}).then(function(token) {
+                            document.getElementById("g-recaptcha-response").value = token;
+                            document.getElementById("registerForm").submit();
+                        });
+                    });
+                }
             });
-        }
+        });
     </script>
 </body>
 

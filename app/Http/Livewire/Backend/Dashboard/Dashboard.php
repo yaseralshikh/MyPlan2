@@ -272,6 +272,7 @@ class Dashboard extends Component
         $levels = Level::all();
 
         // for schools not visited by supervisors
+
         $empty_schools = Task::whereStatus(true)->where('office_id', $byOffice)
         ->whereIn('level_id', [1,2,3,4,5,6])
         ->withCount([

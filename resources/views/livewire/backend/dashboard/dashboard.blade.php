@@ -237,124 +237,126 @@
                     <!-- /.card -->
                 </section>
 
-                {{-- Empty Tasks Table --}}
-                <section class="col-lg-12 connectedSortable">
-                    <div class="card card-primary card-outline">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fa fa-table"></i>
-                                @lang('site.emptyTasks')
-                            </h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-
-                            <div class="form-group d-flex justify-content-between align-items-center">
-
-                                <label class="flex-wrap"  style="width: 200px;">
-                                    @lang('site.totalRecord', ['name' => 'المدارس']) : &nbsp{{ $empty_schools->total() }}
-                                </label>
-
-                                <div>
-                                    <select dir="rtl" wire:model="emptySchoolsPaginateValue" class="form-control">
-                                        <option value="30" selected>30</option>
-                                        <option value="100" selected>100</option>
-                                        <option value="200" selected>200</option>
-                                        <option value="20000" selected>@lang('site.all')</option>
-                                    </select>
+                {{-- Empty Tasks ( Schools) Table --}}
+                @if (!$empty_schools->total() == 0)
+                    <section class="col-lg-12 connectedSortable">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fa fa-table"></i>
+                                    @lang('site.emptyTasks')
+                                </h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
                                 </div>
+                            </div>
+                            <div class="card-body">
 
-                                {{-- search and Export PDF & EXCEL --}}
-                                <div class="input-group" style="width: 350px;">
+                                <div class="form-group d-flex justify-content-between align-items-center">
 
-                                    <div class="card-tools">
-                                        <div class="btn-group pr-2">
-                                            <div class="pl-5">
-                                                {{-- Export Excel --}}
-                                                <a href="#"
-                                                    class="btn btn-outline-light hover-item"
-                                                    data-toggle="tooltip"
-                                                    data-placement="top"
-                                                    title="@lang('site.exportExcel')"
-                                                    wire:click.prevent="emptySchoolsExportExcel">
-                                                    <i class="fa fa-file-excel text-success"></i>
-                                                </a>
-                                                {{-- Export PDF --}}
-                                                <a href="#" class="btn btn-outline-light hover-item"
-                                                    data-toggle="tooltip"
-                                                    data-placement="top"
-                                                    title="@lang('site.exportPDF')"
-                                                    wire:click.prevent="emptySchoolsExportPDF">
-                                                    <i class="fa fa-file-pdf text-danger"></i>
-                                                </a>
+                                    <label class="flex-wrap"  style="width: 200px;">
+                                        @lang('site.totalRecord', ['name' => 'المدارس']) : &nbsp{{ $empty_schools->total() }}
+                                    </label>
+
+                                    <div>
+                                        <select dir="rtl" wire:model="emptySchoolsPaginateValue" class="form-control">
+                                            <option value="30" selected>30</option>
+                                            <option value="100" selected>100</option>
+                                            <option value="200" selected>200</option>
+                                            <option value="20000" selected>@lang('site.all')</option>
+                                        </select>
+                                    </div>
+
+                                    {{-- search and Export PDF & EXCEL --}}
+                                    <div class="input-group" style="width: 350px;">
+
+                                        <div class="card-tools">
+                                            <div class="btn-group pr-2">
+                                                <div class="pl-5">
+                                                    {{-- Export Excel --}}
+                                                    <a href="#"
+                                                        class="btn btn-outline-light hover-item"
+                                                        data-toggle="tooltip"
+                                                        data-placement="top"
+                                                        title="@lang('site.exportExcel')"
+                                                        wire:click.prevent="emptySchoolsExportExcel">
+                                                        <i class="fa fa-file-excel text-success"></i>
+                                                    </a>
+                                                    {{-- Export PDF --}}
+                                                    <a href="#" class="btn btn-outline-light hover-item"
+                                                        data-toggle="tooltip"
+                                                        data-placement="top"
+                                                        title="@lang('site.exportPDF')"
+                                                        wire:click.prevent="emptySchoolsExportPDF">
+                                                        <i class="fa fa-file-pdf text-danger"></i>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    {{-- search text box --}}
-                                    <input type="search" wire:model="emptySchoolSearchString" class="form-control"
-                                    placeholder="@lang('site.searchFor')" value="">
-                                    <div class="input-group-append">
-                                        <button type="submit" class="btn btn-default">
-                                            <i class="fa fa-search"></i>
-                                        </button>
+                                        {{-- search text box --}}
+                                        <input type="search" wire:model="emptySchoolSearchString" class="form-control"
+                                        placeholder="@lang('site.searchFor')" value="">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-default">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+
                                     </div>
 
                                 </div>
 
-                            </div>
-
-                            {{-- Details Tasks Table --}}
-                            <div class="table-responsive" dir="rtl">
-                                <div class="shadow rounded p-4 border">
-                                    <div class="table-responsive">
-                                        <table id="example1"
-                                            class="table text-center table-bordered table-hover dtr-inline display nowrap"
-                                            aria-describedby="example1_info" style="width:100%">
-                                            <thead class="bg-light">
-                                                <tr>
-                                                    <th colspan="4"><h4>@lang('site.emptyTasks')</h4></th>
-                                                </tr>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>@lang('site.school')</th>
-                                                    <th>@lang('site.level')</th>
-                                                    <th>@lang('site.visitedCount')</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @forelse ($empty_schools as $school)
-                                                <tr>
-                                                    <td class="bg-light">{{ $loop->iteration }}</td>
-                                                    <td>{{ $school->name }}</td>
-                                                    <td>{{ $school->level->name }}</td>
-                                                    <td class="text-red">{{ $school->events_count }}</td>
-                                                </tr>
-                                                @empty
-                                                <tr>
-                                                    <td colspan="4" class="text-center">@lang('site.noDataFound')</td>
-                                                </tr>
-                                                @endforelse
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                <td colspan="10">
-                                                        {!! $empty_schools->appends(request()->all())->links() !!}
-                                                </td>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
+                                {{-- Details Tasks Table --}}
+                                <div class="table-responsive" dir="rtl">
+                                    <div class="shadow rounded p-4 border">
+                                        <div class="table-responsive">
+                                            <table id="example1"
+                                                class="table text-center table-bordered table-hover dtr-inline display nowrap"
+                                                aria-describedby="example1_info" style="width:100%">
+                                                <thead class="bg-light">
+                                                    <tr>
+                                                        <th colspan="4"><h4>@lang('site.emptyTasks')</h4></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>@lang('site.school')</th>
+                                                        <th>@lang('site.level')</th>
+                                                        <th>@lang('site.visitedCount')</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @forelse ($empty_schools as $school)
+                                                    <tr>
+                                                        <td class="bg-light">{{ $loop->iteration }}</td>
+                                                        <td>{{ $school->name }}</td>
+                                                        <td>{{ $school->level->name }}</td>
+                                                        <td class="text-red">{{ $school->events_count }}</td>
+                                                    </tr>
+                                                    @empty
+                                                    <tr>
+                                                        <td colspan="4" class="text-center">@lang('site.noDataFound')</td>
+                                                    </tr>
+                                                    @endforelse
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                    <td colspan="10">
+                                                            {!! $empty_schools->appends(request()->all())->links() !!}
+                                                    </td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- /.card -->
-                </section>
+                        <!-- /.card -->
+                    </section>
+                @endif
 
                 <!-- Table for users Events plan -->
                 <section class="col-lg-12 connectedSortable">
@@ -470,11 +472,11 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                  <td colspan="10">
+                                                <td colspan="10">
                                                         {!! $users->appends(request()->all())->links() !!}
-                                                  </td>
+                                                </td>
                                                 </tr>
-                                              </tfoot>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
