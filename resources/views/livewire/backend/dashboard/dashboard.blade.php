@@ -42,6 +42,7 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="col-lg-6 col-6">
                     {{-- Office Filter --}}
                     @role('superadmin')
@@ -497,9 +498,12 @@
         <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
         <script>
+
             $(document).ready(function(){
                 // for chartData
                 const chart_data = @js($chartData);
+
+                const current_semester_name = '{{ $current_semester_name }}';
 
                 const [names, counts, need_cares] = chart_data;
 
@@ -515,7 +519,7 @@
                         renderTo: 'highchart',
                     },
                     title: {
-                        text: 'المهام المنفذة خلال الفصل الدراسي',
+                        text: 'المهام المنفذة خلال ' + current_semester_name,
                         format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
                         useHTML: true,
                     },
@@ -530,7 +534,7 @@
                     yAxis: {
                         min: 0,
                         title: {
-                            text: 'عدد المهام'
+                            text: 'عدد التكرار'
                         },
                         format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
                         useHTML: true,
@@ -557,7 +561,7 @@
                     },
                     colors: colors,
                     series: [{
-                        name: 'التكرار ',
+                        name: 'المهام المنفذة',
                         data: counts,
                         cursor: 'pointer',
                         events: {
@@ -592,9 +596,12 @@
 
                 // Listener for refresh Calendar
                 document.addEventListener('refreshEventChart', function({detail}) {
+
                     if (detail.refresh) {
 
                         const chart_data2 = JSON.parse(detail.data);
+
+                        const current_semester_name = detail.current_semester_name;
 
                         const [names, counts, need_cares] = chart_data2;
 
@@ -610,7 +617,7 @@
                                 renderTo: 'highchart',
                             },
                             title: {
-                                text: 'المهام المنفذة خلال الفصل الدراسي',
+                                text: 'المهام المنفذة خلال ' + current_semester_name,
                                 format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
                                 useHTML: true,
                             },
@@ -625,7 +632,7 @@
                             yAxis: {
                                 min: 0,
                                 title: {
-                                    text: 'عدد المهام'
+                                    text: 'عدد التكرار'
                                 },
                                 format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
                                 useHTML: true,
@@ -652,7 +659,7 @@
                             },
                             colors: colors,
                             series: [{
-                                name: 'التكرار ',
+                                name: 'المهام المنفذة',
                                 data: counts,
                                 cursor: 'pointer',
                                 events: {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Backend\Dashboard;
 
+use PDF;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Week;
@@ -15,7 +16,6 @@ use App\Exports\EmptyTasksExport;
 use App\Exports\UsersPlansExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use PDF;
 
 class Dashboard extends Component
 {
@@ -24,19 +24,22 @@ class Dashboard extends Component
 
     protected $paginationTheme = 'bootstrap';
 
-
     public $byOffice = null; // filter bt Office
     public $bySemester = null; // filter bt Semester
     public $byLevel = 2; // filter bt Task Level
 
+    // for chart
     public $chartData = [];
 
+    // for search
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
+    // for empty School Search
     public $emptySchoolSearchString = null;
     protected $emptySchoolQueryString = ['emptySchoolSearchString' => ['except' => '']];
 
+    //for paginate
     public $paginateValue = 20;
     public $emptySchoolsPaginateValue = 30;
 
@@ -233,7 +236,6 @@ class Dashboard extends Component
         $emptySchoolsPaginateValue = $this->emptySchoolsPaginateValue;
         $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
         $bySemester = $this->bySemester ? $this->bySemester : $this->semesterActive();
-        //$byLevel = $this->byLevel;
 
         // for users plans
         $users = User::whereStatus(true)->where('office_id', $byOffice)->with([
@@ -246,7 +248,8 @@ class Dashboard extends Component
 
         // for chart
         $chartData = $this->getChartData();
-        $this->dispatchBrowserEvent('refreshEventChart', ['refresh' => true , 'data' => $chartData]);
+        $current_semester_name = Semester::where('id', $bySemester)->pluck('name')->first();
+        $this->dispatchBrowserEvent('refreshEventChart', ['refresh' => true , 'data' => $chartData, 'current_semester_name' => $current_semester_name]);
 
         // for counting Data
         $usersCount = User::where('office_id', $byOffice)->whereStatus(1)->count();
@@ -302,6 +305,7 @@ class Dashboard extends Component
             'eventsTrainingCount'   => $eventsTrainingCount,
             'eventsTaskCount'       => $eventsTaskCount,
             'eventsCount'           => $eventsCount,
+            'current_semester_name' => $current_semester_name,
 
         ])->layout('layouts.admin');
     }
