@@ -424,10 +424,14 @@
 
                     const checkbox = document.getElementById('drop-remove');
                     const tooltip = null;
+
                     // User variables
                     const userID = {{ auth()->user()->id }};
                     const userOffice_id = {{ auth()->user()->office_id }};
                     const userRole = {{ auth()->user()->roles[0]->id }};
+
+                    // for all events already has task
+                    const eventsHasTask = [];
 
                     const calendar = new FullCalendar.Calendar(calendarEl, {
                         themeSystem: 'bootstrap5',
@@ -447,6 +451,10 @@
                         selectOverlap: false,
                         eventOverlap:false,
 
+                        selectOverlap: function(event) {
+                            return !event.allDay;
+                        },
+
                         // Display event content
                         eventContent: function(info) {
                             return {
@@ -460,10 +468,15 @@
 
                         // Add new event
                         dateClick: function(info) {
-                            @this.start = info.dateStr;
-                            @this.end = info.dateStr;
 
-                            $('#createModal').modal('toggle');
+                            if (!eventsHasTask.includes(info.dateStr)) {
+
+                                @this.start = info.dateStr;
+                                @this.end = info.dateStr;
+                                $('#createModal').modal('toggle');
+
+                            }
+
                         },
 
                         // Add Multi Days
@@ -555,9 +568,20 @@
                             });
                         },
 
+                        // for checking the value of (info.event.start) to determine if the event has task.
+                        eventDidMount: function(info) {
+
+                            if (info.event.start) {
+                                // Get the start date of the event
+                                const start = info.event.start;
+                                // Format the start date using dayjs
+                                const formattedStart = dayjs(start).format('YYYY-MM-DD');
+
+                                return eventsHasTask.push(formattedStart);
+                            }
+                        },
                     });
 
-                    // for fill calendar
                     calendar.addEventSource({
                         url: '/api/calendar/events'
                     });
