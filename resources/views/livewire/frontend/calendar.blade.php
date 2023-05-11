@@ -489,44 +489,29 @@
                         // Edit event
                         eventClick: function({event}) {
 
-                            if (userID == event.extendedProps.user_id || userRole != 3) {
-
-                                if (event.extendedProps.status && userRole == 3) {
-
-                                    Swal.fire({
-                                        title: 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد',
-                                        timer: 2000,
-                                        timerProgressBar: true,
-                                        icon: 'error',
-                                        toast: true,
-                                        showConfirmButton: false,
-                                        position: 'center'
-                                    })
-
-                                } else {
-
-                                    @this.event_id      = event.id;
-                                    @this.office_id     = event.extendedProps.task.office_id;
-                                    @this.level_id      = event.extendedProps.task.level_id;
-                                    @this.task_id       = event.extendedProps.task_id;
-                                    @this.note          = event.extendedProps.note;
-                                    @this.start         = dayjs(event.start).format('YYYY-MM-DD');
-                                    @this.end           = dayjs(event.start).format('YYYY-MM-DD');
-
-                                    $('#editModal').modal('toggle');
-
-                                }
-
-                            } else {
+                            if (event.extendedProps.status) {
 
                                 Swal.fire({
-                                    title: 'لا تملك الصلاحية للتعديل !!',
+                                    title: 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد',
                                     timer: 2000,
+                                    timerProgressBar: true,
                                     icon: 'error',
                                     toast: true,
                                     showConfirmButton: false,
                                     position: 'center'
                                 })
+
+                            } else {
+
+                                @this.event_id      = event.id;
+                                @this.office_id     = event.extendedProps.task.office_id;
+                                @this.level_id      = event.extendedProps.task.level_id;
+                                @this.task_id       = event.extendedProps.task_id;
+                                @this.note          = event.extendedProps.note;
+                                @this.start         = dayjs(event.start).format('YYYY-MM-DD');
+                                @this.end           = dayjs(event.start).format('YYYY-MM-DD');
+
+                                $('#editModal').modal('toggle');
 
                             }
 
@@ -555,11 +540,11 @@
                         eventMouseEnter: function (info) {
                             $(info.el).tooltip({
                                 title: info.event.extendedProps.week.name + ' ( '
-                                        + info.event.extendedProps.semester.school_year  + ' ) ' + '<br />'
-                                        + info.event.extendedProps.task.name + '<br />'+ '<span class="text-info">'
-                                        + info.event.extendedProps.user.name + '</span>' + '<br />' + '<span class="text-warning">'
-                                        + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>')
-                                        + (info.event.extendedProps.task_done == 1 ? ' وتم التنفيذ' : '' + '</span>'),
+                                    + info.event.extendedProps.semester.school_year  + ' ) ' + '<br />'
+                                    + info.event.extendedProps.task.name + '<br />'+ '<span class="text-info">'
+                                    + info.event.extendedProps.user.name + '</span>' + '<br />' + '<span class="text-warning">'
+                                    + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>')
+                                    + (info.event.extendedProps.task_done == 1 ? ' وتم التنفيذ' : '' + '</span>'),
                                 html: true,
                                 content:'ssss',
                                 placement: 'top',
