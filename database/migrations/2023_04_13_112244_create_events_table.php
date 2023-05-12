@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('note')->nullable();
             $table->date('start');
             $table->date('end');
+            $table->unsignedTinyInteger('overlap')->default(0);
+            $table->string('display')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('week_id')->constrained();
             $table->foreignId('semester_id')->constrained();

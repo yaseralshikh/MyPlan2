@@ -15,6 +15,8 @@ class Event extends Model
         'note',
         'start',
         'end',
+        'overlap',
+        'display',
         'user_id',
         'week_id',
         'semester_id',
@@ -27,6 +29,11 @@ class Event extends Model
     public function status(): string
     {
         return $this->status ? __('site.permission') : __('site.unPermission');
+    }
+
+    public function overlap(): string
+    {
+        return $this->overlap ? __('site.active') : __('site.inActive');
     }
 
     public function user(): BelongsTo
