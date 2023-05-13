@@ -260,7 +260,7 @@ class Calendar extends Component
         Event::findOrFail($this->event_id)->delete();
 
         $this->dispatchBrowserEvent('closeModalEdit', ['close' => true]);
-        $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true]);
+        $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true, 'eventMoveOrRemoved' => $this->start]);
         $this->dispatchBrowserEvent('swal', [
             'title' => __('site.deleteSuccessfully'),
             'timer' => 3000,
@@ -356,7 +356,7 @@ class Calendar extends Component
         }
 
         $this->resetErrorBag();
-        $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true]);
+        $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true, 'eventMoveOrRemoved' => $oldEvent['start']]);
     }
 
     // update Level & Task Options ( Livewire )

@@ -431,7 +431,7 @@
                     const userRole = {{ auth()->user()->roles[0]->id }};
 
                     // for all events already has task
-                    const eventsHasTask = [];
+                    const calendarTasks = [];
 
                     const calendar = new FullCalendar.Calendar(calendarEl, {
                         themeSystem: 'bootstrap5',
@@ -461,23 +461,32 @@
                                 html: '<h6 style="font-weight: bold; color:blue">&nbsp&nbsp<i class="fa fa-calendar" aria-hidden="true"></i>&nbsp&nbsp'
                                     + info.event.extendedProps.task.name + '<span class="text-success">&nbsp&nbsp'
                                     + (info.event.extendedProps.status == 1 ? '<i class="fa fa-check" aria-hidden="true"></i>' : '')
-                                    + (info.event.extendedProps.task_done == 1 ? '<i class="fa fa-check" aria-hidden="true"></i>' : '')
-                                    + '</span> </h6>'
+                                    + (info.event.extendedProps.task_done == 1 ? '<i class="fa fa-check" aria-hidden="true"></i>' : '') + '</span> </h6>'
+                                    + '<div class="border-bottom bg-body-tertiary text-black fw-bolder text-center">' + (info.event.extendedProps.note ? info.event.extendedProps.note : '') + '</div>'
                             }
                         },
 
                         // Add new event
                         dateClick: function(info) {
 
-                            if (!eventsHasTask.includes(info.dateStr)) {
+                            if (!calendarTasks.includes(info.dateStr)) {
 
                                 @this.start = info.dateStr;
                                 @this.end = info.dateStr;
                                 $('#createModal').modal('toggle');
 
                             }
-
                         },
+
+                        // for checking the value of (info.event.start) to determine if the event has task.
+                        eventDidMount: function(info) {
+                            const all_Events_start = dayjs(info.event.start).format('YYYY-MM-DD');
+
+                            if (calendarTasks.indexOf(all_Events_start) == -1){
+                                calendarTasks.push(all_Events_start);
+                            }
+                        },
+
 
                         // Add Multi Days
                         // select: function(info) {
@@ -552,19 +561,6 @@
                                 container: 'body'
                             });
                         },
-
-                        // for checking the value of (info.event.start) to determine if the event has task.
-                        eventDidMount: function(info) {
-
-                            if (info.event.start) {
-                                // Get the start date of the event
-                                const start = info.event.start;
-                                // Format the start date using dayjs
-                                const formattedStart = dayjs(start).format('YYYY-MM-DD');
-
-                                return eventsHasTask.push(formattedStart);
-                            }
-                        },
                     });
 
                     calendar.addEventSource({
@@ -590,9 +586,16 @@
 
                     // Listener for refresh Calendar
                     document.addEventListener('refreshEventCalendar', function({detail}) {
+
+                        if (detail.eventMoveOrRemoved){
+                            const index = calendarTasks.indexOf(detail.eventMoveOrRemoved);
+                            calendarTasks.splice(index, 1);
+                        };
+
                         if (detail.refresh) {
                             calendar.refetchEvents();
-                        }
+                        };
+
                     });
 
                     // when the Localization Aria selected option changes, dynamically change the calendar option
