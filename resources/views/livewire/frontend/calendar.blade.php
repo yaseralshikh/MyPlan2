@@ -1,42 +1,44 @@
 <div>
 
     @push('style')
-        <style>
-            .fc .fc-toolbar {
-                display: flex;
-                flex-wrap: wrap;
-                /* justify-content: center; */
-                font-size: 14px;
-                border-radius: 5px;
-                padding: 5px 15px 5px 15px;
-                background-color: rgb(225, 245, 247);
-            }
+    <style>
+        .fc .fc-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            /* justify-content: center; */
+            font-size: 14px;
+            border-radius: 5px;
+            padding: 5px 15px 5px 15px;
+            background-color: rgb(225, 245, 247);
+        }
 
-            .fc .fc-col-header {
-                background-color: rgb(51, 81, 133);
-            }
+        .fc .fc-col-header {
+            background-color: rgb(51, 81, 133);
+        }
 
-            .fc-col-header-cell-cushion {
-                color: rgb(255, 254, 254);
-            }
+        .fc-col-header-cell-cushion {
+            color: rgb(255, 254, 254);
+        }
 
-            .fc-h-event .fc-event-main-frame {
-                display: block; /* for make fc-event-title-container expand */
-                padding: 0 1px;
-                white-space: normal;
-            }
+        .fc-h-event .fc-event-main-frame {
+            display: block;
+            /* for make fc-event-title-container expand */
+            padding: 0 1px;
+            white-space: normal;
+        }
 
-            .fc-daygrid-event {
-                white-space: normal !important;
-                align-items: normal !important;
-            }
-        </style>
+        .fc-daygrid-event {
+            white-space: normal !important;
+            align-items: normal !important;
+        }
+    </style>
 
     @endpush
 
     <div class="alert {{ auth()->user()->gender ? 'alert-success' : 'alert-danger' }} " dir="rtl" role="alert">
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button class="btn btn-dark" wire:click.prevent="editProfile({{ auth()->user()->id }})">@lang('site.profile')</button>
+            <button class="btn btn-dark"
+                wire:click.prevent="editProfile({{ auth()->user()->id }})">@lang('site.profile')</button>
         </div>
         <h4 class="alert-heading">ملاحظة :</h4>
         <ul class="list-group list-group-flush">
@@ -51,14 +53,16 @@
 
     {{-- Calender --}}
     @if (auth()->user()->office->allowed_create_plans)
-        <div id="calendar" wire:ignore></div>
+    <div id="calendar" wire:ignore></div>
     @else
-        <div class="card mb-3 text-center">
-            <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}" class="img-thumbnail border border-0 rounded mx-auto d-block mt-3 mb-3" alt="sorry">
-            <div class="card-body mb-3" dir="rtl">
-                <h2 class="card-text">المعذرة .. حسب توجيهات إدارة المكتب فقد تم إقفال إدخال الخطط من قبل المشرفين مؤقتاً وسيتم فتحها في وقت لاحق ، شكراُ على اهتمامكم .</h2>
-            </div>
+    <div class="card mb-3 text-center">
+        <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}"
+            class="img-thumbnail border border-0 rounded mx-auto d-block mt-3 mb-3" alt="sorry">
+        <div class="card-body mb-3" dir="rtl">
+            <h2 class="card-text">المعذرة .. حسب توجيهات إدارة المكتب فقد تم إقفال إدخال الخطط من قبل المشرفين مؤقتاً
+                وسيتم فتحها في وقت لاحق ، شكراُ على اهتمامكم .</h2>
         </div>
+    </div>
     @endif
 
     <!-- Create Event - Modal -->
@@ -73,40 +77,43 @@
                 <div class="modal-body">
                     <form wire:submit.prevent="save">
                         @if(auth()->user()->office->office_type == 0)
-                            <!-- Modal offices -->
-                            <div dir="rtl"  class="form-group mb-3" wire:ignore.self>
-                                <label for="office_id" class="col-form-label">@lang('site.offices') :</label>
-                                <select wire:model.defer="office_id" id="office_id" wire:change="OfficeOption($event.target.value)"
-                                    class="form-control fw-bold @error('office_id') is-invalid @enderror">
-                                    <option value="" hidden selected>@lang('site.choise', ['name' => 'مكتب التعليم / إدارة']) :</option>
-                                    @foreach ($offices as $office)
-                                        <option class="fw-bold {{ $loop->last ? 'bg-body-tertiary text-primary' : '' }}" value="{{ $office->id }}">{{ $office->name }}</option>
-                                    @endforeach
-                                </select>
+                        <!-- Modal offices -->
+                        <div dir="rtl" class="form-group mb-3" wire:ignore.self>
+                            <label for="office_id" class="col-form-label">@lang('site.offices') :</label>
+                            <select wire:model.defer="office_id" id="office_id"
+                                wire:change="OfficeOption($event.target.value)"
+                                class="form-control fw-bold @error('office_id') is-invalid @enderror">
+                                <option value="" hidden selected>@lang('site.choise', ['name' => 'مكتب التعليم /
+                                    إدارة']) :</option>
+                                @foreach ($offices as $office)
+                                <option class="fw-bold {{ $loop->last ? 'bg-body-tertiary text-primary' : '' }}"
+                                    value="{{ $office->id }}">{{ $office->name }}</option>
+                                @endforeach
+                            </select>
 
-                                @error('office_id')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
+                            @error('office_id')
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
                         @endif
 
                         <!-- Modal Levels -->
                         <div dir="rtl" class="form-group mb-3" wire:ignore.self>
                             <label for="level_id" class="col-form-label">@lang('site.level') :</label>
-                            <select wire:model.defer="level_id" wire:change="LevelOption($event.target.value)" id="level_id"
-                                class="form-control fw-bold @error('level_id') is-invalid @enderror">
+                            <select wire:model.defer="level_id" wire:change="LevelOption($event.target.value)"
+                                id="level_id" class="form-control fw-bold @error('level_id') is-invalid @enderror">
                                 <option value="" hidden selected>@lang('site.choise', ['name' => 'المرحلة']) :</option>
                                 @foreach ($levels as $level)
-                                    <option class="fw-bold" value="{{ $level->id }}">{{ $level->name }}</option>
+                                <option class="fw-bold" value="{{ $level->id }}">{{ $level->name }}</option>
                                 @endforeach
                             </select>
 
                             @error('level_id')
-                                <div class="invalid-feedback d-block">
-                                    {{ $message }}
-                                </div>
+                            <div class="invalid-feedback d-block">
+                                {{ $message }}
+                            </div>
                             @enderror
                         </div>
 
@@ -115,9 +122,10 @@
                             <label for="task_id" class="col-form-label">@lang('site.task') :</label>
                             <select wire:model.defer="task_id" id="task_id"
                                 class="form-control createSelect2bs4 @error('task_id') is-invalid @enderror">
-                                <option value="" hidden selected >&nbsp;&nbsp; @lang('site.choise', ['name' => 'المهمة']) :</option>
+                                <option value="" hidden selected>&nbsp;&nbsp; @lang('site.choise', ['name' => 'المهمة'])
+                                    :</option>
                                 @foreach ($tasks as $task)
-                                    <option value="{{ $task->id }}">&nbsp;&nbsp; {{ $task->name }}</option>
+                                <option value="{{ $task->id }}">&nbsp;&nbsp; {{ $task->name }}</option>
                                 @endforeach
                             </select>
 
@@ -151,7 +159,8 @@
                         </div>
 
                         {{-- Action --}}
-                        <div class="d-flex justify-content-between align-items-center modal-footer bg-body-tertiary border">
+                        <div
+                            class="d-flex justify-content-between align-items-center modal-footer bg-body-tertiary border">
                             <div>
                                 <button type="button" class="btn btn-secondary" wire:click="resetErrorMsg"
                                     data-bs-dismiss="modal">@lang('site.cancel')</button>
@@ -186,40 +195,43 @@
                     <form wire:submit.prevent="update">
 
                         @if(auth()->user()->office->office_type == 0)
-                            <!-- Modal-Edit offices -->
-                            <div dir="rtl"  class="form-group mb-3" wire:ignore.self>
-                                <label for="office_id_edit" class="col-form-label">@lang('site.offices') :</label>
-                                <select wire:model.defer="office_id" id="office_id_edit" wire:change="OfficeOption($event.target.value)"
-                                    class="form-control fw-bold @error('office_id') is-invalid @enderror">
-                                    <option value="" hidden selected>@lang('site.choise', ['name' => 'مكتب التعليم']) :</option>
-                                    @foreach ($offices as $office)
-                                        <option class="fw-bold {{ $loop->last ? 'bg-body-tertiary text-primary' : '' }}" value="{{ $office->id }}">{{ $office->name }}</option>
-                                    @endforeach
-                                </select>
+                        <!-- Modal-Edit offices -->
+                        <div dir="rtl" class="form-group mb-3" wire:ignore.self>
+                            <label for="office_id_edit" class="col-form-label">@lang('site.offices') :</label>
+                            <select wire:model.defer="office_id" id="office_id_edit"
+                                wire:change="OfficeOption($event.target.value)"
+                                class="form-control fw-bold @error('office_id') is-invalid @enderror">
+                                <option value="" hidden selected>@lang('site.choise', ['name' => 'مكتب التعليم']) :
+                                </option>
+                                @foreach ($offices as $office)
+                                <option class="fw-bold {{ $loop->last ? 'bg-body-tertiary text-primary' : '' }}"
+                                    value="{{ $office->id }}">{{ $office->name }}</option>
+                                @endforeach
+                            </select>
 
-                                @error('office_id')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
+                            @error('office_id')
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
                         @endif
 
                         <!-- Modal-Edit Levels -->
                         <div dir="rtl" class="form-group mb-3" wire:ignore.self>
                             <label for="level_id_edit" class="col-form-label">@lang('site.level') :</label>
-                            <select wire:model.defer="level_id" wire:change="LevelOption($event.target.value)" id="level_id_edit"
-                                class="form-control fw-bold @error('level_id') is-invalid @enderror">
+                            <select wire:model.defer="level_id" wire:change="LevelOption($event.target.value)"
+                                id="level_id_edit" class="form-control fw-bold @error('level_id') is-invalid @enderror">
                                 <option value="" hidden selected>@lang('site.choise', ['name' => 'المرحلة']) :</option>
                                 @foreach ($levels as $level)
-                                    <option class="fw-bold" value="{{ $level->id }}">{{ $level->name }}</option>
+                                <option class="fw-bold" value="{{ $level->id }}">{{ $level->name }}</option>
                                 @endforeach
                             </select>
 
                             @error('level_id')
-                                <div class="invalid-feedback d-block">
-                                    {{ $message }}
-                                </div>
+                            <div class="invalid-feedback d-block">
+                                {{ $message }}
+                            </div>
                             @enderror
                         </div>
 
@@ -228,9 +240,10 @@
                             <label for="task_id_edit" class="col-form-label">@lang('site.task') :</label>
                             <select wire:model.defer="task_id" id="task_id_edit"
                                 class="form-control editSelect2bs4 @error('task_id') is-invalid @enderror">
-                                <option value="" hidden selected >&nbsp;&nbsp; @lang('site.choise', ['name' => 'المهمة']) :</option>
+                                <option value="" hidden selected>&nbsp;&nbsp; @lang('site.choise', ['name' => 'المهمة'])
+                                    :</option>
                                 @foreach ($tasks as $task)
-                                    <option value="{{ $task->id }}">&nbsp;&nbsp; {{ $task->name }}</option>
+                                <option value="{{ $task->id }}">&nbsp;&nbsp; {{ $task->name }}</option>
                                 @endforeach
                             </select>
 
@@ -264,7 +277,8 @@
                         </div>
 
                         {{-- Action --}}
-                        <div class="d-flex justify-content-between align-items-center modal-footer bg-body-tertiary border">
+                        <div
+                            class="d-flex justify-content-between align-items-center modal-footer bg-body-tertiary border">
                             <div>
                                 <button type="button" class="btn btn-secondary" wire:click="resetErrorMsg"
                                     data-bs-dismiss="modal">@lang('site.cancel')</button>
@@ -280,7 +294,8 @@
 
     <!-- Modal Update Profile -->
 
-    <div class="modal fade" id="editProfile" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true" wire:ignore.self>
+    <div class="modal fade" id="editProfile" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true"
+        wire:ignore.self>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -382,13 +397,12 @@
 
     @push('script')
 
-        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.js'></script>
-        <script src="{{ asset('js/locales-all.min.js') }}"></script>
-        <script src="{{ asset('js/dayjs.min.js') }}"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.js'></script>
+    <script src="{{ asset('js/locales-all.min.js') }}"></script>
+    <script src="{{ asset('js/dayjs.min.js') }}"></script>
 
-        <script>
-
-            document.addEventListener('DOMContentLoaded', function() {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
 
                 // Create Modal variables
                 const createModalEl = document.getElementById('createModal');
@@ -649,7 +663,7 @@
 
             });
 
-        </script>
+    </script>
 
     @endpush
 

@@ -70,7 +70,7 @@
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
 
-                                    @role(['admin|superadmin'])
+                                    @role(['admin|superadmin|operationsmanager'])
                                         <a class="dropdown-item" href="{{ route('admin.dashboard') }}">@lang('site.dashboard')</a>
                                         <div class="dropdown-divider"></div>
                                     @endrole

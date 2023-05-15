@@ -30,6 +30,20 @@
             {{-- Office and Semester Filters --}}
             <div class="row">
                 <div class="col-lg-6 col-6">
+                    {{-- Office Filter --}}
+                    @role('superadmin|operationsmanager')
+                        <div class="d-inline pr-3">
+                            <select dir="rtl" wire:model="byOffice" class="form-control form-control-sm mr-5">
+                                <option value="" hidden selected>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
+                                @foreach ($offices as $office)
+                                    <option value="{{ $office->id }}">{{ $office->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endrole
+                </div>
+
+                <div class="col-lg-6 col-6">
                     {{-- Semester Filter --}}
                     <div class="d-inline pr-3">
                         <select dir="rtl" wire:model="bySemester" class="form-control form-control-sm mr-5">
@@ -41,20 +55,6 @@
                             @endforeach
                         </select>
                     </div>
-                </div>
-
-                <div class="col-lg-6 col-6">
-                    {{-- Office Filter --}}
-                    @role('superadmin')
-                        <div class="d-inline pr-3">
-                            <select dir="rtl" wire:model="byOffice" class="form-control form-control-sm mr-5">
-                                <option value="" hidden selected>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
-                                @foreach ($offices as $office)
-                                    <option value="{{ $office->id }}">{{ $office->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    @endrole
                 </div>
             </div>
 
@@ -449,6 +449,7 @@
                                                     <th>@lang('site.eventsOffice')</th>
                                                     <th>@lang('site.eventsTraining')</th>
                                                     <th>@lang('site.eventsTask')</th>
+                                                    <th>@lang('site.vacation')</th>
                                                     <th>@lang('site.eventsTotal')</th>
                                                 </tr>
                                             </thead>
@@ -463,6 +464,7 @@
                                                     <td>{{ $user->events->where('task.name','يوم مكتبي')->count() }}</td>
                                                     <td>{{ $user->events->where('task.name','برنامج تدريبي')->count() }}</td>
                                                     <td>{{ $user->events->where('task.name','مكلف بمهمة')->count() }}</td>
+                                                    <td>{{ $user->events->where('task.name','إجازة')->count() }}</td>
                                                     <td class="bg-light">{{ $user->events->count() }}</td>
                                                 </tr>
                                                 @empty

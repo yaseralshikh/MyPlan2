@@ -10,6 +10,7 @@ use App\Models\JobType;
 use Livewire\Component;
 use App\Models\Education;
 use App\Models\SectionType;
+use App\Exports\UsersExport;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\Specialization;
@@ -135,11 +136,11 @@ class Users extends Component
         DB::table('permission_user')->whereIn('user_id', $this->selectedRows)->delete();
 
         // delete selected users from database
-		User::whereIn('id', $this->selectedRows)->delete();
+        User::whereIn('id', $this->selectedRows)->delete();
 
         $this->alert('success', __('site.deleteSuccessfully'), [
             'position'  =>  'top-end',
-            'timer'  =>  3000,
+            'timer'  =>  2000,
             'timerProgressBar' => true,
             'toast'  =>  true,
             'text'  =>  null,
@@ -167,6 +168,45 @@ class Users extends Component
         $this->dispatchBrowserEvent('show-form');
     }
 
+    // Create new user
+
+    public function createUser()
+    {
+        $validatedData = Validator::make($this->data, [
+            'name'                  => ['required', 'string', 'max:255'],
+            'email'                 => ['required', 'string', 'email', 'regex:/@moe\.gov.sa$/i', 'max:50', 'unique:users'],
+            'office_id'             => 'nullable',
+            'specialization_id'     => 'required',
+            'job_type_id'           => 'required',
+            'section_type_id'       => 'required',
+            'gender'                => 'required',
+            'password'              => 'required|min:8|confirmed',
+            'status'                => 'required',
+        ])->validate();
+
+        $validatedData['password']      = bcrypt($validatedData['password']);
+        $validatedData['education_id']  = auth()->user()->education_id;
+
+        if(empty($validatedData['office_id'])) {
+            $validatedData['office_id'] = auth()->user()->office_id;
+        }
+
+        $user = User::create($validatedData);
+        $user->addRole(4);
+
+        $this->dispatchBrowserEvent('hide-form');
+
+        $this->alert('success', __('site.saveSuccessfully'), [
+            'position'  =>  'top-end',
+            'timer'  =>  2000,
+            'timerProgressBar' => true,
+            'toast'  =>  true,
+            'text'  =>  null,
+            'showCancelButton'  =>  false,
+            'showConfirmButton'  =>  false
+        ]);
+    }
+
     // show Update new user form modal
 
     public function edit(User $user)
@@ -180,6 +220,46 @@ class Users extends Component
 		$this->data = $user->toArray();
 
 		$this->dispatchBrowserEvent('show-form');
+    }
+
+    // Update User
+
+    public function updateUser()
+    {
+        $validatedData = Validator::make($this->data, [
+            'name'                  => 'required',
+            'email'                 => ['required', 'string', 'email', 'regex:/@moe\.gov.sa$/i', 'max:50', 'unique:users,email,'.$this->user->id],
+            'office_id'             => 'nullable',
+            'specialization_id'     => 'required',
+            'job_type_id'           => 'required',
+            'section_type_id'       => 'required',
+            'gender'                => 'required',
+            'status'                => 'required',
+            'password'              => 'sometimes|min:8|confirmed',
+            'email_verified_at'     => 'nullable',
+        ])->validate();
+
+        if(!empty($validatedData['password'])) {
+            $validatedData['password'] = bcrypt($validatedData['password']);
+        }
+
+        if($validatedData['email'] != $this->user->getOriginal('email')){
+            $validatedData['email_verified_at'] = null;
+        }
+
+        $this->user->update($validatedData);
+
+        $this->dispatchBrowserEvent('hide-form');
+
+        $this->alert('success', __('site.updateSuccessfully') , [
+            'position'  =>  'top-end',
+            'timer'     =>  2000,
+            'timerProgressBar' => true,
+            'toast'     =>  true,
+            'text'      =>  null,
+            'showCancelButton'  =>  false,
+            'showConfirmButton' =>  false
+        ]);
     }
 
     // Show user details
@@ -198,13 +278,22 @@ class Users extends Component
 
         $this->data['specialization'] = $user->specialization->name;
 
-        $this->data['type'] = $user->type;
+        $this->data['job_type'] = $user->job_type->name;
 
-        $this->data['edu_type'] = $user->edu_type;
+        $this->data['section_type'] = $user->section_type->name;
 
         $this->data['created_at'] = $user->created_at;
 
 		$this->dispatchBrowserEvent('show-modal-show');
+    }
+
+    // Show Modal Form to Confirm User Removal
+
+    public function confirmUserRemoval($userId)
+    {
+        $this->userIdBeingRemoved = $userId;
+
+        $this->dispatchBrowserEvent('show-delete-modal');
     }
 
     // Delete User
@@ -245,6 +334,71 @@ class Users extends Component
         }
     }
 
+    // Export Excel File
+    public function exportExcel()
+    {
+        return Excel::download(new UsersExport($this->searchTerm,$this->selectedRows,$this->byOffice ? $this->byOffice : auth()->user()->office_id), 'users.xlsx');
+    }
+
+    // Export User PDF File
+    public function exportPDF()
+    {
+        try {
+            if ($this->selectedRows) {
+
+                $users = User::whereIn('id', $this->selectedRows)->orderBy('name', 'asc')->get();
+
+            } else {
+
+                $users = User::where('office_id' , $this->byOffice ? $this->byOffice : auth()->user()->office_id)
+                ->orderBy('name', 'asc')
+                ->get();
+            }
+
+            if ($users->count() <> 0) {
+
+                return response()->streamDownload(function() use($users){
+
+                    $pdf = PDF::loadView('livewire.backend.users.users_pdf',[
+                        'users' => $users ,
+                    ],[],[
+                        'format' => 'A4-L',
+                        'orientation' => 'L'
+                    ]);
+
+                    return $pdf->stream('users');
+
+                },'users.pdf');
+
+            } else {
+
+                $this->alert('error', __('site.noDataFound'), [
+                    'position'  =>  'center',
+                    'timer'  =>  3000,
+                    'timerProgressBar' => true,
+                    'toast'  =>  true,
+                    'text'  =>  null,
+                    'showCancelButton'  =>  false,
+                    'showConfirmButton'  =>  false
+                ]);
+            }
+
+        } catch (\Throwable $th) {
+
+            $message = $this->alert('error', $th->getMessage(), [
+                'position'  =>  'top-end',
+                'timer'  =>  3000,
+                'timerProgressBar' => true,
+                'toast'  =>  true,
+                'text'  =>  null,
+                'showCancelButton'  =>  false,
+                'showConfirmButton'  =>  false
+            ]);
+
+            return $message;
+        }
+    }
+
     public function getUsersProperty()
 	{
 
@@ -254,10 +408,11 @@ class Users extends Component
         $users = User::where('office_id', $byOffice)
                         ->where(function ($qu) {
                             $qu->whereHas('roles', function ($q) {
-                                $q->whereNot('name', 'superadmin');
+                                $q->whereNotIn('name', ['superadmin', 'operationsmanager']);
                         });
                     })
                     ->search(trim(($searchString)))
+                    ->latest()
                     ->paginate(50);
 
         return $users;
@@ -269,15 +424,15 @@ class Users extends Component
 
         $specializations = Specialization::whereStatus(true)->orderBy('name', 'asc')->get();
 
-        $offices = Office::whereStatus(true)->where('education_id' , auth()->user()->office->education_id)->get();
+        $offices         = Office::whereStatus(true)->where('education_id' , auth()->user()->office->education_id)->get();
 
-        $roles = Role::whereNotIn('id',[1])->get();
+        $roles           = Role::whereNotIn('id',[1,2])->get();
 
-        $jobs_type = JobType::whereStatus(true)->get();
+        $jobs_type       = JobType::whereStatus(true)->get();
 
-        $educations         = Education::where('status', true)->get();
+        $educations      = Education::where('status', true)->get();
 
-        $section_types      = SectionType::whereStatus(true)->get();
+        $section_types   = SectionType::whereStatus(true)->get();
 
         $genders = [
             [

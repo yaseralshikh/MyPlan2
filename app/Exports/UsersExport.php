@@ -12,34 +12,35 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class UsersPlansExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithEvents, WithStyles
+class UsersExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithEvents, WithStyles
 {
     /**
     * @return \Illuminate\Support\Collection
     */
 
-    protected $semester_id;
+    protected $search;
+    protected $selected_rows;
     protected $office_id;
     private $index;
 
-    function __construct($semester_id,$office_id) {
-        $this->semester_id = $semester_id;
+    function __construct($search,$selectedRows,$office_id) {
+        $this->search = $search;
+        $this->selected_rows = $selectedRows;
         $this->office_id = $office_id;
     }
 
     public function collection()
     {
-        $bySemester = $this->semester_id;
-
-        $users = User::whereStatus(true)->where('office_id', $this->office_id)->with([
-            'events' => function ($query) use($bySemester) {
-                $query->where('semester_id', $bySemester)->whereStatus(1)->Where('task_done' , 1);
-            }
-        ])
-        ->orderBy('name', 'asc')
-        ->get();
-
-        return $users;
+        if ($this->selected_rows) {
+            return User::whereIn('id', $this->selected_rows)->orderBy('name', 'asc')
+            ->get();
+        } else {
+            return User::query()
+            ->where('name', 'like', '%'.$this->search.'%')
+            ->where('office_id', $this->office_id)
+            ->orderBy('name', 'asc')
+            ->get();
+        }
     }
 
     public function map($user) : array {
@@ -52,13 +53,10 @@ class UsersPlansExport implements FromCollection, WithHeadings, WithMapping, Sho
             $user->email,
             $user->specialization->name,
             $user->job_type->name,
+            $user->section_type->name,
             $user->office->name,
-            $user->events->whereNotIn('task.name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة'])->count() ? $user->events->whereNotIn('task.name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة'])->count() : '0',
-            $user->events->where('task.name','يوم مكتبي' )->count() ? $user->events->where('task.name','يوم مكتبي' )->count() : '0',
-            $user->events->where('task.name','برنامج تدريبي' )->count() ? $user->events->where('task.name','برنامج تدريبي' )->count() : '0',
-            $user->events->where('task.name','مكلف بمهمة' )->count() ? $user->events->where('task.name','مكلف بمهمة' )->count() : '0',
-            $user->events->where('task.name','إجازة' )->count() ? $user->events->where('task.name','إجازة' )->count() : '0',
-            $user->events->count() ? $user->events->count() : '0',
+            $user->roles[0]->name,
+            $user->status ? 'مفعل' : 'غير مفعل',
         ] ;
     }
 
@@ -67,16 +65,13 @@ class UsersPlansExport implements FromCollection, WithHeadings, WithMapping, Sho
         return [
             'م',
             'الاسم',
-            'البريد الالكتروني',
-            'ألتخصص',
+            'البريد الإلكتروني',
+            'التخصص',
             'العمل الحالي',
+            'المرجع الإداري',
             'الإدارة / مكتب التعليم',
-            'زيارات مدارس',
-            'ايام مكتبية',
-            'برامج تدريبية',
-            'مكلف بمهمة',
-            'إجازة',
-            'مجموع الخطط',
+            'الصلاحية',
+            'الحالة',
         ];
     }
 
@@ -100,7 +95,7 @@ class UsersPlansExport implements FromCollection, WithHeadings, WithMapping, Sho
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange = 'A1:L1'; // All headers
+                $cellRange = 'A1:I1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray(
                     array(

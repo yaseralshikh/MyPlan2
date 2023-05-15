@@ -64,7 +64,7 @@
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
                                     wire:click.prevent="setAllAsInActive" href="#">@lang('site.setInActive')</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item {{ $selectedRows ? 'text-danger' : 'disabled-link' }}  delete-confirm"
+                                <a class="dropdown-item {{ $selectedRows && auth()->user()->hasPermission('users-delete') ? 'text-danger' : 'disabled-link' }}  delete-confirm"
                                     wire:click.prevent="deleteSelectedRows" href="#">@lang('site.deleteSelected')</a>
                                 {{-- @endif --}}
                             </div>
@@ -93,7 +93,7 @@
                             </div>
                         </div>
 
-                        @role('superadmin')
+                        @role('superadmin|operationsmanager')
                         {{-- offices Filter --}}
                         <div>
                             <select dir="rtl" name="office_id" wire:model="byOffice"
@@ -171,7 +171,7 @@
                                     <td>{{ $user->job_type->name }}</td>
                                     <td>{{ $user->section_type->name }}</td>
                                     <td class="align-middle">
-                                        <select class="form-control form-control-sm" {{ $user->roles[0]->name == 'superadmin' ? 'disabled' : ''}}
+                                        <select class="form-control form-control-sm" {{ $user->roles[0]->name == 'operationsmanager' ? 'disabled' : ''}}
                                             wire:change='updateUserRole({{ $user }}, $event.target.value)'>
                                             @foreach ($roles as $role)
                                             <option value="{{ $role->id }}" {{ $user->roles[0]->name == $role->name ?
@@ -199,7 +199,7 @@
                                             <button wire:click.prevent="show({{ $user }})"
                                                 class="btn btn-info btn-sm"><i class="fa fa-user"></i></button>
 
-                                            @if ($user->roles[0]->name == 'user')
+                                            @if (auth()->user()->hasPermission('users-delete'))
                                                 <button wire:click.prevent="confirmUserRemoval({{ $user->id }})"
                                                     class="btn btn-danger btn-sm"><i
                                                         class="fa fa-trash bg-danger"></i></button>
@@ -263,23 +263,14 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        {{-- @if ($errors->hasAny(['image', 'image.*']))
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        @endif --}}
                         <div class="row h-100 justify-content-center align-items-center">
                             <div class="col-12">
 
                                 <!-- Modal User Full Name -->
 
-                                <div class="form-group">
+                                <div  class="form-group">
                                     <label for="name">@lang('site.fullName')</label>
-                                    <input type="text" wire:model.defer="data.name"
+                                    <input dir="rtl" type="text" wire:model.defer="data.name"
                                         class="form-control @error('name') is-invalid @enderror" id="name"
                                         aria-describedby="nameHelp" placeholder="@lang('site.enterFullName')">
                                     @error('name')
@@ -304,7 +295,7 @@
                                 </div>
 
                                 <!-- Modal User Office -->
-                                @role('superadmin')
+                                @role('superadmin|operationsmanager')
                                 <div class="form-group">
                                     <label for="office_id">@lang('site.office')</label>
                                     <select id="office_id" class="form-control @error('office_id') is-invalid @enderror"
@@ -342,19 +333,19 @@
                                     @enderror
                                 </div>
 
-                                <!-- Modal User Type -->
+                                <!-- Modal job_Type_id -->
 
                                 <div class="form-group">
-                                    <label for="type">@lang('site.type')</label>
-                                    <select id="type" class="form-control @error('type') is-invalid @enderror"
-                                        wire:model.defer="data.type">
+                                    <label for="job_type_id">@lang('site.type')</label>
+                                    <select id="job_type_id" class="form-control @error('job_type_id') is-invalid @enderror"
+                                        wire:model.defer="data.job_type_id">
                                         <option hidden selected>@lang('site.choise', ['name' => 'العمل الحالي'])</option>
-                                        @foreach ($jobs_type as $job)
-                                        <option class="bg-light" value="{{ $job->title }}">{{ $job->title }}
+                                        @foreach ($jobs_type as $job_type)
+                                        <option class="bg-light" value="{{ $job_type->id }}">{{ $job_type->name }}
                                         </option>
                                         @endforeach
                                     </select>
-                                    @error('type')
+                                    @error('job_type_id')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -364,15 +355,15 @@
                                 <!-- Modal Education Type -->
 
                                 <div class="form-group">
-                                    <label for="section_type">@lang('site.eduType')</label>
-                                    <select id="section_type" class="form-control @error('section_type') is-invalid @enderror"
-                                        wire:model.defer="data.section_type">
+                                    <label for="section_type_id">@lang('site.sectionType')</label>
+                                    <select id="section_type_id" class="form-control @error('section_type_id') is-invalid @enderror"
+                                        wire:model.defer="data.section_type_id">
                                         <option hidden selected>@lang('site.choise', ['name' => 'المرجع الإداري'])</option>
                                         @foreach ($section_types as $section)
                                             <option class="bg-light" value="{{ $section->id }}">{{ $section->name }}</option>
                                         @endforeach
                                     </select>
-                                    @error('section_type')
+                                    @error('section_type_id')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -400,7 +391,7 @@
                                 <!-- Modal User Password -->
 
                                 <div class="form-group">
-                                    <label for="password">@lang('site.password')</label>
+                                    <label for="password">@lang('site.password'){{ $showEditModal ? ' ( اختياري )' : '' }}</label>
                                     <input type="password" wire:model.defer="data.password"
                                         class="form-control @error('password') is-invalid @enderror" id="password"
                                         placeholder="@lang('site.enterPassword')">
@@ -415,7 +406,7 @@
                                 <!-- Modal User Password Confirmation -->
 
                                 <div class="form-group">
-                                    <label for="passwordConfirmation">@lang('site.passwordConfirmation')</label>
+                                    <label for="passwordConfirmation">@lang('site.passwordConfirmation'){{ $showEditModal ? ' ( اختياري )' : '' }}</label>
                                     <input type="password" wire:model.defer="data.password_confirmation"
                                         class="form-control" id="passwordConfirmation"
                                         placeholder="@lang('site.enterConfirmPassword')">
@@ -479,10 +470,10 @@
                                         $data['specialization'] ?? '' }}</a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b class="float-right">@lang('site.type') : </b> <a>{{ $data['type'] ?? '' }}</a>
+                                    <b class="float-right">@lang('site.type') : </b> <a>{{ $data['job_type'] ?? '' }}</a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b class="float-right">@lang('site.eduType') : </b> <a>{{ $data['edu_type'] ?? '' }}</a>
+                                    <b class="float-right">@lang('site.sectionType') : </b> <a>{{ $data['section_type'] ?? '' }}</a>
                                 </li>
                                 <li class="list-group-item">
                                     <b class="float-right">@lang('site.email') :</b> <a>{{ $data['email'] ?? '' }}</a>

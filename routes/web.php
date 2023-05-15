@@ -32,7 +32,7 @@ Route::group(['middleware' => ['auth', 'verified']], function (){
 });
 
 //Backend
-Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'role:admin|superadmin']], function (){
+Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'role:admin|superadmin|operationsmanager']], function (){
     Route::get('/', Dashboard::class)->name('dashboard');
     Route::get('users', Users::class)->name('users');
 });

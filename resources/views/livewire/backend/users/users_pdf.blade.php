@@ -37,6 +37,7 @@
             }
             img{
                 margin-bottom: 5px;
+                width:10%;
             }
 
             @page {
@@ -52,23 +53,24 @@
 
 	<body>
         <htmlpageheader name="page-header">
-            {{-- <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}" width="180px;" alt=""> --}}
-        <h3>إحصائية خطط المشرفين خلال {{ $semester->name }} - {{ $users[0]->office->name }}</h3>
+            <h3>المشرفين المسجلين في منصة خطتي بـ{{ $users[0]->office->name }}</h3>
         </htmlpageheader>
+
+        {{-- <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}" alt=""> --}}
+
 		<div class="counter">
             <table class="">
                 <thead class="">
                     <tr>
-                        <th>#</th>
+                        <th>م</th>
                         <th>الاسم</th>
+                        <th>البريد الإلكتروني</th>
                         <th>ألتخصص</th>
+                        <th>العمل الحالي</th>
+                        <th>المرجع الإداري</th>
                         <th>الادارة / مكتب التعليم</th>
-                        <th>زيارات مدارس</th>
-                        <th>ايام مكتبية</th>
-                        <th>برامج تدريبية</th>
-                        <th>مكلف بمهمة</th>
-                        <th>إجازة</th>
-                        <th>مجموع الخطط</th>
+                        <th>الصلاحية</th>
+                        <th>الحالة</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -76,14 +78,13 @@
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
                             <td>{{ $user->specialization->name }}</td>
+                            <td>{{ $user->job_type->name }}</td>
+                            <td>{{ $user->section_type->name }}</td>
                             <td>{{ $user->office->name }}</td>
-                            <td>{{ $user->events->whereNotIn('task.name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة'])->count() }}</td>
-                            <td>{{ $user->events->where('task.name','يوم مكتبي' )->count() }}</td>
-                            <td>{{ $user->events->where('task.name','برنامج تدريبي' )->count() }}</td>
-                            <td>{{ $user->events->where('task.name','مكلف بمهمة' )->count() }}</td>
-                            <td>{{ $user->events->where('task.name','إجازة' )->count() }}</td>
-                            <td style="background-color: rgba(225, 222, 222, 0.455);">{{ $user->events->count() }}</td>
+                            <td>{{ $user->roles[0]->name }}</td>
+                            <td>{{ $user->status() }}</td>
                         </tr>
 
                         <htmlpagefooter name="page-footer">
@@ -91,7 +92,7 @@
                                 <tbody>
                                     <tr style="border-top: 1px solid rgb(100, 100, 100);">
                                         <td class="logo_header" style="text-align:center;font-size: 12px; padding-left:10px">{{ date('Y-m-d') }}</td>
-                                        <td class="logo_header" style="text-align:center;font-size: 12px; padding-right:10px">رؤيتنا : تعليم ريادي.</td>
+                                        <td class="logo_header" style="text-align:center;font-size: 12px; padding-right:10px">رؤيتنا : تعليم ريادي</td>
                                         <td class="logo_header" style="text-align:center;font-size: 12px; padding-left:10px">{{ $users[0]->office->name }}</td>
                                     </tr>
                                 </tbody>

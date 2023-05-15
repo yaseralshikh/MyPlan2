@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     {
         $user = User::create([
             'name'              => 'ياسر محمد أحمد الشيخ',
-            'email'             => 'yaseralshikh@gmail.com',
+            'email'             => 'yshikh2406@moe.gov.sa',
             'specialization_id' => 17,
             'office_id'         => 1,
             'job_type_id'       => 1,
@@ -26,6 +26,6 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        $user->addRole('superadmin');
+        $user->addRole('operationsmanager');
     }
 }

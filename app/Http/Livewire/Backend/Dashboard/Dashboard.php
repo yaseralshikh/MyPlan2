@@ -69,7 +69,9 @@ class Dashboard extends Component
             $tasks = Task::whereStatus(true)->where('office_id' , $byOffice)->whereIn('level_id', [1,2,3,4,5,6])
             ->withCount([
                 'events' => function ($query) use($bySemester, $byOffice) {
-                    $query->where('semester_id', $bySemester)->where('office_id' , $byOffice);
+                    $query->where('semester_id', $bySemester)
+                            ->where('office_id' , $byOffice)
+                            ->where('task_done' , true);
                 }
             ])
             ->having('events_count', '=', 0)
@@ -275,12 +277,13 @@ class Dashboard extends Component
         $levels = Level::all();
 
         // for schools not visited by supervisors
-
         $empty_schools = Task::whereStatus(true)->where('office_id', $byOffice)
         ->whereIn('level_id', [1,2,3,4,5,6])
         ->withCount([
             'events' => function ($query) use($bySemester, $byOffice) {
-                $query->where('semester_id', $bySemester)->where('office_id', $byOffice);
+                $query->where('semester_id', $bySemester)
+                        ->where('office_id', $byOffice)
+                        ->where('task_done' , true);
             }
         ])
         ->having('events_count', '=', 0)

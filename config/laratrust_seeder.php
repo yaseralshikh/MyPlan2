@@ -12,21 +12,32 @@ return [
     'truncate_tables' => true,
 
     'roles_structure' => [
+        'operationsmanager' => [
+            'education'         => 'c,r,u,d',
+            'section_types'     => 'c,r,u,d',
+            'job_types'         => 'c,r,u,d',
+            'users'             => 'c,r,u,d',
+            'specializations'   => 'c,r,u,d',
+            'events'            => 'c,r,u,d',
+            'tasks'             => 'c,r,u,d',
+            'subtasks'          => 'c,r,u,d',
+            'levels'            => 'c,r,u,d',
+            'offices'           => 'c,r,u,d',
+            'semesters'         => 'c,r,u,d',
+            'weeks'             => 'c,r,u,d',
+            'profile'           => 'r,u'
+        ],
         'superadmin' => [
-            'users' => 'c,r,u,d',
-            'pecializations' => 'c,r,u,d',
-            'events' => 'c,r,u,d',
-            'tasks' => 'c,r,u,d',
-            'levels' => 'c,r,u,d',
-            'offices' => 'c,r,u,d',
-            'semesters' => 'c,r,u,d',
-            'weeks' => 'c,r,u,d',
-            'profile' => 'r,u'
+            'users'             => 'c,r,u',
+            'events'            => 'c,r,u,d',
+            'offices'           => 'c,r,u',
+            'profile'           => 'r,u'
         ],
         'admin' => [
-            'events' => 'c,r,u,d',
-            'users' => 'c,r,u,d',
-            'tasks' => 'c,r,u,d',
+            'events'    => 'c,r,u,d',
+            'users'     => 'c,r,u',
+            'tasks'     => 'c,r,u',
+            'subtasks'  => 'c,r,u,d',
             'profile' => 'r,u'
         ],
         'user' => [

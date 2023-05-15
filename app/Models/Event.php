@@ -15,7 +15,7 @@ class Event extends Model
         'note',
         'start',
         'end',
-        'overlap',
+        // 'overlap',
         'display',
         'user_id',
         'week_id',
