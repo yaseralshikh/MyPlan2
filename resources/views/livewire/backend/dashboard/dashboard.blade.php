@@ -315,17 +315,17 @@
                                     <div class="shadow rounded p-4 border">
                                         <div class="table-responsive">
                                             <table id="example1"
-                                                class="table text-center table-bordered table-hover dtr-inline display nowrap"
+                                                class="table text-center table-bordered table-hover dtr-inline display nowrap sortable"
                                                 aria-describedby="example1_info" style="width:100%">
                                                 <thead class="bg-light">
                                                     <tr>
-                                                        <th colspan="4"><h4>@lang('site.emptyTasks')</h4></th>
+                                                        <th class="no-sort" colspan="4"><h4>@lang('site.emptyTasks')</h4></th>
                                                     </tr>
                                                     <tr>
-                                                        <th>#</th>
+                                                        <th class="no-sort">#</th>
                                                         <th>@lang('site.school')</th>
                                                         <th>@lang('site.level')</th>
-                                                        <th>@lang('site.visitedCount')</th>
+                                                        <th class="no-sort">@lang('site.visitedCount')</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -434,14 +434,14 @@
                                 <div class="shadow rounded p-4 border">
                                     <div class="table-responsive">
                                         <table id="example2"
-                                            class="table text-center table-bordered table-hover dtr-inline display nowrap"
+                                            class="table text-center table-bordered table-hover dtr-inline display nowrap sortable"
                                             aria-describedby="example2_info" style="width:100%">
                                             <thead class="bg-light">
                                                 <tr>
-                                                    <th colspan="10"><h4>@lang('site.statisticsUsersEvent')</h4></th>
+                                                    <th class="no-sort" colspan="10"><h4>@lang('site.statisticsUsersEvent')</h4></th>
                                                 </tr>
                                                 <tr>
-                                                    <th>#</th>
+                                                    <th class="no-sort">#</th>
                                                     <th>@lang('site.name')</th>
                                                     <th>@lang('site.specialization')</th>
                                                     <th>@lang('site.type')</th>
