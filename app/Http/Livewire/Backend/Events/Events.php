@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Backend\Events;
 
+use PDF;
 use Carbon\Carbon;
 use App\Models\Task;
 use App\Models\User;
@@ -14,7 +15,6 @@ use Livewire\Component;
 use App\Models\Semester;
 use App\Rules\UserOverLap;
 use App\Models\SectionType;
-use App\Rules\EventOverLap;
 use Livewire\WithPagination;
 use App\Exports\EventsExport;
 use App\Rules\DateOutService;
@@ -729,19 +729,23 @@ class Events extends Component
         try {
 
             if ($selectedRows) {
+
                 if ($byWeek && $bySectionType) {
+
                     $users = User::where('status', true)->where('office_id', $byOffice)->where('section_type_id', $bySectionType)->orderBy('name', 'asc')
                         ->whereHas('events', function ($query) use ($byWeek) {
                             $query->where('week_id', $byWeek)->where('status', true);
                         })->with(['events' => function ($query) use ($byWeek, $selectedRows) {
-                        $query->with('task')->whereHas('task', function ($q) {$q->whereNotIn('name', ['إجازة']);})->whereIn('id', $selectedRows)->WhereNotNull('id')->where('week_id', $byWeek)->where('status', true)->orderBy('start', 'asc');
+                                $query->with('task')->whereHas('task', function ($q) {$q->whereNotIn('name', ['إجازة']);})->whereIn('id', $selectedRows)->WhereNotNull('id')->where('week_id', $byWeek)->where('status', true)->orderBy('start', 'asc');
                     }])->get();
 
                     if ($users->count() != null) {
+
                         $subtasks = Subtask::where('status', 1)->where('office_id', $byOffice)->where('section_type_id', $bySectionType)->orderBy('position', 'asc')->get();
                         $office = Office::where('id', $byOffice)->first();
 
                         if ($subtasks->count() == null) {
+
                             Log::alert(__('site.notSubtasksFound'));
                             $this->alert('error', __('site.notSubtasksFound'), [
                                 'position' => 'center',
@@ -752,18 +756,26 @@ class Events extends Component
                                 'showCancelButton' => false,
                                 'showConfirmButton' => false,
                             ]);
+
                         } else {
+
                             return response()->streamDownload(function () use ($users, $subtasks, $office) {
+
                                 $pdf = PDF::loadView('livewire.backend.events.events_pdf', [
+
                                     'users' => $users,
                                     'subtasks' => $subtasks,
                                     'office' => $office,
+
                                 ]);
+
                                 return $pdf->stream('events');
+
                             }, 'events.pdf');
                         }
 
                     } else {
+
                         $this->alert('error', __('site.noDataForExport'), [
                             'position' => 'center',
                             'timer' => 2000,
@@ -776,6 +788,7 @@ class Events extends Component
                     }
 
                 } else {
+
                     $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.selectEduType'), [
                         'position' => 'center',
                         'timer' => 6000,
@@ -786,7 +799,9 @@ class Events extends Component
                         'showConfirmButton' => false,
                     ]);
                 }
+
             } else {
+
                 $this->alert('error', __('site.selectRows'), [
                     'position' => 'center',
                     'timer' => 6000,
@@ -799,6 +814,7 @@ class Events extends Component
             }
 
         } catch (\Throwable$th) {
+            
             $message = $this->alert('error', $th->getMessage(), [
                 'position' => 'top-end',
                 'timer' => 2000,
