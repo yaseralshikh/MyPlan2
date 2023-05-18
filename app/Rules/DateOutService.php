@@ -10,12 +10,10 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class DateOutService implements ValidationRule
 {
     public $start;
-    public $end;
 
-    public function __construct($start, $end)
+    public function __construct($start)
     {
         $this->start = $start;
-        $this->end   = $end;
     }
 
     /**
@@ -26,8 +24,8 @@ class DateOutService implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $semester_Id = Semester::where('start', '<=', $this->start)->where('end', '>=', $this->end)->pluck('id')->first();
-        $week_Id = Week::where('start', '<=', $this->start)->where('end', '>=', $this->end)->pluck('id')->first();
+        $semester_Id = Semester::where('start', '<=', $this->start)->where('end', '>=', $this->start)->pluck('id')->first();
+        $week_Id = Week::where('start', '<=', $this->start)->where('end', '>=', $this->start)->pluck('id')->first();
 
         if (!$semester_Id || !$week_Id) {
 

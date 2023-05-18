@@ -61,12 +61,12 @@ class Calendar extends Component
             $emailVerifiedMessage = null;
 
             $validatedData = Validator::make($this->profileData, [
-                'name' => 'required',
-                'email' => 'required|email|unique:users,email,' . $this->userProfile->id,
+                'name'              => 'required',
+                'email'             => 'required|email|unique:users,email,' . $this->userProfile->id,
                 'specialization_id' => 'required',
                 'email_verified_at' => 'nullable',
-                'password' => 'sometimes|confirmed',
-                'status' => 'nullable',
+                'password'          => 'sometimes|confirmed',
+                'status'            => 'nullable',
             ])->validate();
 
             if (!empty($validatedData['password'])) {
@@ -110,8 +110,8 @@ class Calendar extends Component
     protected function rules(): array
     {
         return ([
-            'level_id' => ['required'],
-            'task_id' => ['required', new EventOverLap($this->start), new UserOverLap($this->start), new DateOutService($this->start, $this->end)],
+            'level_id'  => ['required'],
+            'task_id'   => ['required', new EventOverLap($this->start), new UserOverLap($this->start, auth()->user()->id), new DateOutService($this->start, $this->end)],
         ]);
     }
 
@@ -207,9 +207,15 @@ class Calendar extends Component
             'end'       => $this->end,
         ];
 
-        $validatedData = Validator::make($this->data, [
-            'task_id' => ['required', new EventOverLap($this->start)],
-        ])->validate();
+        $eventTaskOriginalId = Event::where('id', $this->event_id)->pluck('task_id')->first();
+
+        if ($eventTaskOriginalId <> $this->task_id) {
+
+            $validatedData = Validator::make($this->data, [
+                'task_id' => ['required', new EventOverLap($this->start)],
+            ])->validate();
+
+        }
 
         $taskName = Task::whereStatus(true)->where('id', $this->task_id)->pluck('name')->first();
 
@@ -276,64 +282,52 @@ class Calendar extends Component
     public function eventDrop($event, $oldEvent)
     {
         $eventdata = Event::find($event['id']);
-        if (($eventdata->user_id == auth()->user()->id) || (auth()->user()->roles[0]->id != 3)) {
-            if ($eventdata->status && auth()->user()->roles[0]->id == 3) {
-                $this->dispatchBrowserEvent('swal', [
-                    'title' => 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد',
-                    'timer' => 4000,
-                    'timerProgressBar' => true,
-                    'icon' => 'error',
-                    'toast' => true,
-                    'showConfirmButton' => false,
-                    'position' => 'center',
-                ]);
-            } else {
 
-                $eventOverLap = Event::where('task_id', $eventdata->task_id)
+        if ($eventdata->status) {
+            $this->dispatchBrowserEvent('swal', [
+                'title' => 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد',
+                'timer' => 4000,
+                'timerProgressBar' => true,
+                'icon' => 'error',
+                'toast' => true,
+                'showConfirmButton' => false,
+                'position' => 'center',
+            ]);
+        } else {
+
+            $eventOverLap = Event::where('task_id', $eventdata->task_id)
                 ->where('start', $event['start'])
                 ->whereHas('task', function ($q) {$q->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة']);})
                 ->count() <= auth()->user()->office->allowed_overlap;
 
-                if ($eventOverLap) {
+            if ($eventOverLap) {
 
-                    $eventStart = $event['start'];
-                    $eventEnd   = $event['start'];
+                $eventStart = $event['start'];
+                $eventEnd   = $event['start'];
 
-                    $week_Id = Week::where('start', '<=', $eventStart)->where('end', '>=', $eventEnd)->pluck('id')->first();
+                $week_Id = Week::where('start', '<=', $eventStart)->where('end', '>=', $eventEnd)->pluck('id')->first();
 
-                    if ($week_Id) {
+                if ($week_Id) {
 
-                        $eventdata->start = $eventStart;
-                        $eventdata->end = $eventEnd;
-                        $eventdata->week_id = $week_Id;
+                    $eventdata->start = $eventStart;
+                    $eventdata->end = $eventEnd;
+                    $eventdata->week_id = $week_Id;
 
-                        $eventdata->save();
+                    $eventdata->save();
 
-                        $this->dispatchBrowserEvent('swal', [
-                            'title' => __('site.updateSuccessfully'),
-                            'timer' => 2000,
-                            'timerProgressBar' => true,
-                            'icon' => 'success',
-                            'toast' => true,
-                            'showConfirmButton' => false,
-                            'position' => 'center',
-                        ]);
-
-                    } else {
-                        $this->dispatchBrowserEvent('swal', [
-                            'title' => 'اليوم المحدد غير مطابق للفصل الدراسي',
-                            'timer' => 3500,
-                            'timerProgressBar' => true,
-                            'icon' => 'error',
-                            'toast' => true,
-                            'showConfirmButton' => false,
-                            'position' => 'center',
-                        ]);
-                    }
+                    $this->dispatchBrowserEvent('swal', [
+                        'title' => __('site.updateSuccessfully'),
+                        'timer' => 2000,
+                        'timerProgressBar' => true,
+                        'icon' => 'success',
+                        'toast' => true,
+                        'showConfirmButton' => false,
+                        'position' => 'center',
+                    ]);
 
                 } else {
                     $this->dispatchBrowserEvent('swal', [
-                        'title' => 'تم حجز الزيارة في هذا الموعد لنفس المدرسة من قبل مشرف أخر.',
+                        'title' => 'اليوم المحدد غير مطابق للفصل الدراسي',
                         'timer' => 3500,
                         'timerProgressBar' => true,
                         'icon' => 'error',
@@ -342,17 +336,18 @@ class Calendar extends Component
                         'position' => 'center',
                     ]);
                 }
+
+            } else {
+                $this->dispatchBrowserEvent('swal', [
+                    'title' => 'تم حجز الزيارة في هذا الموعد لنفس المدرسة من قبل مشرف أخر.',
+                    'timer' => 3500,
+                    'timerProgressBar' => true,
+                    'icon' => 'error',
+                    'toast' => true,
+                    'showConfirmButton' => false,
+                    'position' => 'center',
+                ]);
             }
-        } else {
-            $this->dispatchBrowserEvent('swal', [
-                'title' => 'لا تملك الصلاحية للتعديل !!',
-                'timer' => 2000,
-                'timerProgressBar' => true,
-                'icon' => 'error',
-                'toast' => true,
-                'showConfirmButton' => false,
-                'position' => 'center',
-            ]);
         }
 
         $this->resetErrorBag();

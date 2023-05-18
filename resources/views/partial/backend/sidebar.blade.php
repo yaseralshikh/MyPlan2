@@ -34,6 +34,7 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                {{-- Dashboard --}}
                 <li class="nav-item">
                     <a href="{{ route('admin.dashboard') }}"
                         class="nav-link {{ request()->is('admin') ? 'active' : '' }}">
@@ -43,17 +44,43 @@
                         </p>
                     </a>
                 </li>
-
+                {{-- Users Section --}}
                 <li class="nav-header text-secondary">
                     <h6>@lang('site.usersSection')</h6>
                 </li>
-
+                {{-- Users --}}
                 <li class="nav-item">
                     <a href="{{ route('admin.users') }}"
                         class="nav-link {{ request()->is('admin/users') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-users"></i>
                         <p>
                             @lang('site.users')
+                        </p>
+                    </a>
+                </li>
+                @role('operationsmanager')
+                {{-- Roles And Permissions  --}}
+                <li class="nav-item">
+                    <a href="{{ url('/laratrust') }}"
+                        class="nav-link {{ request()->is('/laratrust') ? 'active' : '' }}">
+                        <i class="fas fa-cog"></i>
+                        <p>
+                            @lang('site.rolesPermissions')
+                        </p>
+                    </a>
+                </li>
+                @endrole
+                {{-- Events Section --}}
+                <li class="nav-header text-secondary">
+                    <h6>@lang('site.eventsSection')</h6>
+                </li>
+                {{-- Events --}}
+                <li class="nav-item">
+                    <a href="{{ route('admin.events') }}"
+                        class="nav-link {{ request()->is('admin/events') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-calendar"></i>
+                        <p>
+                            @lang('site.events')
                         </p>
                     </a>
                 </li>

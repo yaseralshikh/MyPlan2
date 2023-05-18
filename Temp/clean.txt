@@ -7,6 +7,7 @@ php artisan clear-compiled
 php artisan cache:clear
 php artisan optimize
 composer dump-autoload
+
 --------------
 git add .
 git commit -m "Constructed index Dashboard"  / customize backend Dashboard system

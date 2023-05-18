@@ -53,16 +53,20 @@
 
     {{-- Calender --}}
     @if (auth()->user()->office->allowed_create_plans)
-    <div id="calendar" wire:ignore></div>
+
+        <div id="calendar" wire:ignore></div>
+        
     @else
-    <div class="card mb-3 text-center">
-        <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}"
-            class="img-thumbnail border border-0 rounded mx-auto d-block mt-3 mb-3" alt="sorry">
-        <div class="card-body mb-3" dir="rtl">
-            <h2 class="card-text">المعذرة .. حسب توجيهات إدارة المكتب فقد تم إقفال إدخال الخطط من قبل المشرفين مؤقتاً
-                وسيتم فتحها في وقت لاحق ، شكراُ على اهتمامكم .</h2>
+
+        <div class="card mb-3 text-center">
+            <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}"
+                class="img-thumbnail border border-0 rounded mx-auto d-block mt-3 mb-3" alt="sorry">
+            <div class="card-body mb-3" dir="rtl">
+                <h2 class="card-text">المعذرة .. حسب توجيهات إدارة المكتب فقد تم إقفال إدخال الخطط من قبل المشرفين مؤقتاً
+                    وسيتم فتحها في وقت لاحق ، شكراُ على اهتمامكم .</h2>
+            </div>
         </div>
-    </div>
+
     @endif
 
     <!-- Create Event - Modal -->
@@ -243,7 +247,7 @@
                                 <option value="" hidden selected>&nbsp;&nbsp; @lang('site.choise', ['name' => 'المهمة'])
                                     :</option>
                                 @foreach ($tasks as $task)
-                                <option value="{{ $task->id }}">&nbsp;&nbsp; {{ $task->name }}</option>
+                                    <option value="{{ $task->id }}">&nbsp;&nbsp; {{ $task->name }}</option>
                                 @endforeach
                             </select>
 

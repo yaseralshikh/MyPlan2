@@ -31,6 +31,11 @@ class Event extends Model
         return $this->status ? __('site.permission') : __('site.unPermission');
     }
 
+    public function task_done(): string
+    {
+        return $this->task_done ? __('site.yes') : __('site.no');
+    }
+
     public function overlap(): string
     {
         return $this->overlap ? __('site.active') : __('site.inActive');

@@ -210,7 +210,7 @@ return [
              */
             'abort' => [
                 'code' => 403,
-                'message' => 'User does not have any of the necessary access rights.'
+                'message' => 'ليس لديك أي من الصلاحيات الضرورية لدخول هذا القسم.' //'User does not have any of the necessary access rights.'
             ],
 
             /**
@@ -282,7 +282,7 @@ return [
         | Turn this value to false if you don't want to use Laratrust admin panel
         |
         */
-        'register' => false,
+        'register' => true,
 
         /*
         |--------------------------------------------------------------------------
@@ -314,7 +314,7 @@ return [
         | The route where the go back link should point
         |
         */
-        'go_back_route' => '/',
+        'go_back_route' => '/admin',
 
         /*
         |--------------------------------------------------------------------------
@@ -324,7 +324,7 @@ return [
         | These middleware will get added onto each Laratrust panel route.
         |
         */
-        'middleware' => ['web'],
+        'middleware' => ['web', 'auth', 'role:operationsmanager'],
 
         /*
         |--------------------------------------------------------------------------
