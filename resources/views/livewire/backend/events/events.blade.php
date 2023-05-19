@@ -235,6 +235,9 @@
                                         @lang('site.note')
                                     </th>
                                     <th>
+                                        @lang('site.day')
+                                    </th>
+                                    <th>
                                         @lang('site.date')
                                     </th>
                                     <th>
@@ -265,8 +268,8 @@
                                     <td class="align-middle">{{ $event->user->section_type->name }}</td>
                                     <td class="align-middle" style="background-color: {{ $event->color }};">{{ $event->task->name }}</td>
                                     <td class="align-middle">{{ $event->note }}</td>
-                                    <td class="align-middle">{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start)
-                                        }}<br>
+                                    <td class="align-middle">{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start) }}</td>
+                                    <td class="align-middle">
                                         {{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $event->start) }}<br>
                                         {{ Carbon\Carbon::parse($event->start)->toDateString() }}
                                     </td>
@@ -305,7 +308,7 @@
 
                                 @empty
                                 <tr>
-                                    <td colspan="12" class="text-center">@lang('site.noDataFound')</td>
+                                    <td colspan="13" class="text-center">@lang('site.noDataFound')</td>
                                 </tr>
                                 @endforelse
                             </tbody>

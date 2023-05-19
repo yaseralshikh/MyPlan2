@@ -814,7 +814,7 @@ class Events extends Component
             }
 
         } catch (\Throwable$th) {
-            
+
             $message = $this->alert('error', $th->getMessage(), [
                 'position' => 'top-end',
                 'timer' => 2000,

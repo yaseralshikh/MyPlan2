@@ -114,11 +114,11 @@
 
                                 </td>
                                 <td class="logo_header">
-                                    <img src="{{ asset('backend/img/events/moe_logo.jpg') }}" width="150px" alt="">
+                                    <img src="{{ asset('backend/img/events/moe_logo.jpg') }}" width="160px" alt="">
                                 </td>
                                 <td class="logo_header">
-                                    <img src="{{ asset('backend/img/events/moe_logo_l.jpg') }}" width="150px" alt="">
-                                    <span style="font-size: 11px;">{{ $users[0]->events[0]->week->name }} {{ $users[0]->events[0]->week->semester->school_year }}</span>
+                                    <img src="{{ asset('backend/img/events/moe_logo_l.jpg') }}" width="150px" style="padding-bottom: 0.3cm;" alt="">
+                                    <span style="font-size: 11px">{{ $users[0]->events[0]->week->name }} {{ $users[0]->events[0]->week->semester->school_year }}</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -155,7 +155,7 @@
                                 {{-- <td>{{ $event->week->title }}</td> --}}
                                 <td>{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start) }}</td>
                                 <td>{{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $event->start) }}</td>
-                                <td>{{ $event->task->name }}</td>
+                                <td>{{ $event->task->name }} {{ $event->task->name == 'مكلف بمهمة' ? ' : ( ' . $event->note . ' )' : '' }}</td>
                             </tr>
                             @endforeach
                         </tbody>
