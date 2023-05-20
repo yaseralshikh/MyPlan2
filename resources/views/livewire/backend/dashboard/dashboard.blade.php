@@ -438,7 +438,7 @@
                                             aria-describedby="example2_info" style="width:100%">
                                             <thead class="bg-light">
                                                 <tr>
-                                                    <th class="no-sort" colspan="10"><h4>@lang('site.statisticsUsersEvent')</h4></th>
+                                                    <th class="no-sort" colspan="12"><h4>@lang('site.statisticsUsersEvent')</h4></th>
                                                 </tr>
                                                 <tr>
                                                     <th class="no-sort">#</th>
@@ -451,6 +451,8 @@
                                                     <th>@lang('site.eventsTask')</th>
                                                     <th>@lang('site.vacation')</th>
                                                     <th>@lang('site.eventsTotal')</th>
+                                                    <th>@lang('site.eventsStatus')</th>
+                                                    <th>@lang('site.eventsTaskDone')</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -460,22 +462,24 @@
                                                     <td>{{ $user->name }}</td>
                                                     <td>{{ $user->specialization->name }}</td>
                                                     <td>{{ $user->job_type->name }}</td>
-                                                    <td>{{ $user->events->whereNotIn('task.name',['يوم مكتبي','برنامج تدريبي','إجازة','مكلف بمهمة'])->count() }}</td>
-                                                    <td>{{ $user->events->where('task.name','يوم مكتبي')->count() }}</td>
-                                                    <td>{{ $user->events->where('task.name','برنامج تدريبي')->count() }}</td>
-                                                    <td>{{ $user->events->where('task.name','مكلف بمهمة')->count() }}</td>
-                                                    <td>{{ $user->events->where('task.name','إجازة')->count() }}</td>
-                                                    <td class="bg-light">{{ $user->events->count() }}</td>
+                                                    <td>{{ $user->events->whereNotIn('task.name',['يوم مكتبي','برنامج تدريبي','إجازة','مكلف بمهمة'])->where('status',true)->Where('task_done' , 1)->count() }}</td>
+                                                    <td>{{ $user->events->where('task.name','يوم مكتبي')->where('status',true)->Where('task_done' , 1)->count() }}</td>
+                                                    <td>{{ $user->events->where('task.name','برنامج تدريبي')->where('status',true)->Where('task_done' , 1)->count() }}</td>
+                                                    <td>{{ $user->events->where('task.name','مكلف بمهمة')->where('status',true)->Where('task_done' , 1)->count() }}</td>
+                                                    <td>{{ $user->events->where('task.name','إجازة')->where('status',true)->Where('task_done' , 1)->count() }}</td>
+                                                    <td class="bg-light">{{ $user->events->where('status',true)->Where('task_done' , 1)->count() }}</td>
+                                                    <td style="{{ $user->events->where('status', false)->count() == 0 ? '' : 'background-color: #F0F8FF;color:red;' }}">{{ $user->events->where('status', false)->count() }}</td>
+                                                    <td style="{{ $user->events->where('task_done', false)->count() == 0 ? '' : 'background-color: #F0FFF0;color:red;' }}">{{ $user->events->where('task_done', false)->count() }}</td>
                                                 </tr>
                                                 @empty
                                                 <tr>
-                                                    <td colspan="10" class="text-center">@lang('site.noDataFound')</td>
+                                                    <td colspan="12" class="text-center">@lang('site.noDataFound')</td>
                                                 </tr>
                                                 @endforelse
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                <td colspan="10">
+                                                <td colspan="12">
                                                         {!! $users->appends(request()->all())->links() !!}
                                                 </td>
                                                 </tr>

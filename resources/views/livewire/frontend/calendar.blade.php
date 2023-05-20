@@ -55,7 +55,7 @@
     @if (auth()->user()->office->allowed_create_plans)
 
         <div id="calendar" wire:ignore></div>
-        
+
     @else
 
         <div class="card mb-3 text-center">
@@ -72,7 +72,7 @@
     <!-- Create Event - Modal -->
     <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true"
         data-bs-backdrop="static" data-bs-keyboard="false" wire:ignore.self>
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-body-tertiary">
                     <h1 class="modal-title fs-5" id="createModalLabel">@lang('site.addRecord', ['name' => 'خطة'])</h1>
@@ -189,7 +189,7 @@
     <!-- Edit Event - Modal -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true"
         data-bs-backdrop="static" data-bs-keyboard="false" wire:ignore.self>
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-body-tertiary">
                     <h1 class="modal-title fs-5" id="editModalLabel">@lang('site.updateRecord', ['name' => 'خطة'])</h1>
@@ -300,7 +300,7 @@
 
     <div class="modal fade" id="editProfile" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true"
         wire:ignore.self>
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="editProfileModalLabel">

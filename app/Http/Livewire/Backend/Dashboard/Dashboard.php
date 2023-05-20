@@ -242,7 +242,7 @@ class Dashboard extends Component
         // for users plans
         $users = User::whereStatus(true)->where('office_id', $byOffice)->with([
             'events' => function ($query) use($bySemester) {
-                $query->where('semester_id', $bySemester)->whereStatus(true)->Where('task_done' , 1);
+                $query->where('semester_id', $bySemester);
             }
         ])->search(trim(($searchString)))
         ->orderBy('name', 'asc')

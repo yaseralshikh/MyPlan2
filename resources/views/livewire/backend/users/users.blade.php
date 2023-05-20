@@ -247,7 +247,7 @@
 
     <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
         wire:ignore.self>
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <form autocomplete="off" wire:submit.prevent="{{ $showEditModal ? 'updateUser' : 'createUser' }}">
                 <div class="modal-content">
                     <div class="modal-header bg-light">
@@ -448,7 +448,7 @@
     <!-- Modal Show User -->
 
     <div class="modal fade" id="modal-show-user">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-dark">
                 <div class="modal-body text-muted">
                     <div class="card card-primary card-outline">
@@ -498,7 +498,7 @@
 
     <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true" wire:ignore.self>
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-light">
                     <h5>@lang('site.deleteRecord', ['name' => 'مستخدم'])</h5>

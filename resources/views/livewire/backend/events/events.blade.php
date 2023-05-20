@@ -57,10 +57,12 @@
                             </button>
                             <div class="dropdown-menu" role="menu" style="">
                                 {{-- user dose not have Plan --}}
-                                <a class="dropdown-item" wire:click.prevent="userNullPlan"
+                                <a class="dropdown-item" wire:click.prevent="ShowModalUsersPlansIncomplete"
                                     href="#">@lang('site.userWithoutPlan')</a>
+                                {{-- <a class="dropdown-item" wire:click.prevent="UsersPlansIncomplete"
+                                    href="#">@lang('site.userWithoutPlan')</a> --}}
                                 {{-- School dose not have Plan in this week --}}
-                                <a class="dropdown-item" wire:click.prevent="taskNullPlan"
+                                <a class="dropdown-item" wire:click.prevent="ShowModalSchoolsWithNoVisits"
                                     href="#">@lang('site.taskWithoutPlan')</a>
                                 <div class="dropdown-divider"></div>
 
@@ -70,7 +72,8 @@
                                 {{-- export data to PDF file --}}
                                 <a dir="rtl" class="dropdown-item" wire:click.prevent="exportPDF"
                                     href="#">@lang('site.exportPDF')</a>
-                                    {{-- <a dir="rtl" class="dropdown-item" target="_blank" href="https://www.ilovepdf.com/merge_pdf"
+                                {{-- <a dir="rtl" class="dropdown-item" target="_blank"
+                                    href="https://www.ilovepdf.com/merge_pdf"
                                     aria-disabled="true">@lang('site.merge_pdf')</a> --}}
                                 <div class="dropdown-divider"></div>
 
@@ -100,9 +103,11 @@
                     <div class="card-tools">
                         <div class="btn-group pr-2">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" wire:model="allowed_create_plans" wire:change='update_allowed_create_plans' class="custom-control-input"
+                                <input type="checkbox" wire:model="allowed_create_plans"
+                                    wire:change='update_allowed_create_plans' class="custom-control-input"
                                     id="customSwitchallowed_create_plans">
-                                <label class="custom-control-label" for="customSwitchallowed_create_plans">@lang('site.allowed_create_plans')</label>
+                                <label class="custom-control-label"
+                                    for="customSwitchallowed_create_plans">@lang('site.allowed_create_plans')</label>
                             </div>
                             {{-- <a href="#" class="btn btn-outline-secondary btn-sm hover-item" data-toggle="tooltip"
                                 data-placement="top" title="@lang('site.exportExcel')" wire:click.prevent="exportExcel">
@@ -167,17 +172,19 @@
                                 <option value="" selected>@lang('site.choise', [ 'name' => 'الأسبوع الدراسي'])</option>
                                 @foreach ($weeks as $week)
                                 <option value="{{ $week->id }}" {{ $week->active ? 'selected' : '' }} style="{{
-                                    $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{ $week->name . ' ( '.$week->semester->school_year . ' )' }}</option>
+                                    $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{ $week->name . ' (
+                                    '.$week->semester->school_year . ' )' }}</option>
                                 @endforeach
                             </select>
                         </div>
 
                         {{-- Section type Filter --}}
                         <div>
-                            <select dir="rtl" name="bySectionType" wire:model="bySectionType" class="form-control form-control-sm mr-5">
+                            <select dir="rtl" name="bySectionType" wire:model="bySectionType"
+                                class="form-control form-control-sm mr-5">
                                 <option value="" selected>@lang('site.choise', [ 'name' => 'المرجع الإداري'])</option>
                                 @foreach ($sctionsType as $sctionType)
-                                    <option class="bg-light" value="{{ $sctionType->id }}">{{ $sctionType->name }}</option>
+                                <option class="bg-light" value="{{ $sctionType->id }}">{{ $sctionType->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -191,19 +198,20 @@
 
                         {{-- Total Events --}}
                         <div>
-                            <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'الخطط']) : &nbsp( {{ $events->total() }} )</label>
+                            <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'الخطط']) : &nbsp( {{
+                                $events->total() }} )</label>
                         </div>
                     </div>
 
                     @if ($selectedRows)
-                        <span class="mb-2 text-success">
-                            <i class="fa fa-user" aria-hidden="true"></i>
-                            selected
-                            <span class="text-dark font-weight-bold">{{ count($selectedRows) }}</span> {{
-                            Str::plural('event', count($selectedRows)) }}
-                            <a class="ml-2 text-gray" href="" wire:click="resetSelectedRows" data-toggle="tooltip"
-                                data-placement="top" title="Reset Selected Rows"><i class="fas fa-times"></i></a>
-                        </span>
+                    <span class="mb-2 text-success">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        selected
+                        <span class="text-dark font-weight-bold">{{ count($selectedRows) }}</span> {{
+                        Str::plural('event', count($selectedRows)) }}
+                        <a class="ml-2 text-gray" href="" wire:click="resetSelectedRows" data-toggle="tooltip"
+                            data-placement="top" title="Reset Selected Rows"><i class="fas fa-times"></i></a>
+                    </span>
                     @endif
 
                     <div class="table-responsive">
@@ -238,7 +246,10 @@
                                         @lang('site.day')
                                     </th>
                                     <th>
-                                        @lang('site.date')
+                                        @lang('site.hijriDate')
+                                    </th>
+                                    <th>
+                                        @lang('site.gregorianDate')
                                     </th>
                                     <th>
                                         @lang('site.schoolWeek')
@@ -266,12 +277,20 @@
                                     <td class="dtr-control align-middle">{{ $event->user->name }}</td>
                                     <td class="align-middle">{{ $event->user->specialization->name }}</td>
                                     <td class="align-middle">{{ $event->user->section_type->name }}</td>
-                                    <td class="align-middle" style="background-color: {{ $event->color }};">{{ $event->task->name }}</td>
+                                    <td class="align-middle" style="background-color: {{ $event->color }};">{{
+                                        $event->task->name }}</td>
                                     <td class="align-middle">{{ $event->note }}</td>
-                                    <td class="align-middle">{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start) }}</td>
-                                    <td class="align-middle">
-                                        {{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $event->start) }}<br>
-                                        {{ Carbon\Carbon::parse($event->start)->toDateString() }}
+                                    <td class="align-middle"
+                                        data-sort="{{ Carbon\Carbon::parse($event->start)->format('Ymd') }}">
+                                        {{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start) }}
+                                    </td>
+                                    <td class="align-middle"
+                                        data-sort="{{ Carbon\Carbon::parse($event->start)->format('Ymd') }}">
+                                        {{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $event->start) }}
+                                    </td>
+                                    <td class="align-middle"
+                                        data-sort="{{ Carbon\Carbon::parse($event->start)->format('Ymd') }}">
+                                        {{ $event->start }}
                                     </td>
                                     {{-- <td>{{
                                         (Carbon\Carbon::parse($event->end))->diffInDays(Carbon\Carbon::parse($event->start))
@@ -308,7 +327,7 @@
 
                                 @empty
                                 <tr>
-                                    <td colspan="13" class="text-center">@lang('site.noDataFound')</td>
+                                    <td colspan="14" class="text-center">@lang('site.noDataFound')</td>
                                 </tr>
                                 @endforelse
                             </tbody>
@@ -330,7 +349,7 @@
 
     <div class="modal fade" id="form" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
         wire:ignore.self>
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <form autocomplete="off" wire:submit.prevent="{{ $showEditModal ? 'updateEvent' : 'createEvent' }}">
                 <div class="modal-content">
                     <div class="modal-header bg-light">
@@ -348,13 +367,13 @@
                     <div class="modal-body">
 
                         @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
                         @endif
 
                         <div class="row h-100 justify-content-center align-items-center">
@@ -368,7 +387,7 @@
                                         <option value="" selected>@lang('site.choise', ['name' => 'المشرف التربوي'])
                                         </option>
                                         @foreach ($users as $user)
-                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
                                         @endforeach
                                     </select>
 
@@ -406,11 +425,12 @@
                                 <!-- Modal Levels -->
                                 <div class="form-group mb-3" wire:ignore.self>
                                     <label for="level_id" class="col-form-label">@lang('site.level') :</label>
-                                    <select wire:model.defer="data.level_id" wire:change="LevelOption($event.target.value)" id="level_id"
+                                    <select wire:model.defer="data.level_id"
+                                        wire:change="LevelOption($event.target.value)" id="level_id"
                                         class="form-control @error('level_id') is-invalid @enderror">
                                         <option value="" selected>@lang('site.choise', ['name' => 'المرحلة']) :</option>
                                         @foreach ($levels as $level)
-                                            <option value="{{ $level->id }}">{{ $level->name }}</option>
+                                        <option value="{{ $level->id }}">{{ $level->name }}</option>
                                         @endforeach
                                     </select>
 
@@ -426,10 +446,11 @@
                                 <div class="form-group" wire:ignore.self>
                                     <label for="task_id" class="col-form-label">@lang('site.task') :</label>
                                     <select wire:model.defer="data.task_id" id="task_id"
-                                        class="form-control select2bs4 @error('task_id') is-invalid @enderror" id="task_id">
+                                        class="form-control select2bs4 @error('task_id') is-invalid @enderror"
+                                        id="task_id">
                                         <option value="" selected>@lang('site.choise', ['name' => 'المهمة'])</option>
                                         @foreach ($tasks as $task)
-                                            <option value="{{ $task->id }}">{{ $task->name }}</option>
+                                        <option value="{{ $task->id }}">{{ $task->name }}</option>
                                         @endforeach
                                     </select>
 
@@ -485,7 +506,8 @@
 
                         <!-- Modal Event week_id -->
                         <div class="mb-3">
-                            <input type="hidden" wire:model.defer="data.week_id" class="form-control @error('week_id') is-invalid @enderror" id="week_id">
+                            <input type="hidden" wire:model.defer="data.week_id"
+                                class="form-control @error('week_id') is-invalid @enderror" id="week_id">
 
                             @error('week_id')
                             <div class="invalid-feedback d-block">
@@ -516,7 +538,7 @@
 
     <div dir="rtl" class="modal fade" id="confirmationModal" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true" wire:ignore.self>
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-light">
                     <h5>@lang('site.deleteRecord', ['name' => 'خطة'])</h5>
@@ -538,9 +560,9 @@
 
     <!-- Modal show event overlap confirmation -->
 
-    <div dir="rtl" class="modal fade" id="confirmationEventOverLapModal" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true" wire:ignore.self>
-        <div class="modal-dialog" role="document">
+    <div dir="rtl" class="modal fade" id="confirmationEventOverLapModal" data-keyboard="false" data-backdrop="static"
+        role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-light">
                     <h5>@lang('site.event-overlap-confirmation')</h5>
@@ -555,6 +577,100 @@
                             class="mr-1 fa fa-times"></i> @lang('site.cancel')</button>
                     <button type="button" wire:click.prevent="confirmEventOverLap" class="btn btn-success"><i
                             class="mr-1 fa fa-trash"></i>@lang('site.save')</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal show Users whose plans are incomplete -->
+
+    <div dir="rtl" class="modal fade" id="UsersPlansIncompleteModal" data-keyboard="false" data-backdrop="static"
+        role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h5>@lang('site.usersPlansIncomplete')</h5>
+                </div>
+
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table id="example2" class="table text-center table-bordered table-hover dtr-inline sortable"
+                            aria-describedby="example2_info">
+                            <thead class="bg-light ">
+                                <tr>
+                                    <th class="no-sort">#</th>
+                                    <th>@lang('site.name')</th>
+                                    <th>@lang('site.plansCount')</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($usersPlansIncomplete as $user)
+                                    <tr>
+                                        <td class="align-middle">{{ $loop->iteration }}</td>
+                                        <td class="align-middle">{{ $user->name }}</span></td>
+                                        <td class="align-middle"><span style="color:red">( {{ $user->events->count() }} )</span></td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="text-center">@lang('site.noReviews')</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                            class="mr-1 fa fa-times"></i> @lang('site.close')</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal show Schools that doesn't have users to visit -->
+
+    <div dir="rtl" class="modal fade" id="SchoolsWithNoVisitsModal" data-keyboard="false" data-backdrop="static"
+        role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h5>@lang('site.schoolsWithNoVisits') ( @lang('site.total') {{ count($schoolsWithNoVisits) }} )</h5>
+                </div>
+
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table id="example2" class="table text-center table-bordered table-hover dtr-inline sortable"
+                            aria-describedby="example2_info">
+                            <thead class="bg-light ">
+                                <tr>
+                                    <th class="no-sort">#</th>
+                                    <th>@lang('site.schoolName')</th>
+                                    <th>@lang('site.level')</th>
+                                    <th>@lang('site.totalVisits')</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($schoolsWithNoVisits as $school)
+                                    <tr>
+                                        <td class="align-middle">{{ $loop->iteration }}</td>
+                                        <td class="align-middle">{{ $school->name }}</span></td>
+                                        <td class="align-middle">( {{ $school->level->name }} )</td>
+                                        <td class="align-middle">( {{ $school->events->count() }} )</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center">@lang('site.noReviews')</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                            class="mr-1 fa fa-times"></i> @lang('site.close')</button>
                 </div>
             </div>
         </div>
@@ -613,6 +729,14 @@
 
                 window.addEventListener('hide-event-overlap-modal', function (event) {
                     $('#confirmationEventOverLapModal').modal('hide');
+                });
+
+                window.addEventListener('show-users-plans-incomplete-modal', function (event) {
+                    $('#UsersPlansIncompleteModal').modal('show');
+                });
+
+                window.addEventListener('show-schools-with-no-visits-modal', function (event) {
+                    $('#SchoolsWithNoVisitsModal').modal('show');
                 });
 
             });

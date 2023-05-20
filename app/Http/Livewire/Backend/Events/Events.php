@@ -2,27 +2,27 @@
 
 namespace App\Http\Livewire\Backend\Events;
 
-use PDF;
-use Carbon\Carbon;
-use App\Models\Task;
-use App\Models\User;
-use App\Models\Week;
+use App\Exports\EventsExport;
 use App\Models\Event;
 use App\Models\Level;
 use App\Models\Office;
-use App\Models\Subtask;
-use Livewire\Component;
-use App\Models\Semester;
-use App\Rules\UserOverLap;
 use App\Models\SectionType;
-use Livewire\WithPagination;
-use App\Exports\EventsExport;
+use App\Models\Semester;
+use App\Models\Subtask;
+use App\Models\Task;
+use App\Models\User;
+use App\Models\Week;
 use App\Rules\DateOutService;
-use Livewire\WithFileUploads;
+use App\Rules\UserOverLap;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 
 class Events extends Component
 {
@@ -37,8 +37,6 @@ class Events extends Component
 
     public $tasks = [];
     public $levels = [];
-
-    public $items = [];
 
     public $event;
 
@@ -63,6 +61,9 @@ class Events extends Component
 
     public $overLapData = [];
     public $overLapStatus = null;
+
+    public $usersPlansIncomplete = [];
+    public $schoolsWithNoVisits = [];
 
     // update Site Status
 
@@ -159,7 +160,7 @@ class Events extends Component
     {
         $events_done_status = Event::whereIn('id', $this->selectedRows)->get();
 
-        if(!$events_done_status[0]->status){
+        if (!$events_done_status[0]->status) {
 
             $this->alert('error', __('site.eventsDoneStatus'), [
                 'position' => 'center',
@@ -188,7 +189,6 @@ class Events extends Component
                 'showConfirmButton' => false,
             ]);
         };
-
 
         $this->reset(['selectPageRows', 'selectedRows']);
     }
@@ -245,7 +245,7 @@ class Events extends Component
 
     public function addNewEvent()
     {
-        $this->reset(['data','tasks']);
+        $this->reset(['data', 'tasks']);
         //$this->resetExcept(['byStatus','byWeek','searchTerm']);
         $this->showEditModal = false;
         $this->data['status'] = 1;
@@ -260,12 +260,12 @@ class Events extends Component
     public function createEvent()
     {
         $validatedData = Validator::make($this->data, [
-            'user_id'       => 'required',
-            'level_id'      => 'required',
-            'task_id'       => 'required',
-            'start'         => ['required', new UserOverLap($this->data['start'], $this->data['user_id']), new DateOutService($this->data['start'], $this->data['start'])],
-            'note'          => 'nullable|max:255',
-            'status'        => 'required',
+            'user_id' => 'required',
+            'level_id' => 'required',
+            'task_id' => 'required',
+            'start' => ['required', new UserOverLap($this->data['start'], $this->data['user_id']), new DateOutService($this->data['start'], $this->data['start'])],
+            'note' => 'nullable|max:255',
+            'status' => 'required',
         ])->validate();
 
         $taskName = Task::whereStatus(true)->where('id', $this->data['task_id'])->pluck('name')->first();
@@ -294,22 +294,22 @@ class Events extends Component
         $week_Id = Week::where('start', '<=', $validatedData['start'])->where('end', '>=', $validatedData['start'])->pluck('id')->first();
 
         $eventStatus = Event::where('task_id', $validatedData['task_id'])->where('start', $validatedData['start'])
-            ->whereHas('task', function ($q) {$q->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة']);})
-            ->count() <= 0 ;
+            ->whereHas('task', function ($q) {$q->whereNotIn('name', ['إجازة', 'برنامج تدريبي', 'يوم مكتبي', 'مكلف بمهمة']);})
+            ->count() <= 0;
 
         if (!$eventStatus) {
 
             $this->overLapData = [
 
-                'user_id'       => $this->data['user_id'],
-                'office_id'     => auth()->user()->office_id,
-                'task_id'       => $this->data['task_id'],
-                'start'         => $this->data['start'],
-                'end'           => $this->data['start'],
-                'status'        => $this->data['status'],
-                'color'         => $color,
-                'semester_id'   => $semester_Id,
-                'week_id'       => $week_Id,
+                'user_id' => $this->data['user_id'],
+                'office_id' => auth()->user()->office_id,
+                'task_id' => $this->data['task_id'],
+                'start' => $this->data['start'],
+                'end' => $this->data['start'],
+                'status' => $this->data['status'],
+                'color' => $color,
+                'semester_id' => $semester_Id,
+                'week_id' => $week_Id,
             ];
 
             if (isset($this->data['note'])) {
@@ -381,7 +381,7 @@ class Events extends Component
 
     public function edit(Event $event)
     {
-        $this->reset(['data','tasks','byLevel']);
+        $this->reset(['data', 'tasks', 'byLevel']);
 
         $this->showEditModal = true;
 
@@ -409,12 +409,12 @@ class Events extends Component
     public function updateEvent()
     {
         $validatedData = Validator::make($this->data, [
-            'task_id'       => 'required',
-            'user_id'       => 'required',
-            'level_id'      => 'required',
-            'start'         => ['required', new DateOutService($this->data['start'])],
-            'note'          => 'nullable|max:255',
-            'status'        => 'required',
+            'task_id' => 'required',
+            'user_id' => 'required',
+            'level_id' => 'required',
+            'start' => ['required', new DateOutService($this->data['start'])],
+            'note' => 'nullable|max:255',
+            'status' => 'required',
         ])->validate();
 
         $taskName = Task::whereStatus(true)->where('id', $this->data['task_id'])->pluck('name')->first();
@@ -442,22 +442,22 @@ class Events extends Component
         $week_Id = Week::where('start', '<=', $validatedData['start'])->where('end', '>=', $validatedData['start'])->pluck('id')->first();
 
         $eventStatus = Event::where('task_id', $validatedData['task_id'])->where('start', $validatedData['start'])
-        ->whereHas('task', function ($q) {$q->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة']);})
-        ->count() <= 0 ;
+            ->whereHas('task', function ($q) {$q->whereNotIn('name', ['إجازة', 'برنامج تدريبي', 'يوم مكتبي', 'مكلف بمهمة']);})
+            ->count() <= 0;
 
         if (!$eventStatus) {
 
             $this->overLapData = [
 
-                'user_id'       => $this->data['user_id'],
-                'office_id'     => auth()->user()->office_id,
-                'task_id'       => $this->data['task_id'],
-                'start'         => $this->data['start'],
-                'end'           => $this->data['start'],
-                'status'        => $this->data['status'],
-                'color'         => $color,
-                'semester_id'   => $semester_Id,
-                'week_id'       => $week_Id,
+                'user_id' => $this->data['user_id'],
+                'office_id' => auth()->user()->office_id,
+                'task_id' => $this->data['task_id'],
+                'start' => $this->data['start'],
+                'end' => $this->data['start'],
+                'status' => $this->data['status'],
+                'color' => $color,
+                'semester_id' => $semester_Id,
+                'week_id' => $week_Id,
 
             ];
 
@@ -494,7 +494,6 @@ class Events extends Component
         }
     }
 
-
     // Show Modal Form to Confirm Event Removal
 
     public function confirmEventRemoval($eventId)
@@ -525,7 +524,7 @@ class Events extends Component
                 'showConfirmButton' => false,
             ]);
 
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             $message = $this->alert('error', $th->getMessage(), [
                 'position' => 'top-end',
                 'timer' => 2000,
@@ -538,7 +537,6 @@ class Events extends Component
             return $message;
         }
     }
-
 
     // Export Excel File
     public function exportExcel()
@@ -582,14 +580,13 @@ class Events extends Component
         }
     }
 
-
-    public function userNullPlan()
+    public function ShowModalUsersPlansIncomplete()
     {
+        $this->usersPlansIncomplete = [];
+
         $byWeek = $this->byWeek;
         $bySectionType = $this->bySectionType;
         $byOffice = auth()->user()->office_id;
-
-        $this->items = [];
 
         if ($byWeek && $bySectionType) {
 
@@ -605,56 +602,23 @@ class Events extends Component
                 $start->addDay();
             }
 
-            $days_range = count($dates)-1;
+            $this->usersPlansIncomplete  = User::where('status', true)
+                ->where('section_type_id', $bySectionType)
+                ->where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)
+                ->whereHas('events', function ($query) use ($byWeek, $dates) {
+                    $query->where('week_id', 8)
+                        ->groupBy('office_id')
+                        ->havingRaw('COUNT(*) < ' . count($dates));
+                })
+                ->with(['events' => function ($query) use ($byWeek) {
+                    $query->where('week_id', $byWeek)->orderBy('start', 'asc');
+                }])
+                ->get();
 
-            $users = User::where('status', true)->where('section_type_id', $bySectionType)->where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)->with(['events' => function ($query) use ($byWeek) {
-                $query->where('week_id', $byWeek)->orderBy('start', 'asc');
-            }])->get();
-
-            $table = '<table style="border-collapse: collapse;">';
-            $table .= '<thead><tr><th style="border: 1px solid;text-align: center;background-color: #f2f2f2;">! مشرفين خططهم غير مكتملة</th><th style="border: 1px solid;text-align: center;background-color: #f2f2f2;">م</th></tr></thead>';
-            $table .= '<tbody>';
-
-            $index = 0;
-
-            foreach ($users as $user) {
-                if ($user->events->count() < $days_range ) {
-                    $index = $index+ 1;
-                    $table .= '<tr>';
-                    $table .= '<td style="border: 1px solid;text-align: center;">' . $user->name . ' (<span style="color:red"> ' . $user->events->count() . ' </span>)' . '</td>';
-                    $table .= '<td style="border: 1px solid;text-align: center;">' . $index . '</td>';
-                    $table .= '</td>';
-                }
-            }
-
-            $table .= '</tbody></table>';
-
-            if (count($users)) {
-                $this->alert('error', $table, [
-                    'position' => 'center',
-                    'timer' => null,
-                    'toast' => true,
-                    'text'  => null,
-                    'showCancelButton' => false,
-                    'showConfirmButton' => true,
-                    //'width' => '550px',
-                ]);
-
-            } else {
-                $this->alert('success', __('site.noReviews'), [
-                    'position' => 'center',
-                    'timer' => 2000,
-                    'timerProgressBar' => true,
-                    'toast' => true,
-                    'text' => null,
-                    'showCancelButton' => false,
-                    'showConfirmButton' => false,
-                    //'width' => '500px',
-                ]);
-            }
+            $this->dispatchBrowserEvent('show-users-plans-incomplete-modal');
 
         } else {
-            $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.selectEduType'), [
+            $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.selectSectionType'), [
                 'position' => 'center',
                 'timer' => 6000,
                 'timerProgressBar' => true,
@@ -667,7 +631,37 @@ class Events extends Component
         }
     }
 
+    public function ShowModalSchoolsWithNoVisits()
+    {
+        $this->schoolsWithNoVisits = [];
 
+        $byWeek = $this->byWeek;
+        $Office_id = auth()->user()->office_id;
+
+        if ($byWeek) {
+
+            $schoolsHasEvents = Event::where('office_id', $Office_id)->where('week_id', $byWeek)->pluck('task_id')->toArray();
+
+            $this->schoolsWithNoVisits = Task::where('office_id', $Office_id)->whereNotIn('id', array_values($schoolsHasEvents))->whereNotIn('level_id', [7])->get();
+
+            $this->dispatchBrowserEvent('show-schools-with-no-visits-modal');
+
+        } else {
+
+            $this->alert('error', __('site.selectWeek'), [
+                'position' => 'center',
+                'timer' => 6000,
+                'timerProgressBar' => true,
+                'toast' => true,
+                'text' => null,
+                'showCancelButton' => false,
+                'showConfirmButton' => false,
+                'width' => '500px',
+            ]);
+        }
+    }
+
+    // taskNullPlan
     public function taskNullPlan()
     {
         $byWeek = $this->byWeek;
@@ -677,7 +671,7 @@ class Events extends Component
 
             $events = Event::where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)->where('week_id', $byWeek)->pluck('task_id')->toArray();
 
-            $tasks_null_plan = Task::where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)->whereNotIn('id' , array_values($events))->whereNotIn('level_id',[5])->get();
+            $tasks_null_plan = Task::where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)->whereNotIn('id', array_values($events))->whereNotIn('level_id', [7])->get();
 
             $chunks = $tasks_null_plan->chunk(3);
 
@@ -699,7 +693,7 @@ class Events extends Component
                 'position' => 'center',
                 'timer' => null,
                 'toast' => true,
-                'text'  => null,
+                'text' => null,
                 'showCancelButton' => false,
                 'showConfirmButton' => true,
                 'width' => '700px',
@@ -736,7 +730,7 @@ class Events extends Component
                         ->whereHas('events', function ($query) use ($byWeek) {
                             $query->where('week_id', $byWeek)->where('status', true);
                         })->with(['events' => function ($query) use ($byWeek, $selectedRows) {
-                                $query->with('task')->whereHas('task', function ($q) {$q->whereNotIn('name', ['إجازة']);})->whereIn('id', $selectedRows)->WhereNotNull('id')->where('week_id', $byWeek)->where('status', true)->orderBy('start', 'asc');
+                        $query->with('task')->whereHas('task', function ($q) {$q->whereNotIn('name', ['إجازة']);})->whereIn('id', $selectedRows)->WhereNotNull('id')->where('week_id', $byWeek)->where('status', true)->orderBy('start', 'asc');
                     }])->get();
 
                     if ($users->count() != null) {
@@ -813,7 +807,7 @@ class Events extends Component
                 ]);
             }
 
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
 
             $message = $this->alert('error', $th->getMessage(), [
                 'position' => 'top-end',
@@ -830,7 +824,6 @@ class Events extends Component
             return $message;
         }
     }
-
 
     //Get Semester Active
     public function semesterActive()
@@ -894,7 +887,7 @@ class Events extends Component
 
         $byOffice = $selected_office_id ? $selected_office_id : $user_office_id;
 
-        $this->levels = Level::whereIn('id', [1,2,3,4,5,6, $user_office_id == $byOffice ? 7 : ''])
+        $this->levels = Level::whereIn('id', [1, 2, 3, 4, 5, 6, $user_office_id == $byOffice ? 7 : ''])
             ->whereHas('tasks', function ($query) use ($byOffice) {$query->where('office_id', $byOffice);})
             ->get();
     }
@@ -910,7 +903,7 @@ class Events extends Component
         $selected_level_id = $this->byLevel;
 
         $this->tasks = Task::where('office_id', $byOffice)
-            ->whereStatus(1)->where('level_id' , $selected_level_id)
+            ->whereStatus(1)->where('level_id', $selected_level_id)
             ->orderBy('level_id', 'asc')
             ->orderBy('name', 'asc')
             ->get();
@@ -922,11 +915,11 @@ class Events extends Component
 
         $levels = $this->getLevelsData();
 
-        $tasks  = $this->getTaskesData();
+        $tasks = $this->getTaskesData();
 
-        $users  = User::whereStatus(1)->where('office_id', auth()->user()->office_id)->orderBy('name', 'asc')->get();
+        $users = User::whereStatus(1)->where('office_id', auth()->user()->office_id)->orderBy('name', 'asc')->get();
 
-        $weeks  = Week::whereStatus(1)->where('semester_id', $this->semesterActive())->get();
+        $weeks = Week::whereStatus(1)->where('semester_id', $this->semesterActive())->get();
 
         $this->allowed_create_plans = Office::where('id', auth()->user()->office_id)->pluck('allowed_create_plans')->first();
 
