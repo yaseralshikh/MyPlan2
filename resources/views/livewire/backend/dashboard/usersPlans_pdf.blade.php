@@ -69,6 +69,8 @@
                         <th>مكلف بمهمة</th>
                         <th>إجازة</th>
                         <th>مجموع الخطط</th>
+                        <th>الخطط الغير معتمدة</th>
+                        <th>الخطط الغير منفذة</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -78,19 +80,21 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->specialization->name }}</td>
                             <td>{{ $user->office->name }}</td>
-                            <td>{{ $user->events->whereNotIn('task.name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة'])->count() }}</td>
-                            <td>{{ $user->events->where('task.name','يوم مكتبي' )->count() }}</td>
-                            <td>{{ $user->events->where('task.name','برنامج تدريبي' )->count() }}</td>
-                            <td>{{ $user->events->where('task.name','مكلف بمهمة' )->count() }}</td>
-                            <td>{{ $user->events->where('task.name','إجازة' )->count() }}</td>
-                            <td style="background-color: rgba(225, 222, 222, 0.455);">{{ $user->events->count() }}</td>
+                            <td>{{ $user->events->where('status', true)->where('task_done', true)->whereNotIn('task.name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة'])->count() }}</td>
+                            <td>{{ $user->events->where('status', true)->where('task_done', true)->where('task.name','يوم مكتبي' )->count() }}</td>
+                            <td>{{ $user->events->where('status', true)->where('task_done', true)->where('task.name','برنامج تدريبي' )->count() }}</td>
+                            <td>{{ $user->events->where('status', true)->where('task_done', true)->where('task.name','مكلف بمهمة' )->count() }}</td>
+                            <td>{{ $user->events->where('status', true)->where('task_done', true)->where('task.name','إجازة' )->count() }}</td>
+                            <td style="background-color: rgba(225, 222, 222, 0.455);">{{ $user->events->where('status', true)->where('task_done', true)->count() }}</td>
+                            <td style="background-color: rgba(225, 222, 222, 0.455);color:rgb(112, 7, 7);">{{ $user->events->where('status', 0)->count() }}</td>
+                            <td style="background-color: rgba(225, 222, 222, 0.455);color:rgb(112, 7, 7);">{{ $user->events->where('task_done', 0)->count() }}</td>
                         </tr>
 
                         <htmlpagefooter name="page-footer">
                             <table style="border-collapse: collapse;">
                                 <tbody>
                                     <tr style="border-top: 1px solid rgb(100, 100, 100);">
-                                        <td class="logo_header" style="text-align:center;font-size: 12px; padding-left:10px">{{ date('Y-m-d') }}</td>
+                                        <td class="logo_header" style="text-align:center;font-size: 12px; padding-left:10px">{{ date('Y-m-d') }} - {{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d') }}</td>
                                         <td class="logo_header" style="text-align:center;font-size: 12px; padding-right:10px">رؤيتنا : تعليم ريادي.</td>
                                         <td class="logo_header" style="text-align:center;font-size: 12px; padding-left:10px">{{ $users[0]->office->name }}</td>
                                     </tr>

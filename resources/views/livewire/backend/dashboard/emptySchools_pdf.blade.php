@@ -79,7 +79,7 @@
                             <table style="border-collapse: collapse;">
                                 <tbody>
                                     <tr style="border-top: 1px solid rgb(100, 100, 100);">
-                                        <td class="logo_header" style="text-align:center;font-size: 12px; padding-left:10px">{{ date('Y-m-d') }}</td>
+                                        <td class="logo_header" style="text-align:center;font-size: 12px; padding-left:10px">{{ date('Y-m-d') }} - {{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d') }}</td>
                                         <td class="logo_header" style="text-align:center;font-size: 12px; padding-right:10px">رؤيتنا : تعليم ريادي.</td>
                                         <td class="logo_header" style="text-align:center;font-size: 12px; padding-left:10px">{{ $tasks[0]->office->name }}</td>
                                     </tr>

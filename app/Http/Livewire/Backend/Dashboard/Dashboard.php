@@ -141,7 +141,7 @@ class Dashboard extends Component
 
             $users = User::whereStatus(true)->with([
                 'events' => function ($query) use($bySemester) {
-                    $query->where('semester_id', $bySemester)->whereStatus(true)->where('task_done', true);
+                    $query->where('semester_id', $bySemester);
                 }
             ])
             ->where('office_id' , $this->byOffice ? $this->byOffice : auth()->user()->office_id)

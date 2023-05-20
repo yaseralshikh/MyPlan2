@@ -33,7 +33,7 @@ class UsersPlansExport implements FromCollection, WithHeadings, WithMapping, Sho
 
         $users = User::whereStatus(true)->where('office_id', $this->office_id)->with([
             'events' => function ($query) use($bySemester) {
-                $query->where('semester_id', $bySemester)->whereStatus(1)->Where('task_done' , 1);
+                $query->where('semester_id', $bySemester);
             }
         ])
         ->orderBy('name', 'asc')
@@ -53,12 +53,14 @@ class UsersPlansExport implements FromCollection, WithHeadings, WithMapping, Sho
             $user->specialization->name,
             $user->job_type->name,
             $user->office->name,
-            $user->events->whereNotIn('task.name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة'])->count() ? $user->events->whereNotIn('task.name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة'])->count() : '0',
-            $user->events->where('task.name','يوم مكتبي' )->count() ? $user->events->where('task.name','يوم مكتبي' )->count() : '0',
-            $user->events->where('task.name','برنامج تدريبي' )->count() ? $user->events->where('task.name','برنامج تدريبي' )->count() : '0',
-            $user->events->where('task.name','مكلف بمهمة' )->count() ? $user->events->where('task.name','مكلف بمهمة' )->count() : '0',
-            $user->events->where('task.name','إجازة' )->count() ? $user->events->where('task.name','إجازة' )->count() : '0',
-            $user->events->count() ? $user->events->count() : '0',
+            $user->events->where('status', true)->where('task_done', true)->whereNotIn('task.name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة'])->count() ? $user->events->where('status', true)->where('task_done', true)->whereNotIn('task.name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة'])->count() : '0',
+            $user->events->where('status', true)->where('task_done', true)->where('task.name','يوم مكتبي' )->count() ? $user->events->where('status', true)->where('task_done', true)->where('task.name','يوم مكتبي' )->count() : '0',
+            $user->events->where('status', true)->where('task_done', true)->where('task.name','برنامج تدريبي' )->count() ? $user->events->where('status', true)->where('task_done', true)->where('task.name','برنامج تدريبي' )->count() : '0',
+            $user->events->where('status', true)->where('task_done', true)->where('task.name','مكلف بمهمة' )->count() ? $user->events->where('status', true)->where('task_done', true)->where('task.name','مكلف بمهمة' )->count() : '0',
+            $user->events->where('status', true)->where('task_done', true)->where('task.name','إجازة' )->count() ? $user->events->where('status', true)->where('task_done', true)->where('task.name','إجازة' )->count() : '0',
+            $user->events->where('status', true)->where('task_done', true)->count() ? $user->events->where('status', true)->where('task_done', true)->count() : '0',
+            $user->events->where('status', false)->count() ? $user->events->where('status', false)->count() : '0',
+            $user->events->where('task_done', false)->count() ? $user->events->where('task_done', false)->count() : '0',
         ] ;
     }
 
@@ -77,6 +79,8 @@ class UsersPlansExport implements FromCollection, WithHeadings, WithMapping, Sho
             'مكلف بمهمة',
             'إجازة',
             'مجموع الخطط',
+            'الخطط الغير معتمدة',
+            'الخطط الغير منفذة',
         ];
     }
 
@@ -100,7 +104,7 @@ class UsersPlansExport implements FromCollection, WithHeadings, WithMapping, Sho
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange = 'A1:L1'; // All headers
+                $cellRange = 'A1:N1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray(
                     array(
