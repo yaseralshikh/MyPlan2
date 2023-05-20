@@ -541,36 +541,26 @@ class Events extends Component
     // Export Excel File
     public function exportExcel()
     {
-        $byStatus = $this->byStatus;
         $byWeek = $this->byWeek;
         $bySectionType = $this->bySectionType;
         $byOffice = auth()->user()->office_id;
 
-        if ($byStatus) {
-            if ($byWeek && $bySectionType) {
-                return Excel::download(new EventsExport(
-                    $this->searchTerm,
-                    $this->selectedRows,
-                    $this->byWeek,
-                    $bySectionType,
-                    $this->byStatus,
-                    $byOffice),
-                    'events.xlsx');
-            } else {
-                $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.sectionType'), [
-                    'position' => 'center',
-                    'timer' => 6000,
-                    'timerProgressBar' => true,
-                    'toast' => true,
-                    'text' => null,
-                    'showCancelButton' => false,
-                    'showConfirmButton' => false,
-                ]);
-            }
+        if ($byWeek && $bySectionType) {
+
+            return Excel::download(new EventsExport(
+
+                $this->searchTerm,
+                $this->selectedRows,
+                $this->byWeek,
+                $bySectionType,
+                $byOffice),
+                'events.xlsx');
+
         } else {
-            $this->alert('error', __('site.selectStatus'), [
+
+            $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.sectionType'), [
                 'position' => 'center',
-                'timer' => 2000,
+                'timer' => 6000,
                 'timerProgressBar' => true,
                 'toast' => true,
                 'text' => null,
