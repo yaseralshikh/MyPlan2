@@ -34,7 +34,7 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                
+
                 {{-- Dashboard --}}
                 <li class="nav-item">
                     <a href="{{ route('admin.dashboard') }}"
@@ -88,6 +88,24 @@
                         </p>
                     </a>
                 </li>
+
+                @role('operationsmanager')
+                {{-- Education Section --}}
+                <li class="nav-header text-secondary">
+                    <h6>@lang('site.educationSection')</h6>
+                </li>
+                {{-- Events --}}
+                <li class="nav-item">
+                    <a href="{{ route('admin.education') }}"
+                        class="nav-link {{ request()->is('admin/education') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-calendar"></i>
+                        <p>
+                            @lang('site.educations')
+                        </p>
+                    </a>
+                </li>
+                @endrole
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

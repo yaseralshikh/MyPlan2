@@ -605,8 +605,10 @@ class Events extends Component
                 ->where('section_type_id', $bySectionType)
                 ->where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)
                 ->with(['events' => function ($query) use ($byWeek) {
-                    $query->where('week_id', $byWeek)->orderBy('start', 'asc');
-                }])->get();
+                        $query->where('week_id', $byWeek)->orderBy('start', 'asc');
+                    }])
+                ->orderBy('name', 'asc')
+                ->get();
 
             // $this->usersPlansIncomplete  = User::where('status', true)
             //     ->where('section_type_id', $bySectionType)
@@ -675,6 +677,8 @@ class Events extends Component
         $this->schoolsWithNoVisits = Task::where('office_id', $Office_id)
             ->whereNotIn('id', array_values($schoolsHasEvents))->whereNotIn('level_id', [7])
             ->whereHas('office', function ($q) {$q->where('office_type', 1)->where('gender', auth()->user()->gender);})
+            ->orderBy('level_id', 'asc')
+            ->orderBy('name', 'asc')
             ->get();
     }
 

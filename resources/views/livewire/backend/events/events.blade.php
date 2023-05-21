@@ -219,13 +219,13 @@
                             aria-describedby="example2_info">
                             <thead class="bg-light ">
                                 <tr>
-                                    <th scope="col">
+                                    <td scope="col">
                                         <div class="custom-control custom-checkbox small">
                                             <input type="checkbox" wire:model="selectPageRows" value=""
                                                 class="custom-control-input" id="customCheck">
                                             <label class="custom-control-label" for="customCheck"></label>
                                         </div>
-                                    </th>
+                                    </td>
                                     <th class="no-sort">#</th>
                                     <th>
                                         @lang('site.name')

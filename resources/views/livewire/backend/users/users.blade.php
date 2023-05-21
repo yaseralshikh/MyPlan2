@@ -129,13 +129,13 @@
                             aria-describedby="example2_info">
                             <thead class="bg-light">
                                 <tr>
-                                    <th class="align-middle">
+                                    <td class="align-middle">
                                         <div class="custom-control custom-checkbox small">
                                             <input type="checkbox" wire:model="selectPageRows" value=""
                                                 class="custom-control-input" id="customCheck">
                                             <label class="custom-control-label" for="customCheck"></label>
                                         </div>
-                                    </th>
+                                    </td>
                                     <th class="align-middle">#</th>
                                     <th class="align-middle">
                                         @lang('site.name')
@@ -547,14 +547,6 @@
 
                 window.addEventListener('hide-delete-modal', function (event) {
                     $('#confirmationModal').modal('hide');
-                });
-
-                window.addEventListener('show-import-excel-modal', function (event) {
-                    $('#importExcelModal').modal('show');
-                });
-
-                window.addEventListener('hide-import-excel-modal', function (event) {
-                    $('#importExcelModal').modal('hide');
                 });
             });
     </script>

@@ -7,6 +7,7 @@ use App\Http\Livewire\Backend\Users\Users;
 use App\Http\Livewire\Backend\Events\Events;
 use App\Http\Controllers\OfficeDropdownController;
 use App\Http\Livewire\Backend\Dashboard\Dashboard;
+use App\Http\Livewire\Backend\Education\Education;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,4 +38,5 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'ro
     Route::get('/', Dashboard::class)->name('dashboard');
     Route::get('users', Users::class)->name('users');
     Route::get('events', Events::class )->name('events');
+    Route::get('education', Education::class )->name('education');
 });
