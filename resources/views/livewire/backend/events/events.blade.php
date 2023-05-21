@@ -366,7 +366,7 @@
                     </div>
                     <div class="modal-body">
 
-                        @if ($errors->any())
+                        {{-- @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
                                 @foreach ($errors->all() as $error)
@@ -374,7 +374,7 @@
                                 @endforeach
                             </ul>
                         </div>
-                        @endif
+                        @endif --}}
 
                         <div class="row h-100 justify-content-center align-items-center">
                             <div class="col-12">

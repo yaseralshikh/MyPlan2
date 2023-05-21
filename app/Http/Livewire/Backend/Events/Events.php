@@ -261,12 +261,17 @@ class Events extends Component
     public function createEvent()
     {
         $validatedData = Validator::make($this->data, [
-            'user_id' => 'required',
-            'level_id' => 'required',
-            'task_id' => 'required',
-            'start' => ['required', new UserOverLap($this->data['start'], $this->data['user_id']), new DateOutService($this->data['start'], $this->data['start'])],
-            'note' => 'nullable|max:255',
-            'status' => 'required',
+            'user_id'   => 'required',
+            'level_id'  => 'required',
+            'task_id'   => 'required',
+            //'start'     => ['required', new UserOverLap($this->data['start'], $this->data['user_id']), new DateOutService($this->data['start'], $this->data['start'])],
+            'start' => [
+                'required',
+                new UserOverLap($this->data['start'] ?? null, $this->data['user_id'] ?? null),
+                new DateOutService($this->data['start'] ?? null, $this->data['start'] ?? null),
+            ],
+            'note'      => 'nullable|max:255',
+            'status'    => 'required',
         ])->validate();
 
         $taskName = Task::whereStatus(true)->where('id', $this->data['task_id'])->pluck('name')->first();
