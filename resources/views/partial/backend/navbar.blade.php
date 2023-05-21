@@ -166,7 +166,7 @@
                         </div>
                         <div class="col-6">
                             <p class="mb-2 text-sm text-muted">{{ Str::title(Auth::user()->specialization->name) }}</p>
-                            <p class="mb-2 text-sm text-muted">{{ Str::title(Auth::user()->type) }}</p>
+                            <p class="mb-2 text-sm text-muted">{{ Str::title(Auth::user()->job_type->name) }}</p>
                             <p class="mb-2 text-sm text-muted">{{ Auth::user()->roles[0]->name }}</p>
                         </div>
                     </div>

@@ -157,7 +157,7 @@
 
                         {{-- Paginate Filter --}}
                         <div>
-                            <select dir="rtl" wire:model="paginateValue" class="form-control">
+                            <select dir="rtl" wire:model="paginateValue" class="form-control form-control-sm">
                                 <option value="50" selected>50</option>
                                 <option value="100" selected>100</option>
                                 <option value="150" selected>150</option>
@@ -606,9 +606,13 @@
                             <tbody>
                                 @forelse ($usersPlansIncomplete as $user)
                                     <tr>
-                                        <td class="align-middle">{{ $loop->iteration }}</td>
-                                        <td class="align-middle">{{ $user->name }}</span></td>
-                                        <td class="align-middle"><span style="color:red">( {{ $user->events->count() }} )</span></td>
+                                        @if ($user->events->count() < $workDaysOfTheWeek )
+                                            <td class="align-middle">{{ $loop->iteration }}</td>
+                                            <td class="align-middle">{{ $user->name }}</span></td>
+                                            <td class="align-middle"><span style="color:red">( {{ $user->events->count() }} )</span></td>
+                                        @else
+                                            <td colspan="3" class="text-center">@lang('site.noReviews')</td>
+                                        @endif
                                     </tr>
                                 @empty
                                     <tr>
@@ -630,7 +634,7 @@
 
     <!-- Modal show Schools that doesn't have users to visit -->
 
-    <div dir="rtl" class="modal fade" id="SchoolsWithNoVisitsModal" data-keyboard="false" data-backdrop="static"
+    <div dir="rtl" class="modal fade" id="SchoolsWithNoVisitsModal"
         role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -639,6 +643,30 @@
                 </div>
 
                 <div class="modal-body">
+
+                    <!-- Modal Office -->
+                    @if(auth()->user()->office->office_type == 0)
+                        <div class="form-group mb-3" wire:ignore.self>
+                            <label dir="rtl" for="office_id" class="col-form-label">@lang('site.offices') :</label>
+                            <select wire:model.defer="data.office_id" id="office_id"
+                                wire:change="OfficeOption($event.target.value)"
+                                class="form-control fw-bold @error('office_id') is-invalid @enderror">
+                                <option value="" hidden selected>@lang('site.choise', ['name' => 'مكتب التعليم /
+                                    إدارة']) :</option>
+                                @foreach ($offices as $office)
+                                <option class="fw-bold {{ $loop->last ? 'bg-body-tertiary text-primary' : '' }}"
+                                    value="{{ $office->id }}">{{ $office->name }}</option>
+                                @endforeach
+                            </select>
+
+                            @error('office_id')
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                    @endif
+
                     <div class="table-responsive">
                         <table id="example2" class="table text-center table-bordered table-hover dtr-inline sortable"
                             aria-describedby="example2_info">
@@ -655,7 +683,7 @@
                                     <tr>
                                         <td class="align-middle">{{ $loop->iteration }}</td>
                                         <td class="align-middle">{{ $school->name }}</span></td>
-                                        <td class="align-middle">( {{ $school->level->name }} )</td>
+                                        <td class="align-middle">{{ $school->level->name }}</td>
                                         <td class="align-middle">( {{ $school->events->count() }} )</td>
                                     </tr>
                                 @empty

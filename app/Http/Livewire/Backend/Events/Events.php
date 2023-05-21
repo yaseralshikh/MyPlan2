@@ -63,6 +63,7 @@ class Events extends Component
     public $overLapStatus = null;
 
     public $usersPlansIncomplete = [];
+    public $workDaysOfTheWeek = [];
     public $schoolsWithNoVisits = [];
 
     // update Site Status
@@ -592,18 +593,27 @@ class Events extends Component
                 $start->addDay();
             }
 
-            $this->usersPlansIncomplete  = User::where('status', true)
+            $this->workDaysOfTheWeek = count($dates);
+
+            $this->usersPlansIncomplete = User::where('status', true)
                 ->where('section_type_id', $bySectionType)
                 ->where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)
-                ->whereHas('events', function ($query) use ($byWeek, $dates) {
-                    $query->where('week_id', 8)
-                        ->groupBy('office_id')
-                        ->havingRaw('COUNT(*) < ' . count($dates));
-                })
                 ->with(['events' => function ($query) use ($byWeek) {
                     $query->where('week_id', $byWeek)->orderBy('start', 'asc');
-                }])
-                ->get();
+                }])->get();
+
+            // $this->usersPlansIncomplete  = User::where('status', true)
+            //     ->where('section_type_id', $bySectionType)
+            //     ->where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)
+            //     ->whereHas('events', function ($query) use ($byWeek, $dates) {
+            //         $query->where('week_id', $byWeek)
+            //             ->groupBy('office_id')
+            //             ->havingRaw('COUNT(*) < ' . count($dates));
+            //     })
+            //     ->with(['events' => function ($query) use ($byWeek) {
+            //         $query->where('week_id', $byWeek)->orderBy('start', 'asc');
+            //     }])
+            //     ->get();
 
             $this->dispatchBrowserEvent('show-users-plans-incomplete-modal');
 
@@ -623,16 +633,11 @@ class Events extends Component
 
     public function ShowModalSchoolsWithNoVisits()
     {
-        $this->schoolsWithNoVisits = [];
-
         $byWeek = $this->byWeek;
-        $Office_id = auth()->user()->office_id;
 
         if ($byWeek) {
 
-            $schoolsHasEvents = Event::where('office_id', $Office_id)->where('week_id', $byWeek)->pluck('task_id')->toArray();
-
-            $this->schoolsWithNoVisits = Task::where('office_id', $Office_id)->whereNotIn('id', array_values($schoolsHasEvents))->whereNotIn('level_id', [7])->get();
+            $this->getSchoolsWithNoVisits($byWeek);
 
             $this->dispatchBrowserEvent('show-schools-with-no-visits-modal');
 
@@ -651,57 +656,23 @@ class Events extends Component
         }
     }
 
-    // taskNullPlan
-    public function taskNullPlan()
+    public function getSchoolsWithNoVisits($week = null)
     {
-        $byWeek = $this->byWeek;
-        $byOffice = auth()->user()->office_id;
+        $this->schoolsWithNoVisits = [];
 
-        if ($byWeek) {
+        $Office_id = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
 
-            $events = Event::where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)->where('week_id', $byWeek)->pluck('task_id')->toArray();
+        $schoolsHasEvents = Event::where('week_id', $week)
+            ->pluck('task_id')
+            ->toArray();
 
-            $tasks_null_plan = Task::where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)->whereNotIn('id', array_values($events))->whereNotIn('level_id', [7])->get();
-
-            $chunks = $tasks_null_plan->chunk(3);
-
-            $tableRows = '';
-
-            foreach ($chunks as $chunk) {
-                $tableRow = '<tr>';
-                foreach ($chunk as $task) {
-                    $tableRow .= '<td style="border: 1px solid;text-align: center;">' . $task->name . '</td>';
-                }
-                $tableRow .= str_repeat('<td style="border: 1px solid;text-align: center;"></td>', 3 - count($chunk));
-                $tableRow .= '</tr>';
-                $tableRows .= $tableRow;
-            }
-
-            $table = '<table style="border-collapse: collapse;"><thead><tr><th colspan="3" style="border: 1px solid;text-align: center;background-color: #f2f2f2;">! مدارس لم تدرج في خطة هذا الاسبوع</th></tr></thead><tbody>' . $tableRows . '</tbody></table>';
-
-            $this->alert('warning', $table, [
-                'position' => 'center',
-                'timer' => null,
-                'toast' => true,
-                'text' => null,
-                'showCancelButton' => false,
-                'showConfirmButton' => true,
-                'width' => '700px',
-            ]);
-
-        } else {
-            $this->alert('error', __('site.selectWeek'), [
-                'position' => 'center',
-                'timer' => 6000,
-                'timerProgressBar' => true,
-                'toast' => true,
-                'text' => null,
-                'showCancelButton' => false,
-                'showConfirmButton' => false,
-                'width' => '500px',
-            ]);
-        }
+        $this->schoolsWithNoVisits = Task::where('office_id', $Office_id)
+            ->whereNotIn('id', array_values($schoolsHasEvents))->whereNotIn('level_id', [7])
+            ->whereHas('office', function ($q) {$q->where('office_type', 1)->where('gender', auth()->user()->gender);})
+            ->get();
     }
+
+    // export users plans for week
 
     public function exportPDF()
     {
@@ -861,6 +832,7 @@ class Events extends Component
     {
         $this->byOffice = $id;
         $this->getLevelsData();
+        $this->getSchoolsWithNoVisits();
     }
 
     public function LevelOption($id)

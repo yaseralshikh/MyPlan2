@@ -424,7 +424,7 @@ class Users extends Component
 
         $specializations = Specialization::whereStatus(true)->orderBy('name', 'asc')->get();
 
-        $offices         = Office::whereStatus(true)->where('education_id' , auth()->user()->office->education_id)->get();
+        $offices         = Office::whereStatus(true)->where('gender', auth()->user()->gender)->where('education_id' , auth()->user()->office->education_id)->get();
 
         $roles           = Role::whereNotIn('id',[1,2])->get();
 
