@@ -10,7 +10,7 @@
     <style>
         /* Style the body */
         body {
-            font-family: 'amiri';
+            font-family: 'kfgqpcuthmantahanaskh';
             /* font-weight: bold; */
             display: table;
         }

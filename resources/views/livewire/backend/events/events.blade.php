@@ -408,9 +408,10 @@
                                         class="form-control fw-bold @error('office_id') is-invalid @enderror">
                                         <option value="" hidden selected>@lang('site.choise', ['name' => 'مكتب التعليم /
                                             إدارة']) :</option>
-                                        @foreach ($offices as $office)
-                                        <option class="fw-bold {{ $loop->last ? 'bg-body-tertiary text-primary' : '' }}"
-                                            value="{{ $office->id }}">{{ $office->name }}</option>
+                                        @foreach ($offices->whereIn('id', array_merge($education_offices, [auth()->user()->office->id])) as $office)
+                                            <option class="fw-bold {{ $loop->last ? 'bg-body-tertiary text-primary' : '' }}"
+                                                value="{{ $office->id }}">{{ $office->name }}
+                                            </option>
                                         @endforeach
                                     </select>
 
@@ -653,7 +654,7 @@
                                 class="form-control fw-bold @error('office_id') is-invalid @enderror">
                                 <option value="" hidden selected>@lang('site.choise', ['name' => 'مكتب التعليم /
                                     إدارة']) :</option>
-                                @foreach ($offices as $office)
+                                @foreach ($offices->where('office_type' , 1) as $office)
                                 <option class="fw-bold {{ $loop->last ? 'bg-body-tertiary text-primary' : '' }}"
                                     value="{{ $office->id }}">{{ $office->name }}</option>
                                 @endforeach

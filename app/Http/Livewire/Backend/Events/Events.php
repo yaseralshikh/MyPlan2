@@ -65,6 +65,7 @@ class Events extends Component
     public $usersPlansIncomplete = [];
     public $workDaysOfTheWeek = [];
     public $schoolsWithNoVisits = [];
+    public $education_offices = [];
 
     // update Site Status
 
@@ -892,14 +893,14 @@ class Events extends Component
 
         $sctionsType = SectionType::all();
 
-        $education_offices = Office::where('office_type', 1)
-            ->where('education_id', auth()->user()->office->education->id)
+        $this->education_offices = Office::where('office_type', 1)
             ->pluck('id')
             ->toArray();
 
         $offices = Office::whereStatus(true)
             ->where('gender', auth()->user()->gender)
-            ->whereIn('id', array_merge($education_offices, [auth()->user()->office->id]))
+            ->where('education_id', auth()->user()->office->education->id)
+            //->whereIn('id', array_merge($education_offices, [auth()->user()->office->id]))
             ->get();
 
         return view('livewire.backend.events.events', compact(
