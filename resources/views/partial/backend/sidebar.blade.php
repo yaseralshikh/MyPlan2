@@ -34,6 +34,7 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                
                 {{-- Dashboard --}}
                 <li class="nav-item">
                     <a href="{{ route('admin.dashboard') }}"
@@ -44,6 +45,7 @@
                         </p>
                     </a>
                 </li>
+
                 {{-- Users Section --}}
                 <li class="nav-header text-secondary">
                     <h6>@lang('site.usersSection')</h6>
@@ -58,6 +60,7 @@
                         </p>
                     </a>
                 </li>
+
                 @role('operationsmanager')
                 {{-- Roles And Permissions  --}}
                 <li class="nav-item">
@@ -70,6 +73,7 @@
                     </a>
                 </li>
                 @endrole
+
                 {{-- Events Section --}}
                 <li class="nav-header text-secondary">
                     <h6>@lang('site.eventsSection')</h6>
