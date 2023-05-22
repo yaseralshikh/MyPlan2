@@ -53,8 +53,6 @@
                                 <a class="dropdown-item" wire:click.prevent="importExcelForm"
                                     href="#">@lang('site.importExcel')</a>
                                 @endrole --}}
-                                <a class="dropdown-item" wire:click.prevent="exportExcel" href="#"
-                                    aria-disabled="true">@lang('site.exportExcel')</a>
                                 <a class="dropdown-item" wire:click.prevent="exportPDF"
                                     href="#">@lang('site.exportPDF')</a>
                                 <div class="dropdown-divider"></div>
@@ -220,10 +218,10 @@
                                 <!-- Modal Education Name -->
 
                                 <div  class="form-group">
-                                    <label for="name">@lang('site.Name')</label>
+                                    <label for="name">@lang('site.educationName')</label>
                                     <input dir="rtl" type="text" wire:model.defer="data.name"
                                         class="form-control @error('name') is-invalid @enderror" id="name"
-                                        aria-describedby="nameHelp" placeholder="@lang('site.Name')">
+                                        aria-describedby="nameHelp" placeholder="@lang('site.educationName')">
                                     @error('name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
