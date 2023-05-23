@@ -92,11 +92,15 @@ class Events extends Component
     public function updatedSelectPageRows($value)
     {
         if ($value) {
+
             $this->selectedRows = $this->events->pluck('id')->map(function ($id) {
                 return (string) $id;
             });
+
         } else {
+
             $this->reset(['selectedRows', 'selectPageRows']);
+
         }
     }
 
@@ -697,12 +701,26 @@ class Events extends Component
 
                 if ($byWeek && $bySectionType) {
 
-                    $users = User::where('status', true)->where('office_id', $byOffice)->where('section_type_id', $bySectionType)->orderBy('name', 'asc')
-                        ->whereHas('events', function ($query) use ($byWeek) {
-                            $query->where('week_id', $byWeek)->where('status', true);
-                        })->with(['events' => function ($query) use ($byWeek, $selectedRows) {
-                        $query->with('task')->whereHas('task', function ($q) {$q->whereNotIn('name', ['إجازة']);})->whereIn('id', $selectedRows)->WhereNotNull('id')->where('week_id', $byWeek)->where('status', true)->orderBy('start', 'asc');
-                    }])->get();
+                    $users = User::where('status', true)
+                        ->where('office_id', $byOffice)
+                        ->where('section_type_id', $bySectionType)
+                        ->orderBy('name', 'asc')
+                        ->with(['events' => function ($query) use ($byWeek, $selectedRows) {
+                            $query->whereIn('id', $selectedRows)
+                                ->where('week_id', $byWeek)
+                                ->where('status', true)
+                                ->orderBy('start', 'asc');
+                        }])
+                        ->whereHas('events', function ($query) use ($byWeek, $selectedRows) {
+                            $query->whereIn('id', $selectedRows)
+                                ->where('week_id', $byWeek)
+                                ->where('status', true)
+                                ->orderBy('start', 'asc')
+                                ->whereHas('task', function ($q) {
+                                    $q->whereNotIn('name', ['إجازة']);
+                                });
+                        })
+                        ->get();
 
                     if ($users->count() != null) {
 
