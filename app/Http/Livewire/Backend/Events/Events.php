@@ -751,7 +751,7 @@ class Events extends Component
 
                         $subtasks = Subtask::where('status', 1)->where('office_id', $byOffice)->where('section_type_id', $bySectionType)->orderBy('position', 'asc')->get();
                         $office = Office::where('id', $byOffice)->first();
-                        Log::alert('test');
+
                         if ($subtasks->count() == null) {
 
                             $this->alert('error', __('site.notSubtasksFound'), [
