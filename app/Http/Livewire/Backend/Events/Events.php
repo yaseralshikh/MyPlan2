@@ -838,10 +838,10 @@ class Events extends Component
             ->when($byWeek, function ($query) use ($byWeek) {
                 $query->where('week_id', $byWeek);
             })->when($bySectionType, function ($query) use ($bySectionType) {
-            $query->whereHas('user', function ($q) use ($bySectionType) {
-                $q->where('section_type_id', $bySectionType);
-            });
-        })
+                $query->whereHas('user', function ($q) use ($bySectionType) {
+                    $q->where('section_type_id', $bySectionType);
+                });
+            })
             ->search(trim(($searchString)))
             ->orderBy('start', 'asc')
             ->latest('created_at')
