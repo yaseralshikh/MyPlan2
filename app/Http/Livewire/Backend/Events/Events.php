@@ -519,6 +519,7 @@ class Events extends Component
     public function deleteEvent()
     {
         try {
+
             $event = Event::findOrFail($this->eventIdBeingRemoved);
 
             $event->delete();
@@ -536,6 +537,7 @@ class Events extends Component
             ]);
 
         } catch (\Throwable $th) {
+
             $message = $this->alert('error', $th->getMessage(), [
                 'position' => 'top-end',
                 'timer' => 2000,
@@ -545,6 +547,9 @@ class Events extends Component
                 'showCancelButton' => false,
                 'showConfirmButton' => false,
             ]);
+
+            Log::error($th->getMessage());
+
             return $message;
         }
     }
@@ -556,29 +561,49 @@ class Events extends Component
         $bySectionType = $this->bySectionType;
         $byOffice = auth()->user()->office_id;
 
-        if ($byWeek && $bySectionType) {
+        try {
 
-            return Excel::download(new EventsExport(
+            if ($byWeek && $bySectionType) {
 
-                $this->searchTerm,
-                $this->selectedRows,
-                $this->byWeek,
-                $bySectionType,
-                $byOffice),
-                'events.xlsx');
+                return Excel::download(new EventsExport(
 
-        } else {
+                    $this->searchTerm,
+                    $this->selectedRows,
+                    $this->byWeek,
+                    $bySectionType,
+                    $byOffice),
+                    'events.xlsx');
 
-            $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.sectionType'), [
-                'position' => 'center',
-                'timer' => 6000,
+            } else {
+
+                $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.sectionType'), [
+                    'position' => 'center',
+                    'timer' => 6000,
+                    'timerProgressBar' => true,
+                    'toast' => true,
+                    'text' => null,
+                    'showCancelButton' => false,
+                    'showConfirmButton' => false,
+                ]);
+            }
+
+        } catch (\Throwable $th) {
+
+            $message = $this->alert('error', $th->getMessage(), [
+                'position' => 'top-end',
+                'timer' => 2000,
                 'timerProgressBar' => true,
                 'toast' => true,
                 'text' => null,
                 'showCancelButton' => false,
                 'showConfirmButton' => false,
             ]);
+
+            Log::error($th->getMessage());
+
+            return $message;
         }
+
     }
 
     public function ShowModalUsersPlansIncomplete()
@@ -729,7 +754,6 @@ class Events extends Component
 
                         if ($subtasks->count() == null) {
 
-                            Log::alert(__('site.notSubtasksFound'));
                             $this->alert('error', __('site.notSubtasksFound'), [
                                 'position' => 'center',
                                 'timer' => 6000,
@@ -808,7 +832,7 @@ class Events extends Component
                 'showConfirmButton' => false,
             ]);
 
-            Log::debug($th->getMessage());
+            Log::error($th->getMessage());
 
             return $message;
         }
