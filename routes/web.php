@@ -8,6 +8,7 @@ use App\Http\Livewire\Backend\Events\Events;
 use App\Http\Controllers\OfficeDropdownController;
 use App\Http\Livewire\Backend\Dashboard\Dashboard;
 use App\Http\Livewire\Backend\Education\Education;
+use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,4 +40,5 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'ro
     Route::get('users', Users::class)->name('users');
     Route::get('events', Events::class )->name('events');
     Route::get('education', Education::class )->name('education');
+    Route::get('/log-viewer', [LogViewerController::class, 'index'])->name('log-viewer');
 });

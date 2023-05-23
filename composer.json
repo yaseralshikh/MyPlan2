@@ -18,6 +18,7 @@
         "maatwebsite/excel": "^3.1",
         "mpdf/mpdf": "^8.1",
         "psr/log": "2.0",
+        "rap2hpoutre/laravel-log-viewer": "^2.3",
         "santigarcor/laratrust": "^8.0"
     },
     "require-dev": {

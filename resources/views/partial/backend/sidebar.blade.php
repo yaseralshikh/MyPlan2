@@ -106,6 +106,23 @@
                 </li>
                 @endrole
 
+                @role('operationsmanager')
+                {{-- Settings Section --}}
+                <li class="nav-header text-secondary">
+                    <h6>@lang('site.settingsSection')</h6>
+                </li>
+                {{-- log-viewer --}}
+                <li class="nav-item">
+                    <a href="{{ route('admin.log-viewer') }}"
+                        class="nav-link {{ request()->is('admin/log-viewer') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-exclamation-triangle"></i>
+                        <p>
+                            @lang('site.logViewer')
+                        </p>
+                    </a>
+                </li>
+                @endrole
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
