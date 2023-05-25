@@ -136,7 +136,7 @@
                                             <label class="custom-control-label" for="customCheck"></label>
                                         </div>
                                     </td>
-                                    <th class="align-middle">#</th>
+                                    <th class="align-middle no-sort">#</th>
                                     <th class="align-middle">
                                         @lang('site.name')
                                     </th>
@@ -193,12 +193,27 @@
                                     </td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
-                                            <button wire:click.prevent="edit({{ $user }})"
-                                                class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
-
-                                            <button wire:click.prevent="show({{ $user }})"
-                                                class="btn btn-info btn-sm"><i class="fa fa-user"></i></button>
-
+                                            {{-- users-update --}}
+                                            @if (auth()->user()->hasPermission('users-update'))
+                                                <button wire:click.prevent="edit({{ $user }})"
+                                                    class="btn btn-primary btn-sm"><i class="fa fa-edit"></i>
+                                                </button>
+                                            @else
+                                                <button class="btn btn-primary btn-sm" disabled>
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                            @endif
+                                            {{-- users-read --}}
+                                            @if (auth()->user()->hasPermission('users-read'))
+                                                <button wire:click.prevent="show({{ $user }})"
+                                                    class="btn btn-primary btn-sm"><i class="fa fa-user"></i>
+                                                </button>
+                                            @else
+                                                <button class="btn btn-primary btn-sm" disabled>
+                                                    <i class="fa fa-user"></i>
+                                                </button>
+                                            @endif
+                                            {{-- users-delete --}}
                                             @if (auth()->user()->hasPermission('users-delete'))
                                                 <button wire:click.prevent="confirmUserRemoval({{ $user->id }})"
                                                     class="btn btn-danger btn-sm"><i
@@ -208,11 +223,6 @@
                                                         class="fa fa-trash bg-danger"></i></button>
                                             @endif
                                         </div>
-                                        {{-- <form action="" method="post" id="delete-user-{{ $user->id }}"
-                                            class="d-none">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form> --}}
                                     </td>
                                 </tr>
 

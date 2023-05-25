@@ -20,6 +20,7 @@ class Office extends Model
         'director_signature_path',
         'assistant_signature_path',
         'assistant2_signature_path',
+        'assistant3_signature_path',
         'education_id',
         'office_type',
         'gender',
@@ -51,6 +52,21 @@ class Office extends Model
         return $this->belongsTo(Education::class);
     }
 
+    public function allowed_create_plans(): string
+    {
+        return $this->allowed_create_plans ? __('site.open') : __('site.close');
+    }
+
+    public function office_type(): string
+    {
+        return $this->office_type ? __('site.officeType') : __('site.managementType');
+    }
+
+    public function gender(): string
+    {
+        return $this->gender ? __('site.male') : __('site.female');
+    }
+
     public function status(): string
     {
         return $this->status ? __('site.active') : __('site.inActive');
@@ -69,6 +85,7 @@ class Office extends Model
         'director_url',
         'assistant_url',
         'assistant2_url',
+        'assistant3_url',
     ];
 
     public function getDirectorUrlAttribute()
@@ -92,6 +109,15 @@ class Office extends Model
     {
         if ($this->assistant2_signature_path && Storage::disk('signature_photos')->exists($this->assistant2_signature_path)) {
             return Storage::disk('signature_photos')->url($this->assistant2_signature_path);
+        }
+
+        return asset('backend/img/noimage.png');
+    }
+
+    public function getAssistant3UrlAttribute()
+    {
+        if ($this->assistant3_signature_path && Storage::disk('signature_photos')->exists($this->assistant3_signature_path)) {
+            return Storage::disk('signature_photos')->url($this->assistant3_signature_path);
         }
 
         return asset('backend/img/noimage.png');

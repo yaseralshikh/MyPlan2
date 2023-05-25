@@ -554,58 +554,6 @@ class Events extends Component
         }
     }
 
-    // Export Excel File
-    public function exportExcel()
-    {
-        $byWeek = $this->byWeek;
-        $bySectionType = $this->bySectionType;
-        $byOffice = auth()->user()->office_id;
-
-        try {
-
-            if ($byWeek && $bySectionType) {
-
-                return Excel::download(new EventsExport(
-
-                    $this->searchTerm,
-                    $this->selectedRows,
-                    $this->byWeek,
-                    $bySectionType,
-                    $byOffice),
-                    'events.xlsx');
-
-            } else {
-
-                $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.sectionType'), [
-                    'position' => 'center',
-                    'timer' => 6000,
-                    'timerProgressBar' => true,
-                    'toast' => true,
-                    'text' => null,
-                    'showCancelButton' => false,
-                    'showConfirmButton' => false,
-                ]);
-            }
-
-        } catch (\Throwable $th) {
-
-            $message = $this->alert('error', $th->getMessage(), [
-                'position' => 'top-end',
-                'timer' => 2000,
-                'timerProgressBar' => true,
-                'toast' => true,
-                'text' => null,
-                'showCancelButton' => false,
-                'showConfirmButton' => false,
-            ]);
-
-            Log::error($th->getMessage());
-
-            return $message;
-        }
-
-    }
-
     public function ShowModalUsersPlansIncomplete()
     {
         $this->usersPlansIncomplete = [];
@@ -711,6 +659,58 @@ class Events extends Component
             ->get();
     }
 
+    // Export Excel File
+    public function exportExcel()
+    {
+        $byWeek = $this->byWeek;
+        $bySectionType = $this->bySectionType;
+        $byOffice = auth()->user()->office_id;
+
+        try {
+
+            if ($byWeek && $bySectionType) {
+
+                return Excel::download(new EventsExport(
+
+                    $this->searchTerm,
+                    $this->selectedRows,
+                    $this->byWeek,
+                    $bySectionType,
+                    $byOffice),
+                    'events.xlsx');
+
+            } else {
+
+                $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.sectionType'), [
+                    'position' => 'center',
+                    'timer' => 6000,
+                    'timerProgressBar' => true,
+                    'toast' => true,
+                    'text' => null,
+                    'showCancelButton' => false,
+                    'showConfirmButton' => false,
+                ]);
+            }
+
+        } catch (\Throwable $th) {
+
+            $message = $this->alert('error', $th->getMessage(), [
+                'position' => 'top-end',
+                'timer' => 2000,
+                'timerProgressBar' => true,
+                'toast' => true,
+                'text' => null,
+                'showCancelButton' => false,
+                'showConfirmButton' => false,
+            ]);
+
+            Log::error($th->getMessage());
+
+            return $message;
+        }
+
+    }
+
     // export users plans for week
 
     public function exportPDF()
@@ -734,17 +734,17 @@ class Events extends Component
                             $query->whereIn('id', $selectedRows)
                                 ->where('week_id', $byWeek)
                                 ->where('status', true)
-                                ->orderBy('start', 'asc');
-                        }])
-                        ->whereHas('events', function ($query) use ($byWeek, $selectedRows) {
-                            $query->whereIn('id', $selectedRows)
-                                ->where('week_id', $byWeek)
-                                ->where('status', true)
-                                ->orderBy('start', 'asc')
                                 ->whereHas('task', function ($q) {
                                     $q->whereNotIn('name', ['إجازة']);
-                                });
-                        })
+                                })
+                                ->orderBy('start', 'asc');
+                        }])
+                        // ->whereHas('events', function ($query) use ($byWeek, $selectedRows) {
+                        //     $query->whereIn('id', $selectedRows)
+                        //         ->where('week_id', $byWeek)
+                        //         ->where('status', true)
+                        //         ->orderBy('start', 'asc');
+                        // })
                         ->get();
 
                     if ($users->count() != null) {

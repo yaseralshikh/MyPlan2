@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('director_signature_path', 2048)->nullable();
             $table->string('assistant_signature_path', 2048)->nullable();
             $table->string('assistant2_signature_path', 2048)->nullable();
+            $table->string('assistant3_signature_path', 2048)->nullable();
             $table->foreignId('education_id')->constrained()->onDelete('cascade');
             $table->unsignedTinyInteger('office_type')->default(0);
             $table->unsignedTinyInteger('gender')->default(1);

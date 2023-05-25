@@ -94,13 +94,23 @@
                 <li class="nav-header text-secondary">
                     <h6>@lang('site.educationSection')</h6>
                 </li>
-                {{-- Events --}}
+                {{-- Education --}}
                 <li class="nav-item">
                     <a href="{{ route('admin.education') }}"
                         class="nav-link {{ request()->is('admin/education') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-calendar"></i>
                         <p>
                             @lang('site.educations')
+                        </p>
+                    </a>
+                </li>
+                {{-- Offices --}}
+                <li class="nav-item">
+                    <a href="{{ route('admin.offices') }}"
+                        class="nav-link {{ request()->is('admin/offices') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-calendar"></i>
+                        <p>
+                            @lang('site.offices')
                         </p>
                     </a>
                 </li>
@@ -114,6 +124,7 @@
                 {{-- log-viewer --}}
                 <li class="nav-item">
                     <a href="{{ route('admin.log-viewer') }}"
+                        target="_blank"
                         class="nav-link {{ request()->is('admin/log-viewer') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-exclamation-triangle"></i>
                         <p>

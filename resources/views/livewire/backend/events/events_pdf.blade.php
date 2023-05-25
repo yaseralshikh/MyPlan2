@@ -10,7 +10,7 @@
     <style>
         /* Style the body */
         body {
-            font-family: 'kfgqpcuthmantahanaskh';
+            font-family: 'amiri';
             /* font-weight: bold; */
             display: table;
         }
@@ -155,7 +155,7 @@
                                 {{-- <td>{{ $event->week->title }}</td> --}}
                                 <td>{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start) }}</td>
                                 <td>{{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $event->start) }}</td>
-                                <td>{{ $event->task->name }} {{ $event->task->name == 'مكلف بمهمة' ? ' : ( ' . $event->note . ' )' : '' }}</td>
+                                <td>{{ $event->task->name }} {{ $event->task->name == 'مكلف بمهمة' || $event->task->name == 'برنامج تدريبي' ? ' : ( ' . $event->note . ' )' : '' }}</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -200,7 +200,7 @@
                                     <h3>مدير {{ $office->name }}</h3>
 
                                     @if ($office->director_signature_path)
-                                        <img src="{{ $office->director_url }}" style="" width="130px" alt="">
+                                        <img src="{{ $office->director_url }}"  style="float: center; margin: -0.4cm 0 -0.4cm 0" width="160px" alt="">
                                     @else
                                         <br>
                                     @endif

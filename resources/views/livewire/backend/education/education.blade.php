@@ -49,14 +49,10 @@
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <div class="dropdown-menu" role="menu" dir="rtl">
-                                {{-- @role('superadmin')
-                                <a class="dropdown-item" wire:click.prevent="importExcelForm"
-                                    href="#">@lang('site.importExcel')</a>
-                                @endrole --}}
                                 <a class="dropdown-item" wire:click.prevent="exportPDF"
                                     href="#">@lang('site.exportPDF')</a>
                                 <div class="dropdown-divider"></div>
-                                {{-- @if ($selectedRows) --}}
+
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
                                     wire:click.prevent="setAllAsActive" href="#">@lang('site.setActive')</a>
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
@@ -64,7 +60,6 @@
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item {{ $selectedRows && auth()->user()->hasPermission('education-delete') ? 'text-danger' : 'disabled-link' }}  delete-confirm"
                                     wire:click.prevent="deleteSelectedRows" href="#">@lang('site.deleteSelected')</a>
-                                {{-- @endif --}}
                             </div>
                         </div>
                     </h3>
@@ -127,6 +122,12 @@
                                         @lang('site.name')
                                     </th>
                                     <th class="align-middle">
+                                        @lang('site.officeType')
+                                    </th>
+                                    <th class="align-middle">
+                                        @lang('site.managementType')
+                                    </th>
+                                    <th class="align-middle">
                                         @lang('site.status')
                                     </th>
                                     <th class="align-middle no-sort" colspan="2">@lang('site.action')</th>
@@ -144,6 +145,8 @@
                                     </td>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $education->name }}</td>
+                                    <td>{{ $education->offices->where('office_type', 1)->count() }}</td>
+                                    <td>{{ $education->offices->where('office_type', 0)->count() }}</td>
                                     <td>
                                         <span
                                             class="font-weight-bold badge text-white {{ $education->status == 1 ? 'bg-success' : 'bg-secondary' }}">
@@ -152,8 +155,11 @@
                                     </td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
-                                            <button wire:click.prevent="edit({{ $education }})"
-                                                class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
+                                            @if (auth()->user()->hasPermission('offices-update'))
+                                                <button wire:click.prevent="edit({{ $education }})" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
+                                            @else
+                                                <button class="btn btn-primary btn-sm" disabled><i class="fa fa-edit"></i></button>
+                                            @endif
 
                                             @if (auth()->user()->hasPermission('education-delete'))
                                                 <button wire:click.prevent="confirmEducationRemoval({{ $education->id }})"

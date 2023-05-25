@@ -13,6 +13,7 @@
             }
 			body {
 				font-family: 'amiri', sans-serif;
+                /* font-weight: bold; */
 				text-align: center;
                 display: table;
                 direction: rtl;
@@ -53,7 +54,7 @@
 
 	<body>
         <htmlpageheader name="page-header">
-            <h3>إدارات التعليم التي تعمل بنظام منصة خطتي</h3>
+            <h3>كشف بإدارات ومكاتب التعليم بـ {{ $offices[0]->education->name }}</h3>
         </htmlpageheader>
 
         {{-- <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}" alt=""> --}}
@@ -63,24 +64,22 @@
                 <thead class="">
                     <tr>
                         <th>م</th>
-                        <th>@lang('site.name')</th>
-                        <th class="align-middle">
-                            @lang('site.officeType')
-                        </th>
-                        <th class="align-middle">
-                            @lang('site.managementType')
-                        </th>
-                        <th>@lang('site.status')</th>
+                        <th class="align-middle">@lang('site.office')</th>
+                        <th class="align-middle">@lang('site.director')</th>
+                        <th class="align-middle">@lang('site.education_id')</th>
+                        <th class="align-middle">@lang('site.office_type')</th class="align-middle">
+                        <th class="align-middle">@lang('site.gender')</th class="align-middle">
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($educations as $index => $education)
+                    @foreach ($offices as $index => $office)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $education->name }}</td>
-                            <td>{{ $education->offices->where('office_type', 1)->count() }}</td>
-                            <td>{{ $education->offices->where('office_type', 0)->count() }}</td>
-                            <td>{{ $education->status() }}</td>
+                            <td>{{ $office->name }}</td>
+                            <td>{{ $office->director }}</td>
+                            <td>{{ $office->education->name }}</td>
+                            <td>{{ $office->office_type() }}</td>
+                            <td>{{ $office->gender() }}</td>
                         </tr>
 
                         <htmlpagefooter name="page-footer">

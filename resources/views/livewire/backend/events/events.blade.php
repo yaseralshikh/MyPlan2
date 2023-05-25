@@ -316,11 +316,17 @@
                                     </td> --}}
                                     <td class="align-middle">
                                         <div class="btn-group btn-group-sm">
-                                            <button wire:click.prevent="edit({{ $event }})"
-                                                class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
-                                            <button wire:click.prevent="confirmEventRemoval({{ $event->id }})"
-                                                class="btn btn-danger btn-sm"><i
-                                                    class="fa fa-trash bg-danger"></i></button>
+                                            @if (auth()->user()->hasPermission('offices-update'))
+                                                <button wire:click.prevent="edit({{ $event }})" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
+                                            @else
+                                                <button class="btn btn-primary btn-sm" disabled><i class="fa fa-edit"></i></button>
+                                            @endif
+
+                                            @if (auth()->user()->hasPermission('offices-delete'))
+                                                <button wire:click.prevent="confirmEventRemoval({{ $event->id }})" class="btn btn-danger btn-sm"><i class="fa fa-trash bg-danger"></i></button>
+                                            @else
+                                                <button class="btn btn-danger btn-sm" disabled><i class="fa fa-trash bg-danger"></i></button>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

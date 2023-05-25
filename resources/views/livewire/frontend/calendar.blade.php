@@ -170,7 +170,7 @@
                                     data-bs-dismiss="modal">@lang('site.cancel')</button>
                                 <button type="submit" class="btn btn-primary">@lang('site.save')</button>
                             </div>
-                            @role('admin|superadmin')
+                            @role('admin|superadmin|operationsmanager')
                             <div class="form-check">
                                 <input class="form-check-input" wire:model.defer="all_user" type="checkbox" value=""
                                     id="flexCheckDefault">

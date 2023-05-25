@@ -42,29 +42,36 @@ class EventsExport implements FromCollection, WithHeadings, WithMapping, ShouldA
         $office =$this->byOffice ? $this->byOffice : auth()->user()->office_id;
 
         if ($this->selected_rows) {
+
             return Event::whereIn('id', $this->selected_rows)
                 ->where('office_id', $office)->when($week, function($query) use ($week){
                     $query->where('week_id', $week);
-                })->when($bySectionType, function ($query) use($bySectionType) {
+                })
+                ->when($bySectionType, function ($query) use($bySectionType) {
                     $query->whereHas('user', function ($q) use($bySectionType) {
                         $q->where('section_type_id', $bySectionType);
                     });
                 })
                 ->search(trim(($this->search)))
-                //->latest('created_at')
-                ->orderBy('start', 'asc')->get();
+                ->orderBy('start')
+                ->get();
+
         } else {
-            return Event::query()
-            ->where('office_id', $office)->when($this->byWeek, function($query) use ($week){
-                $query->where('week_id', $week);
-            })->when($bySectionType, function ($query) use($bySectionType) {
-                $query->whereHas('user', function ($q) use($bySectionType) {
-                    $q->where('section_type_id', $bySectionType);
-                });
-            })
-            ->search(trim(($this->search)))
-            //->latest('created_at')
-            ->orderBy('start', 'asc')->get();
+
+            return Event::where('office_id', $office)
+                ->when($this->byWeek, function($query) use ($week){
+                    $query->where('week_id', $week);
+                })
+                ->when($bySectionType, function ($query) use($bySectionType) {
+                    $query->whereHas('user', function ($q) use($bySectionType) {
+                        $q->where('section_type_id', $bySectionType);
+                    });
+                })
+                ->search(trim(($this->search)))
+                ->whereHas('task', function ($query) {
+                    $query->orderBy('name');
+                })
+                ->get();
         }
     }
 

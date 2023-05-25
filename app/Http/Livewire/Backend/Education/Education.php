@@ -271,7 +271,6 @@ class Education extends Component
                     'position'  =>  'center',
                     'timer'  =>  2000,
                     'timerProgressBar' => true,
-                    'timerProgressBar' => true,
                     'toast'  =>  true,
                     'text'  =>  null,
                     'showCancelButton'  =>  false,
@@ -284,7 +283,6 @@ class Education extends Component
             $message = $this->alert('error', $th->getMessage(), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
-                'timerProgressBar' => true,
                 'timerProgressBar' => true,
                 'toast'  =>  true,
                 'text'  =>  null,
@@ -301,7 +299,7 @@ class Education extends Component
         $searchString = $this->searchTerm;
 
         $educations = ModelsEducation::search(trim(($searchString)))
-                    ->latest()
+                    ->orderBy('name')
                     ->paginate(50);
 
         return $educations;
