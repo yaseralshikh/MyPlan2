@@ -105,7 +105,7 @@
                         </span>
                     @endif
 
-                    <div class="table-responsive">
+                    <div class="table-responsive" data-aos="fade-up" wire:ignore.self>
                         <table id="example2" class="table text-center table-bordered table-hover dtr-inline sortable"
                             aria-describedby="example2_info">
                             <thead class="bg-light">
@@ -180,7 +180,7 @@
 
                                 @empty
                                 <tr>
-                                    <td colspan="3" class="text-center">@lang('site.noDataFound')</td>
+                                    <td colspan="7" class="text-center">@lang('site.noDataFound')</td>
                                 </tr>
                                 @endforelse
                             </tbody>

@@ -129,7 +129,7 @@
                     </span>
                     @endif
 
-                    <div class="table-responsive">
+                    <div class="table-responsive" data-aos="fade-up" wire:ignore.self>
                         <table id="example2" class="table text-center table-bordered table-hover dtr-inline sortable"
                             aria-describedby="example2_info">
                             <thead class="bg-light">

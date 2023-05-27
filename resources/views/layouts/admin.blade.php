@@ -40,6 +40,9 @@
         {{-- sortable-tablesort --}}
         <!-- This will add arrows, as well as support for .no-sort and .indicator-left -->
         <link href="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@latest/sortable-base.min.css" rel="stylesheet" />
+        {{-- AOS, called Animate on Scroll --}}
+        <link href="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.css" rel="stylesheet">
+
 
         @yield('style')
         <style>
@@ -96,8 +99,14 @@
         <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
         {{-- sortable-tablesort --}}
         <script src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@latest/sortable.min.js"></script>
+        {{-- AOS, called Animate on Scroll --}}
+        <script src="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.js"></script>
 
         @yield('script')
-        
+
+        <script>
+            // AOS, called Animate on Scroll
+            AOS.init();
+        </script>
     </body>
 </html>

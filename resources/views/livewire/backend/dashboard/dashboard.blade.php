@@ -60,7 +60,7 @@
 
             <!-- Small boxes (Stat box) -->
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-3 col-3" data-aos="fade-up" wire:ignore.self>
                     <!-- Total Schools Count -->
                     <div class="small-box bg-info">
                         <div class="inner">
@@ -76,7 +76,7 @@
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-3 col-3" data-aos="fade-up" wire:ignore.self>
                     <!-- Total Users Count -->
                     <div class="small-box bg-warning">
                         <div class="inner">
@@ -87,12 +87,12 @@
                         <div class="icon">
                             <i class="ion ion-person-add"></i>
                         </div>
-                        <a href="#" class="small-box-footer">@lang('site.moreInfo') <i
+                        <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i
                                 class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-3 col-3" data-aos="fade-up" wire:ignore.self>
                     <!-- Total Events Count -->
                     <div class="small-box" style="background-color:rgba(38, 248, 255, 0.784);">
                         <div class="inner">
@@ -105,12 +105,12 @@
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
-                        <a href="#" class="small-box-footer text-dark">@lang('site.moreInfo')
+                        <a href="{{ route('admin.events') }}" class="small-box-footer text-dark">@lang('site.moreInfo')
                             <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-3 col-3" data-aos="fade-up" wire:ignore.self>
                     <!--  Total Weeks Count -->
                     <div class="small-box bg-primary">
                         <div class="inner">
@@ -126,7 +126,7 @@
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-3 col-3" data-aos="fade-up" wire:ignore.self>
                     <!-- Events Schools Count -->
                     <div class="small-box bg-success">
                         <div class="inner">
@@ -143,7 +143,7 @@
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-3 col-3" data-aos="fade-up" wire:ignore.self>
                     <!-- Events Office Count -->
                     <div class="small-box text-white bg-secondary">
                         <div class="inner">
@@ -160,7 +160,7 @@
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-3 col-3" data-aos="fade-up" wire:ignore.self>
                     <!-- Events Training Count -->
                     <div class="small-box" style="background-color:rgb(239, 117, 47);">
                         <div class="inner">
@@ -177,7 +177,7 @@
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-3 col-3" data-aos="fade-up" wire:ignore.self>
                     <!-- Events Task Count -->
                     <div class="small-box" style="background-color:rgba(24, 37, 88, 0.342);">
                         <div class="inner">
@@ -239,7 +239,7 @@
                 </section>
 
                 {{-- Empty Tasks ( Schools) Table --}}
-                @if (!$empty_schools->total() == 0)
+                @if (auth()->user()->office->office_type)
                     <section class="col-lg-12 connectedSortable">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
@@ -310,7 +310,7 @@
 
                                 </div>
 
-                                {{-- Details Tasks Table --}}
+                                {{-- Details Empty Schools visite Table --}}
                                 <div class="table-responsive" dir="rtl">
                                     <div class="shadow rounded p-4 border">
                                         <div class="table-responsive">
@@ -344,7 +344,7 @@
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
-                                                    <td colspan="10">
+                                                    <td colspan="4">
                                                             {!! $empty_schools->appends(request()->all())->links() !!}
                                                     </td>
                                                     </tr>
@@ -597,6 +597,9 @@
                         buttonOptions: {
                             align: 'right'
                         }
+                    },
+                    accessibility: {
+                        enabled: false
                     }
                 });
 
@@ -695,6 +698,9 @@
                                 buttonOptions: {
                                     align: 'right'
                                 }
+                            },
+                            accessibility: {
+                                enabled: false
                             }
                         });
                     }

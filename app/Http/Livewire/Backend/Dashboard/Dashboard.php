@@ -229,17 +229,13 @@ class Dashboard extends Component
         return json_encode($this->chartData);
     }
 
-    public function render()
-    {
-        // parameters values
-        $searchString = $this->searchTerm;
-        $emptySchoolSearchString = $this->emptySchoolSearchString;
-        $paginateValue = $this->paginateValue;
-        $emptySchoolsPaginateValue = $this->emptySchoolsPaginateValue;
+    public function getUsersProperty() {
+
         $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
         $bySemester = $this->bySemester ? $this->bySemester : $this->semesterActive();
+        $searchString = $this->searchTerm;
+        $paginateValue = $this->paginateValue;
 
-        // for users plans
         $users = User::whereStatus(true)->where('office_id', $byOffice)->with([
             'events' => function ($query) use($bySemester) {
                 $query->where('semester_id', $bySemester);
@@ -247,6 +243,43 @@ class Dashboard extends Component
         ])->search(trim(($searchString)))
         ->orderBy('name', 'asc')
         ->paginate($paginateValue);
+
+        return $users;
+
+    }
+
+    public function getSchoolsProperty(){
+
+        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
+        $bySemester = $this->bySemester ? $this->bySemester : $this->semesterActive();
+        $emptySchoolSearchString = $this->emptySchoolSearchString;
+        $emptySchoolsPaginateValue = $this->emptySchoolsPaginateValue;
+
+        $schools = Task::whereStatus(true)
+            ->where('office_id', $byOffice)
+            ->whereIn('level_id', [1,2,3,4,5,6])
+            ->withCount([
+                'events' => function ($query) use($bySemester) {
+                    $query->where('semester_id', $bySemester)
+                        ->where('task_done' , true);
+                }
+            ])
+            ->having('events_count', '=', 0)
+            ->search(trim(($emptySchoolSearchString)))
+            ->orderBy('name', 'asc')
+            ->orderBy('level_id', 'asc')
+            ->paginate($emptySchoolsPaginateValue);
+
+        //dd($schools);
+        return $schools;
+
+    }
+
+    public function render()
+    {
+        // parameters values
+        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
+        $bySemester = $this->bySemester ? $this->bySemester : $this->semesterActive();
 
         // for chart
         $chartData = $this->getChartData();
@@ -277,20 +310,10 @@ class Dashboard extends Component
         $levels = Level::all();
 
         // for schools not visited by supervisors
-        $empty_schools = Task::whereStatus(true)->where('office_id', $byOffice)
-        ->whereIn('level_id', [1,2,3,4,5,6])
-        ->withCount([
-            'events' => function ($query) use($bySemester, $byOffice) {
-                $query->where('semester_id', $bySemester)
-                        ->where('office_id', $byOffice)
-                        ->where('task_done' , true);
-            }
-        ])
-        ->having('events_count', '=', 0)
-        ->search(trim(($emptySchoolSearchString)))
-        ->orderBy('name', 'asc')
-        ->orderBy('level_id', 'asc')
-        ->paginate($emptySchoolsPaginateValue);
+        $empty_schools = $this->schools;
+
+        // for users plans
+        $users = $this->users;
 
         return view('livewire.backend.dashboard.dashboard', [
 
