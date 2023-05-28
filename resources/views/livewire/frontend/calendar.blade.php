@@ -35,7 +35,7 @@
 
     @endpush
 
-    <div class="alert {{ auth()->user()->gender ? 'alert-success' : 'alert-danger' }} " dir="rtl" role="alert">
+    <div class="alert {{ auth()->user()->gender ? 'alert-success' : 'alert-danger' }} " dir="rtl" role="alert" data-aos="fade-up" wire:ignore.self>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
             <button class="btn btn-dark"
                 wire:click.prevent="editProfile({{ auth()->user()->id }})">@lang('site.profile')</button>

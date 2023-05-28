@@ -21,8 +21,14 @@
 
     {{-- Styles --}}
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+
+    {{-- AOS, called Animate on Scroll --}}
+    <link href="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.css" rel="stylesheet">
+
     @livewireStyles
+
     @stack('style')
+
     <style>
         body {
             font-family: 'noto-naskh';
@@ -157,9 +163,21 @@
     <!-- Select2 -->
     <script src="{{ asset('backend/plugins/select2/js/select2.full.min.js') }}" defer></script>
 
+    {{-- AOS, called Animate on Scroll --}}
+    <script src="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.js"></script>
+
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
+
     @livewireScripts
+
     <x-livewire-alert::scripts />
+
     @stack('script')
+
+    <script>
+        // AOS, called Animate on Scroll
+        AOS.init();
+    </script>
+
 </body>
 </html>
