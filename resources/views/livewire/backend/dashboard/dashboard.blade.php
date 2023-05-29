@@ -121,7 +121,7 @@
                         <div class="icon">
                             <i class="ion ion-calendar"></i>
                         </div>
-                        <a href="#" class="small-box-footer">@lang('site.moreInfo') <i
+                        <a href="{{ route('admin.weeks') }}" class="small-box-footer">@lang('site.moreInfo') <i
                                 class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>

@@ -37,14 +37,16 @@
                 <div class="card-header bg-light">
                     <h3 class="card-title">
                         <button wire:click.prevent='addNewOffice' class="ml-1 btn btn-sm btn-primary">
+                            {{  auth()->user()->hasPermission('offices-create') ? '' : 'disabled' }}
                             <i class="mr-2 fa fa-plus-circle" aria-hidden="true">
                                 <span>@lang('site.addRecord', ['name' => 'مكتب / ادارة'])</span>
                             </i>
                         </button>
 
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm">@lang('site.action')</button>
+                            <button type="button" class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('offices-read') ? '' : 'disabled' }}>@lang('site.action')</button>
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon"
+                                {{  auth()->user()->hasPermission('offices-read') ? '' : 'disabled' }}
                                 data-toggle="dropdown" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
@@ -57,7 +59,7 @@
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
                                     wire:click.prevent="setAllAsInActive" href="#">@lang('site.setInActive')</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item {{ $selectedRows ? 'text-danger' : 'disabled-link' }}  delete-confirm"
+                                <a class="dropdown-item {{ $selectedRows && auth()->user()->hasPermission('offices-delete') ? 'text-danger' : 'disabled-link' }}  delete-confirm"
                                     wire:click.prevent="deleteSelectedRows" href="#">@lang('site.deleteSelected')</a>
                             </div>
                         </div>
@@ -246,22 +248,15 @@
                                     </td>
                                     <td class="align-middle">
                                         <div class="btn-group btn-group-sm">
-                                            @if (auth()->user()->hasPermission('offices-update'))
                                             <button wire:click.prevent="edit({{ $office }})"
-                                                class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
-                                            @else
-                                            <button class="btn btn-primary btn-sm" disabled><i
-                                                    class="fa fa-edit"></i></button>
-                                            @endif
+                                                class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('offices-update') ? '' : 'disabled' }}>
+                                                <i class="fa fa-edit"></i>
+                                            </button>
 
-                                            @if (auth()->user()->hasPermission('offices-delete'))
                                             <button wire:click.prevent="confirmOfficeRemoval({{ $office->id }})"
-                                                class="btn btn-danger btn-sm"><i
-                                                    class="fa fa-trash bg-danger"></i></button>
-                                            @else
-                                            <button class="btn btn-danger btn-sm" disabled><i
-                                                    class="fa fa-trash bg-danger"></i></button>
-                                            @endif
+                                                class="btn btn-danger btn-sm" {{  auth()->user()->hasPermission('offices-delete') ? '' : 'disabled' }}>
+                                                <i class="fa fa-trash bg-danger"></i>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>

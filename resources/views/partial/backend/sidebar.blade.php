@@ -90,10 +90,13 @@
                 </li>
 
                 @role('operationsmanager')
+
                 {{-- Education Section --}}
+
                 <li class="nav-header text-secondary">
                     <h6>@lang('site.educationSection')</h6>
                 </li>
+
                 {{-- Education --}}
                 <li class="nav-item">
                     <a href="{{ route('admin.education') }}"
@@ -104,6 +107,7 @@
                         </p>
                     </a>
                 </li>
+
                 {{-- Offices --}}
                 <li class="nav-item">
                     <a href="{{ route('admin.offices') }}"
@@ -114,24 +118,54 @@
                         </p>
                     </a>
                 </li>
+
+                @endrole
+
+                @role('operationsmanager|superadmin')
+                    {{-- semester & week Section --}}
+                    <li class="nav-header text-secondary">
+                        <h6>@lang('site.semestersSection')</h6>
+                    </li>
+                    @role('operationsmanager')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.semesters') }}"
+                            class="nav-link {{ request()->is('admin/semesters') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-graduation-cap"></i>
+                            <p>
+                                @lang('site.semesters')
+                            </p>
+                        </a>
+                    </li>
+                    @endrole
+
+                    <li class="nav-item">
+                        <a href="{{ route('admin.weeks') }}"
+                            class="nav-link {{ request()->is('admin/weeks') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-graduation-cap"></i>
+                            <p>
+                                @lang('site.weeks')
+                            </p>
+                        </a>
+                    </li>
                 @endrole
 
                 @role('operationsmanager')
-                {{-- Settings Section --}}
-                <li class="nav-header text-secondary">
-                    <h6>@lang('site.settingsSection')</h6>
-                </li>
-                {{-- log-viewer --}}
-                <li class="nav-item">
-                    <a href="{{ route('admin.log-viewer') }}"
-                        target="_blank"
-                        class="nav-link {{ request()->is('admin/log-viewer') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-exclamation-triangle"></i>
-                        <p>
-                            @lang('site.logViewer')
-                        </p>
-                    </a>
-                </li>
+                    {{-- Settings Section --}}
+                    <li class="nav-header text-secondary">
+                        <h6>@lang('site.settingsSection')</h6>
+                    </li>
+
+                    {{-- log-viewer --}}
+                    <li class="nav-item">
+                        <a href="{{ route('admin.log-viewer') }}"
+                            target="_blank"
+                            class="nav-link {{ request()->is('admin/log-viewer') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-exclamation-triangle"></i>
+                            <p>
+                                @lang('site.logViewer')
+                            </p>
+                        </a>
+                    </li>
                 @endrole
 
             </ul>

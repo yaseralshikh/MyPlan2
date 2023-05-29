@@ -4,11 +4,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Livewire\Backend\Users\Users;
+use App\Http\Livewire\Backend\Weeks\Weeks;
 use App\Http\Livewire\Backend\Events\Events;
 use App\Http\Livewire\Backend\Offices\Offices;
 use App\Http\Controllers\OfficeDropdownController;
 use App\Http\Livewire\Backend\Dashboard\Dashboard;
 use App\Http\Livewire\Backend\Education\Education;
+use App\Http\Livewire\Backend\Semesters\Semesters;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 
 /*
@@ -40,11 +42,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'ro
     Route::get('/', Dashboard::class)->name('dashboard');
     Route::get('users', Users::class)->name('users');
     Route::get('events', Events::class )->name('events');
+    Route::get('weeks', Weeks::class )->name('weeks');
 });
 
 //Backend -> log-viewer
 Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'role:operationsmanager']], function (){
     Route::get('education', Education::class )->name('education');
     Route::get('offices', Offices::class )->name('offices');
+    Route::get('semesters', Semesters::class )->name('semesters');
     Route::get('/log-viewer', [LogViewerController::class, 'index'])->name('log-viewer');
 });

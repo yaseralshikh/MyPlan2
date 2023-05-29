@@ -145,7 +145,7 @@
                 });
             });
         };
-        
+
         document.addEventListener('DOMContentLoaded', function() {
 
             // On Textbox password pressed enter
@@ -165,6 +165,7 @@
             });
         });
     </script>
+    
 </body>
 
 </html>

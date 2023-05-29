@@ -36,15 +36,16 @@
             <div class="card">
                 <div class="card-header bg-light">
                     <h3 class="card-title">
-                        <button wire:click.prevent='addNewUser' class="ml-1 btn btn-sm btn-primary">
+                        <button wire:click.prevent='addNewUser' class="ml-1 btn btn-sm btn-primary" {{  auth()->user()->hasPermission('users-create') ? '' : 'disabled' }}>
                             <i class="mr-2 fa fa-plus-circle" aria-hidden="true">
                                 <span>@lang('site.addRecord', ['name' => 'مستخدم'])</span>
                             </i>
                         </button>
 
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm">@lang('site.action')</button>
+                            <button type="button" class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('users-read') ? '' : 'disabled' }}>@lang('site.action')</button>
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon"
+                                {{  auth()->user()->hasPermission('users-read') ? '' : 'disabled' }}
                                 data-toggle="dropdown" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
@@ -194,34 +195,20 @@
                                     <td>
                                         <div class="btn-group btn-group-sm">
                                             {{-- users-update --}}
-                                            @if (auth()->user()->hasPermission('users-update'))
-                                                <button wire:click.prevent="edit({{ $user }})"
-                                                    class="btn btn-primary btn-sm"><i class="fa fa-edit"></i>
-                                                </button>
-                                            @else
-                                                <button class="btn btn-primary btn-sm" disabled>
-                                                    <i class="fa fa-edit"></i>
-                                                </button>
-                                            @endif
+                                            <button wire:click.prevent="edit({{ $user }})"
+                                                class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('users-update') ? '' : 'disabled' }}>
+                                                <i class="fa fa-edit"></i>
+                                            </button>
                                             {{-- users-read --}}
-                                            @if (auth()->user()->hasPermission('users-read'))
-                                                <button wire:click.prevent="show({{ $user }})"
-                                                    class="btn btn-primary btn-sm"><i class="fa fa-user"></i>
-                                                </button>
-                                            @else
-                                                <button class="btn btn-primary btn-sm" disabled>
-                                                    <i class="fa fa-user"></i>
-                                                </button>
-                                            @endif
+                                            <button wire:click.prevent="edit({{ $user }})"
+                                                class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('users-read') ? '' : 'disabled' }}>
+                                                <i class="fa fa-user"></i>
+                                            </button>
                                             {{-- users-delete --}}
-                                            @if (auth()->user()->hasPermission('users-delete'))
-                                                <button wire:click.prevent="confirmUserRemoval({{ $user->id }})"
-                                                    class="btn btn-danger btn-sm"><i
-                                                        class="fa fa-trash bg-danger"></i></button>
-                                            @else
-                                                <button class="btn btn-danger btn-sm" disabled><i
-                                                        class="fa fa-trash bg-danger"></i></button>
-                                            @endif
+                                            <button wire:click.prevent="confirmUserRemoval({{ $user->id }})"
+                                                class="btn btn-danger btn-sm" {{  auth()->user()->hasPermission('users-delete') ? '' : 'disabled' }}>
+                                                <i class="fa fa-trash bg-danger"></i>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>

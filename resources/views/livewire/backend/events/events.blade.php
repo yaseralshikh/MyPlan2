@@ -45,13 +45,15 @@
                 <div class="card-header bg-light">
                     <h3 class="card-title">
                         <button wire:click.prevent='addNewEvent' class="ml-1 btn btn-sm btn-primary">
+                            {{ auth()->user()->hasPermission('events-create') ? '' : 'disabled' }}
                             <i class="mr-2 fa fa-plus-circle" aria-hidden="true">
                                 <span>@lang('site.addRecord', ['name' => 'خطة'])</span>
                             </i>
                         </button>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm">@lang('site.action')</button>
+                            <button type="button" class="btn btn-primary btn-sm" {{ auth()->user()->hasPermission('events-read') ? '' : 'disabled' }}>@lang('site.action')</button>
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon"
+                                {{ auth()->user()->hasPermission('events-read') ? '' : 'disabled' }}
                                 data-toggle="dropdown" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
@@ -94,7 +96,7 @@
                                 <div class="dropdown-divider"></div>
 
                                 {{-- Delete Selected event --}}
-                                <a class="dropdown-item {{ $selectedRows ? 'text-danger' : 'disabled-link' }}  delete-confirm"
+                                <a class="dropdown-item {{ $selectedRows && auth()->user()->hasPermission('events-delete') ? 'text-danger' : 'disabled-link' }}  delete-confirm"
                                     wire:click.prevent="deleteSelectedRows" href="#">@lang('site.deleteSelected')</a>
                             </div>
                         </div>
@@ -246,10 +248,7 @@
                                         @lang('site.day')
                                     </th>
                                     <th>
-                                        @lang('site.hijriDate')
-                                    </th>
-                                    <th>
-                                        @lang('site.gregorianDate')
+                                        @lang('site.date')
                                     </th>
                                     <th>
                                         @lang('site.schoolWeek')
@@ -286,11 +285,8 @@
                                     </td>
                                     <td class="align-middle"
                                         data-sort="{{ Carbon\Carbon::parse($event->start)->format('Ymd') }}">
+                                        {{ $event->start }} <br>
                                         {{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $event->start) }}
-                                    </td>
-                                    <td class="align-middle"
-                                        data-sort="{{ Carbon\Carbon::parse($event->start)->format('Ymd') }}">
-                                        {{ $event->start }}
                                     </td>
                                     {{-- <td>{{
                                         (Carbon\Carbon::parse($event->end))->diffInDays(Carbon\Carbon::parse($event->start))
@@ -316,17 +312,15 @@
                                     </td> --}}
                                     <td class="align-middle">
                                         <div class="btn-group btn-group-sm">
-                                            @if (auth()->user()->hasPermission('offices-update'))
-                                                <button wire:click.prevent="edit({{ $event }})" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
-                                            @else
-                                                <button class="btn btn-primary btn-sm" disabled><i class="fa fa-edit"></i></button>
-                                            @endif
+                                            <button wire:click.prevent="edit({{ $event }})"
+                                                class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('events-update') ? '' : 'disabled' }}>
+                                                <i class="fa fa-edit"></i>
+                                            </button>
 
-                                            @if (auth()->user()->hasPermission('offices-delete'))
-                                                <button wire:click.prevent="confirmEventRemoval({{ $event->id }})" class="btn btn-danger btn-sm"><i class="fa fa-trash bg-danger"></i></button>
-                                            @else
-                                                <button class="btn btn-danger btn-sm" disabled><i class="fa fa-trash bg-danger"></i></button>
-                                            @endif
+                                            <button wire:click.prevent="confirmEventRemoval({{ $event->id }})"
+                                                class="btn btn-danger btn-sm" {{  auth()->user()->hasPermission('events-delete') ? '' : 'disabled' }}>
+                                                <i class="fa fa-trash bg-danger"></i>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>

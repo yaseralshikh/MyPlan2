@@ -36,15 +36,17 @@
             <div class="card">
                 <div class="card-header bg-light">
                     <h3 class="card-title">
-                        <button wire:click.prevent='addNewEducation' class="ml-1 btn btn-sm btn-primary">
+                        <button wire:click.prevent='addNewEducation' class="ml-1 btn btn-sm btn-primary" {{
+                            auth()->user()->hasPermission('education-create') ? '' : 'disabled' }}>
                             <i class="mr-2 fa fa-plus-circle" aria-hidden="true">
                                 <span>@lang('site.addRecord', ['name' => 'إدارة تعليم'])</span>
                             </i>
                         </button>
 
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm">@lang('site.action')</button>
+                            <button type="button" class="btn btn-primary btn-sm" {{ auth()->user()->hasPermission('education-read') ? '' : 'disabled' }}>@lang('site.action')</button>
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon"
+                                {{ auth()->user()->hasPermission('education-read') ? '' : 'disabled' }}
                                 data-toggle="dropdown" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
@@ -155,26 +157,16 @@
                                     </td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
-                                            @if (auth()->user()->hasPermission('offices-update'))
-                                                <button wire:click.prevent="edit({{ $education }})" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
-                                            @else
-                                                <button class="btn btn-primary btn-sm" disabled><i class="fa fa-edit"></i></button>
-                                            @endif
+                                            <button wire:click.prevent="edit({{ $education }})"
+                                                class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('education-update') ? '' : 'disabled' }}>
+                                                <i class="fa fa-edit"></i>
+                                            </button>
 
-                                            @if (auth()->user()->hasPermission('education-delete'))
-                                                <button wire:click.prevent="confirmEducationRemoval({{ $education->id }})"
-                                                    class="btn btn-danger btn-sm"><i
-                                                        class="fa fa-trash bg-danger"></i></button>
-                                            @else
-                                                <button class="btn btn-danger btn-sm" disabled><i
-                                                        class="fa fa-trash bg-danger"></i></button>
-                                            @endif
+                                            <button wire:click.prevent="confirmEducationRemoval({{ $education->id }})"
+                                                class="btn btn-danger btn-sm" {{  auth()->user()->hasPermission('education-delete') ? '' : 'disabled' }}>
+                                                <i class="fa fa-trash bg-danger"></i>
+                                            </button>
                                         </div>
-                                        {{-- <form action="" method="post" id="delete-user-{{ $user->id }}"
-                                            class="d-none">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form> --}}
                                     </td>
                                 </tr>
 
