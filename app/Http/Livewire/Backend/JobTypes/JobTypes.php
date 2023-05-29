@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Livewire\Backend\Semesters;
+namespace App\Http\Livewire\Backend\JobTypes;
 
+use App\Models\JobType;
 use Livewire\Component;
-use App\Models\Semester;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class Semesters extends Component
+class JobTypes extends Component
 {
     use WithPagination;
     use LivewireAlert;
@@ -17,48 +17,26 @@ class Semesters extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $data = [];
-    public $semester;
+    public $jobtype;
 
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
-    public $byStatus = 1;
-
     public $showEditModal = false;
 
-    public $semesterIdBeingRemoved = null;
+    public $jobtypesIdBeingRemoved = null;
 
     public $selectedRows = [];
 	public $selectPageRows = false;
-    protected $listeners = ['deleteConfirmed' => 'deleteSemesters'];
+    protected $listeners = ['deleteConfirmed' => 'deleteJobTypes'];
 
-    public function changeActive($semesterId)
-    {
-        $semester =Semester::where('id' ,$semesterId)->get();
-        if ($semester[0]->active) {
-            Semester::where('id' ,$semesterId)->update(['active' => 0]);
-        } else {
-            Semester::where('id' ,$semesterId)->update(['active' => 1]);
-            Semester::whereNotIn('id' ,[$semesterId])->update(['active' => 0]);
-        }
-
-        $this->alert('success', __('site.semesterActiveSuccessfully'), [
-            'position'  =>  'top-end',
-            'timer'  =>  2000,
-            'timerProgressBar' => true,
-            'toast'  =>  true,
-            'text'  =>  null,
-            'showCancelButton'  =>  false,
-            'showConfirmButton'  =>  false
-        ]);
-    }
 
     // Updated Select Page Rows
 
     public function updatedSelectPageRows($value)
     {
         if ($value) {
-            $this->selectedRows = $this->semesters->pluck('id')->map(function ($id) {
+            $this->selectedRows = $this->jobtypes->pluck('id')->map(function ($id) {
                 return (string) $id;
             });
         } else {
@@ -80,13 +58,14 @@ class Semesters extends Component
         $this->dispatchBrowserEvent('show-delete-alert-confirmation');
     }
 
-    // set All selected User As Active
+    // set All selected JobType As Active
 
     public function setAllAsActive()
 	{
-		Semester::whereIn('id', $this->selectedRows)->update(['status' => 1]);
+		JobType::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
         $this->alert('success', __('site.activeSuccessfully'), [
+
             'position'  =>  'top-end',
             'timer'  =>  2000,
             'timerProgressBar' => true,
@@ -99,13 +78,14 @@ class Semesters extends Component
 		$this->reset(['selectPageRows', 'selectedRows']);
 	}
 
-    // set All selected User As InActive
+    // set All selected JobType As InActive
 
 	public function setAllAsInActive()
 	{
-		Semester::whereIn('id', $this->selectedRows)->update(['status' => 0]);
+		JobType::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
         $this->alert('success', __('site.inActiveSuccessfully'), [
+
             'position'  =>  'top-end',
             'timer'  =>  2000,
             'timerProgressBar' => true,
@@ -118,14 +98,15 @@ class Semesters extends Component
 		$this->reset(['selectPageRows', 'selectedRows']);
 	}
 
-    // Delete Selected Semesters
+    // Delete Selected JobTypes
 
-    public function deleteSemesters()
+    public function deleteJobTypes()
     {
-        // delete selected Semesters from database
-        Semester::whereIn('id', $this->selectedRows)->delete();
+        // delete selected Levels from database
+        JobType::whereIn('id', $this->selectedRows)->delete();
 
         $this->alert('success', __('site.deleteSuccessfully'), [
+
             'position'  =>  'top-end',
             'timer'  =>  2000,
             'timerProgressBar' => true,
@@ -135,36 +116,40 @@ class Semesters extends Component
             'showConfirmButton'  =>  false
         ]);
 
-        $this->reset();
+        $this->reset('data');
     }
 
-    // show add new Semester form modal
+    // Updated Search Term
+    public function updatedSearchTerm()
+    {
+        $this->resetPage();
+    }
 
-    public function addNewSemester()
+    // show add new Level form modal
+
+    public function addNewJobType()
     {
         $this->reset('data');
         $this->showEditModal = false;
         $this->dispatchBrowserEvent('show-form');
     }
 
-    // Create new Semester
+    // Create new JobType
 
-    public function createSemester()
+    public function createJobType()
     {
         $validatedData = Validator::make($this->data, [
-
-			'name'              => 'required',
-			'start'             => 'required|date',
-			'end'               => 'required|date',
-			'school_year'       => 'required|numeric',
-
+			'name'                   => 'required|max:255',
+			'description'            => 'max:255',
 		])->validate();
 
-		Semester::create($validatedData);
+
+		JobType::create($validatedData);
 
         $this->dispatchBrowserEvent('hide-form');
 
         $this->alert('success', __('site.saveSuccessfully'), [
+
             'position'  =>  'top-end',
             'timer'  =>  2000,
             'timerProgressBar' => true,
@@ -172,43 +157,44 @@ class Semesters extends Component
             'text'  =>  null,
             'showCancelButton'  =>  false,
             'showConfirmButton'  =>  false
+
         ]);
     }
 
-    // show Update new Semester form modal
+    // show Update new JobType form modal
 
-    public function edit(Semester $semester)
+    public function edit(JobType $jobtype)
     {
         $this->reset('data');
 
         $this->showEditModal = true;
 
-        $this->semester = $semester;
+        $this->jobtype = $jobtype;
 
-        $this->data = $semester->toArray();
+        $this->data = $jobtype->toArray();
 
         $this->dispatchBrowserEvent('show-form');
     }
 
-    // Update Task
+    // Update JobType
 
-    public function updateSemester()
+    public function updateJobType()
     {
         try {
+
             $validatedData = Validator::make($this->data, [
-                'name'           => 'required',
-                'start'          => 'required|date',
-                'end'            => 'required|date',
-                'school_year'    => 'required|numeric',
+
+                'name'                   => 'required|max:255',
+                'description'            => 'max:255',
+
             ])->validate();
 
-            $this->semester->update($validatedData);
-
-            // Semester::whereNotIn('id' ,[$semesterId])->update(['active' => 0]);
+            $this->jobtype->update($validatedData);
 
             $this->dispatchBrowserEvent('hide-form');
 
             $this->alert('success', __('site.updateSuccessfully'), [
+
                 'position'  =>  'top-end',
                 'timer'  =>  2000,
                 'timerProgressBar' => true,
@@ -221,6 +207,7 @@ class Semesters extends Component
         } catch (\Throwable $th) {
 
             $message = $this->alert('error', $th->getMessage(), [
+
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'timerProgressBar' => true,
@@ -236,30 +223,29 @@ class Semesters extends Component
         }
     }
 
-    // Show Modal Form to Confirm Semester Removal
+    // Show Modal Form to Confirm JobType Removal
 
-    public function confirmSemesterRemoval($semesterId)
+    public function confirmJobTypeRemoval($JobTypeId)
     {
-        $this->semesterIdBeingRemoved = $semesterId;
+        $this->jobtypesIdBeingRemoved = $JobTypeId;
 
         $this->dispatchBrowserEvent('show-delete-modal');
     }
 
-    // Delete Semester
+    // Delete JobType
 
-    public function deleteSemester()
+    public function deleteJobType()
     {
         try {
-            $semester = Semester::findOrFail($this->semesterIdBeingRemoved);
+            $job_type = JobType::findOrFail($this->jobtypesIdBeingRemoved);
 
-            $semester->delete();
+            $job_type->delete();
 
-            $semester = null;
+            $job_type = null;
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
             $this->alert('success', __('site.deleteSuccessfully'), [
-
                 'position'  =>  'top-end',
                 'timer'  =>  2000,
                 'timerProgressBar' => true,
@@ -272,6 +258,7 @@ class Semesters extends Component
         } catch (\Throwable $th) {
 
             $message = $this->alert('error', $th->getMessage(), [
+
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'timerProgressBar' => true,
@@ -287,27 +274,23 @@ class Semesters extends Component
         }
     }
 
-    public function getSemestersProperty()
+    public function getJobTypesProperty()
 	{
-        $searchString = $this->searchTerm;
-        $byStatus = $this->byStatus;
-
-        $semesters = Semester::where('status', $byStatus)
-            ->search(trim(($searchString)))
-            ->orderBy('start', 'asc')
-            ->orderBy('id','asc')
+        $JobTypes = JobType::query()
+            ->where('name', 'like', '%'.$this->searchTerm.'%')
+            ->orderBy('name' , 'asc')
             ->paginate(30);
 
-        return $semesters;
+        return $JobTypes;
 	}
 
     public function render()
     {
-        $semesters = $this->semesters;
+        $job_types = $this->JobTypes;
 
-        return view('livewire.backend.semesters.semesters', compact(
+        return view('livewire.backend.job-types.job-types', compact(
 
-            'semesters',
+            'job_types'
 
         ))->layout('layouts.admin');
     }

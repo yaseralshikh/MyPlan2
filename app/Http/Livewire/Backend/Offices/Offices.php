@@ -584,6 +584,8 @@ class Offices extends Component
 
             $office->delete();
 
+            $office= null;
+
             $this->dispatchBrowserEvent('hide-delete-modal');
 
             $this->alert('success', __('site.deleteSuccessfully'), [

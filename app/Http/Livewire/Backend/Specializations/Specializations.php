@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Livewire\Backend\Semesters;
+namespace App\Http\Livewire\Backend\Specializations;
 
 use Livewire\Component;
-use App\Models\Semester;
 use Livewire\WithPagination;
+use App\Models\Specialization;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class Semesters extends Component
+class Specializations extends Component
 {
     use WithPagination;
     use LivewireAlert;
@@ -17,48 +17,25 @@ class Semesters extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $data = [];
-    public $semester;
+    public $specialization;
 
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
-    public $byStatus = 1;
-
     public $showEditModal = false;
 
-    public $semesterIdBeingRemoved = null;
+    public $specializationIdBeingRemoved = null;
 
     public $selectedRows = [];
 	public $selectPageRows = false;
-    protected $listeners = ['deleteConfirmed' => 'deleteSemesters'];
-
-    public function changeActive($semesterId)
-    {
-        $semester =Semester::where('id' ,$semesterId)->get();
-        if ($semester[0]->active) {
-            Semester::where('id' ,$semesterId)->update(['active' => 0]);
-        } else {
-            Semester::where('id' ,$semesterId)->update(['active' => 1]);
-            Semester::whereNotIn('id' ,[$semesterId])->update(['active' => 0]);
-        }
-
-        $this->alert('success', __('site.semesterActiveSuccessfully'), [
-            'position'  =>  'top-end',
-            'timer'  =>  2000,
-            'timerProgressBar' => true,
-            'toast'  =>  true,
-            'text'  =>  null,
-            'showCancelButton'  =>  false,
-            'showConfirmButton'  =>  false
-        ]);
-    }
+    protected $listeners = ['deleteConfirmed' => 'deleteSpecializations'];
 
     // Updated Select Page Rows
 
     public function updatedSelectPageRows($value)
     {
         if ($value) {
-            $this->selectedRows = $this->semesters->pluck('id')->map(function ($id) {
+            $this->selectedRows = $this->specializations->pluck('id')->map(function ($id) {
                 return (string) $id;
             });
         } else {
@@ -73,18 +50,18 @@ class Semesters extends Component
         $this->reset(['selectedRows', 'selectPageRows']);
     }
 
-    // show Sweetalert Confirmation for Delete
+    // show Sweetalert Confirmation for Delete Selected Rows
 
     public function deleteSelectedRows()
     {
         $this->dispatchBrowserEvent('show-delete-alert-confirmation');
     }
 
-    // set All selected User As Active
+    // set All selected Specialization As Active
 
     public function setAllAsActive()
 	{
-		Semester::whereIn('id', $this->selectedRows)->update(['status' => 1]);
+		Specialization::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
         $this->alert('success', __('site.activeSuccessfully'), [
             'position'  =>  'top-end',
@@ -103,7 +80,7 @@ class Semesters extends Component
 
 	public function setAllAsInActive()
 	{
-		Semester::whereIn('id', $this->selectedRows)->update(['status' => 0]);
+		Specialization::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
         $this->alert('success', __('site.inActiveSuccessfully'), [
             'position'  =>  'top-end',
@@ -118,12 +95,12 @@ class Semesters extends Component
 		$this->reset(['selectPageRows', 'selectedRows']);
 	}
 
-    // Delete Selected Semesters
+    // Delete Selected Specializations
 
-    public function deleteSemesters()
+    public function deleteSpecializations()
     {
-        // delete selected Semesters from database
-        Semester::whereIn('id', $this->selectedRows)->delete();
+        // delete selected Specializations from database
+        Specialization::whereIn('id', $this->selectedRows)->delete();
 
         $this->alert('success', __('site.deleteSuccessfully'), [
             'position'  =>  'top-end',
@@ -138,33 +115,36 @@ class Semesters extends Component
         $this->reset();
     }
 
-    // show add new Semester form modal
+    // Updated Search Term
+    public function updatedSearchTerm()
+    {
+        $this->resetPage();
+    }
 
-    public function addNewSemester()
+    // show add new Specialization form modal
+
+    public function addNewSpecialization()
     {
         $this->reset('data');
         $this->showEditModal = false;
         $this->dispatchBrowserEvent('show-form');
     }
 
-    // Create new Semester
+    // Create new user
 
-    public function createSemester()
+    public function createSpecialization()
     {
         $validatedData = Validator::make($this->data, [
-
-			'name'              => 'required',
-			'start'             => 'required|date',
-			'end'               => 'required|date',
-			'school_year'       => 'required|numeric',
-
+			'name'                  => 'required',
 		])->validate();
 
-		Semester::create($validatedData);
+
+		Specialization::create($validatedData);
 
         $this->dispatchBrowserEvent('hide-form');
 
         $this->alert('success', __('site.saveSuccessfully'), [
+
             'position'  =>  'top-end',
             'timer'  =>  2000,
             'timerProgressBar' => true,
@@ -172,39 +152,35 @@ class Semesters extends Component
             'text'  =>  null,
             'showCancelButton'  =>  false,
             'showConfirmButton'  =>  false
+
         ]);
     }
 
-    // show Update new Semester form modal
+    // show Update new Specialization form modal
 
-    public function edit(Semester $semester)
+    public function edit(Specialization $specialization)
     {
         $this->reset('data');
 
         $this->showEditModal = true;
 
-        $this->semester = $semester;
+        $this->specialization = $specialization;
 
-        $this->data = $semester->toArray();
+        $this->data = $specialization->toArray();
 
         $this->dispatchBrowserEvent('show-form');
     }
 
-    // Update Task
+    // Update Specialization
 
-    public function updateSemester()
+    public function updateSpecialization()
     {
         try {
             $validatedData = Validator::make($this->data, [
-                'name'           => 'required',
-                'start'          => 'required|date',
-                'end'            => 'required|date',
-                'school_year'    => 'required|numeric',
+                'name'                      => 'required',
             ])->validate();
 
-            $this->semester->update($validatedData);
-
-            // Semester::whereNotIn('id' ,[$semesterId])->update(['active' => 0]);
+            $this->specialization->update($validatedData);
 
             $this->dispatchBrowserEvent('hide-form');
 
@@ -221,6 +197,7 @@ class Semesters extends Component
         } catch (\Throwable $th) {
 
             $message = $this->alert('error', $th->getMessage(), [
+
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'timerProgressBar' => true,
@@ -236,30 +213,29 @@ class Semesters extends Component
         }
     }
 
-    // Show Modal Form to Confirm Semester Removal
+    // Show Modal Form to Confirm Specialization Removal
 
-    public function confirmSemesterRemoval($semesterId)
+    public function confirmSpecializationRemoval($specializationId)
     {
-        $this->semesterIdBeingRemoved = $semesterId;
+        $this->specializationIdBeingRemoved = $specializationId;
 
         $this->dispatchBrowserEvent('show-delete-modal');
     }
 
-    // Delete Semester
+    // Delete Task
 
-    public function deleteSemester()
+    public function deleteSpecialization()
     {
         try {
-            $semester = Semester::findOrFail($this->semesterIdBeingRemoved);
+            $specialization = Specialization::findOrFail($this->specializationIdBeingRemoved);
 
-            $semester->delete();
+            $specialization->delete();
 
-            $semester = null;
+            $specialization = null;
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
             $this->alert('success', __('site.deleteSuccessfully'), [
-
                 'position'  =>  'top-end',
                 'timer'  =>  2000,
                 'timerProgressBar' => true,
@@ -268,10 +244,10 @@ class Semesters extends Component
                 'showCancelButton'  =>  false,
                 'showConfirmButton'  =>  false
             ]);
-
         } catch (\Throwable $th) {
 
             $message = $this->alert('error', $th->getMessage(), [
+
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'timerProgressBar' => true,
@@ -282,32 +258,28 @@ class Semesters extends Component
             ]);
 
             Log::error($th->getMessage());
-
             return $message;
         }
     }
 
-    public function getSemestersProperty()
+    public function getSpecializationsProperty()
 	{
         $searchString = $this->searchTerm;
-        $byStatus = $this->byStatus;
 
-        $semesters = Semester::where('status', $byStatus)
-            ->search(trim(($searchString)))
-            ->orderBy('start', 'asc')
-            ->orderBy('id','asc')
+        $specializations = Specialization::search(trim(($searchString)))
+            ->orderBy('name', 'asc')
             ->paginate(30);
 
-        return $semesters;
+        return $specializations;
 	}
 
     public function render()
     {
-        $semesters = $this->semesters;
+        $specializations = $this->specializations;
 
-        return view('livewire.backend.semesters.semesters', compact(
+        return view('livewire.backend.specializations.specializations', compact(
 
-            'semesters',
+            'specializations'
 
         ))->layout('layouts.admin');
     }

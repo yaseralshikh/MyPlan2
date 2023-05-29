@@ -215,6 +215,8 @@ class Education extends Component
 
             $education->delete();
 
+            $education = null;
+
             $this->dispatchBrowserEvent('hide-delete-modal');
 
             $this->alert('success', __('site.deleteSuccessfully'), [

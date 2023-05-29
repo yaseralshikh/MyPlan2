@@ -247,6 +247,8 @@ class Weeks extends Component
 
             $week->delete();
 
+            $week = null;
+
             $this->dispatchBrowserEvent('hide-delete-modal');
 
             $this->alert('success', __('site.deleteSuccessfully'), [

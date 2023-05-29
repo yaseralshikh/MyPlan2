@@ -105,7 +105,7 @@ return [
     'eventsTotal' => 'مجموع الخطط',
     'type' => 'العمل الحالي',
     'jobType' => 'العمل الحالي',
-    'jobs_type' => 'العمل الحالي',
+    'job_types' => 'العمل الحالي',
     'sectionType' => 'المرجع الإداري',
     'statisticsUsersEvent' => 'احصائية خطط المشرفين',
     'eventsSchool' => 'زيارات مدارس',

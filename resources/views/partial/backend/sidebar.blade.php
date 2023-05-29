@@ -62,6 +62,26 @@
                 </li>
 
                 @role('operationsmanager')
+                {{-- specializations --}}
+                <li class="nav-item">
+                    <a href="{{ route('admin.specializations') }}"
+                        class="nav-link {{ request()->is('admin/specializations') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-address-card"></i>
+                        <p>
+                            @lang('site.specializations')
+                        </p>
+                    </a>
+                </li>
+                {{-- Job Types --}}
+                <li class="nav-item">
+                    <a href="{{ route('admin.job_types') }}"
+                        class="nav-link {{ request()->is('admin/job_types') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-address-card"></i>
+                        <p>
+                            @lang('site.job_types')
+                        </p>
+                    </a>
+                </li>
                 {{-- Roles And Permissions  --}}
                 <li class="nav-item">
                     <a href="{{ url('/laratrust') }}"
@@ -89,7 +109,37 @@
                     </a>
                 </li>
 
+                <li class="nav-header text-secondary">
+                    <h6>@lang('site.tasksSection')</h6>
+                </li>
+                <li class="nav-item">
+                    <a href="#"
+                        class="nav-link {{ request()->is('admin/tasks') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tasks"></i>
+                        <p>
+                            @lang('site.tasks')
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#"
+                        class="nav-link {{ request()->is('admin/subtasks') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tasks"></i>
+                        <p>
+                            @lang('site.subTasks')
+                        </p>
+                    </a>
+                </li>
                 @role('operationsmanager')
+                <li class="nav-item">
+                    <a href="{{ route('admin.levels') }}"
+                        class="nav-link {{ request()->is('admin/levels') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tasks"></i>
+                        <p>
+                            @lang('site.levels')
+                        </p>
+                    </a>
+                </li>
 
                 {{-- Education Section --}}
 

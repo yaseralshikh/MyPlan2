@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Livewire\Backend\Semesters;
+namespace App\Http\Livewire\Backend\Levels;
 
+use App\Models\Level;
 use Livewire\Component;
-use App\Models\Semester;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class Semesters extends Component
+class Levels extends Component
 {
     use WithPagination;
     use LivewireAlert;
@@ -17,48 +17,25 @@ class Semesters extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $data = [];
-    public $semester;
+    public $level;
 
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
-    public $byStatus = 1;
-
     public $showEditModal = false;
 
-    public $semesterIdBeingRemoved = null;
+    public $levelIdBeingRemoved = null;
 
     public $selectedRows = [];
 	public $selectPageRows = false;
-    protected $listeners = ['deleteConfirmed' => 'deleteSemesters'];
-
-    public function changeActive($semesterId)
-    {
-        $semester =Semester::where('id' ,$semesterId)->get();
-        if ($semester[0]->active) {
-            Semester::where('id' ,$semesterId)->update(['active' => 0]);
-        } else {
-            Semester::where('id' ,$semesterId)->update(['active' => 1]);
-            Semester::whereNotIn('id' ,[$semesterId])->update(['active' => 0]);
-        }
-
-        $this->alert('success', __('site.semesterActiveSuccessfully'), [
-            'position'  =>  'top-end',
-            'timer'  =>  2000,
-            'timerProgressBar' => true,
-            'toast'  =>  true,
-            'text'  =>  null,
-            'showCancelButton'  =>  false,
-            'showConfirmButton'  =>  false
-        ]);
-    }
+    protected $listeners = ['deleteConfirmed' => 'deleteLevels'];
 
     // Updated Select Page Rows
 
     public function updatedSelectPageRows($value)
     {
         if ($value) {
-            $this->selectedRows = $this->semesters->pluck('id')->map(function ($id) {
+            $this->selectedRows = $this->levels->pluck('id')->map(function ($id) {
                 return (string) $id;
             });
         } else {
@@ -84,7 +61,7 @@ class Semesters extends Component
 
     public function setAllAsActive()
 	{
-		Semester::whereIn('id', $this->selectedRows)->update(['status' => 1]);
+		Level::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
         $this->alert('success', __('site.activeSuccessfully'), [
             'position'  =>  'top-end',
@@ -103,7 +80,7 @@ class Semesters extends Component
 
 	public function setAllAsInActive()
 	{
-		Semester::whereIn('id', $this->selectedRows)->update(['status' => 0]);
+		Level::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
         $this->alert('success', __('site.inActiveSuccessfully'), [
             'position'  =>  'top-end',
@@ -118,12 +95,12 @@ class Semesters extends Component
 		$this->reset(['selectPageRows', 'selectedRows']);
 	}
 
-    // Delete Selected Semesters
+    // Delete Selected Levels
 
-    public function deleteSemesters()
+    public function deleteLevels()
     {
-        // delete selected Semesters from database
-        Semester::whereIn('id', $this->selectedRows)->delete();
+        // delete selected Levels from database
+        Level::whereIn('id', $this->selectedRows)->delete();
 
         $this->alert('success', __('site.deleteSuccessfully'), [
             'position'  =>  'top-end',
@@ -135,32 +112,35 @@ class Semesters extends Component
             'showConfirmButton'  =>  false
         ]);
 
-        $this->reset();
+        $this->reset('data');
     }
 
-    // show add new Semester form modal
 
-    public function addNewSemester()
+    // Updated Search Term
+    public function updatedSearchTerm()
+    {
+        $this->resetPage();
+    }
+
+    // show add new Level form modal
+
+    public function addNewLevel()
     {
         $this->reset('data');
         $this->showEditModal = false;
         $this->dispatchBrowserEvent('show-form');
     }
 
-    // Create new Semester
+    // Create new user
 
-    public function createSemester()
+    public function createLevel()
     {
         $validatedData = Validator::make($this->data, [
-
-			'name'              => 'required',
-			'start'             => 'required|date',
-			'end'               => 'required|date',
-			'school_year'       => 'required|numeric',
-
+			'name'                  => 'required',
 		])->validate();
 
-		Semester::create($validatedData);
+
+		Level::create($validatedData);
 
         $this->dispatchBrowserEvent('hide-form');
 
@@ -175,36 +155,31 @@ class Semesters extends Component
         ]);
     }
 
-    // show Update new Semester form modal
+    // show Update new Level form modal
 
-    public function edit(Semester $semester)
+    public function edit(Level $level)
     {
         $this->reset('data');
 
         $this->showEditModal = true;
 
-        $this->semester = $semester;
+        $this->level = $level;
 
-        $this->data = $semester->toArray();
+        $this->data = $level->toArray();
 
         $this->dispatchBrowserEvent('show-form');
     }
 
     // Update Task
 
-    public function updateSemester()
+    public function updateLevel()
     {
         try {
             $validatedData = Validator::make($this->data, [
-                'name'           => 'required',
-                'start'          => 'required|date',
-                'end'            => 'required|date',
-                'school_year'    => 'required|numeric',
+                'name'                      => 'required',
             ])->validate();
 
-            $this->semester->update($validatedData);
-
-            // Semester::whereNotIn('id' ,[$semesterId])->update(['active' => 0]);
+            $this->level->update($validatedData);
 
             $this->dispatchBrowserEvent('hide-form');
 
@@ -236,30 +211,29 @@ class Semesters extends Component
         }
     }
 
-    // Show Modal Form to Confirm Semester Removal
+    // Show Modal Form to Confirm Level Removal
 
-    public function confirmSemesterRemoval($semesterId)
+    public function confirmLevelRemoval($levelId)
     {
-        $this->semesterIdBeingRemoved = $semesterId;
+        $this->levelIdBeingRemoved = $levelId;
 
         $this->dispatchBrowserEvent('show-delete-modal');
     }
 
-    // Delete Semester
+    // Delete Task
 
-    public function deleteSemester()
+    public function deleteLevel()
     {
         try {
-            $semester = Semester::findOrFail($this->semesterIdBeingRemoved);
+            $level = Level::findOrFail($this->levelIdBeingRemoved);
 
-            $semester->delete();
+            $level->delete();
 
-            $semester = null;
+            $level = null;
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
             $this->alert('success', __('site.deleteSuccessfully'), [
-
                 'position'  =>  'top-end',
                 'timer'  =>  2000,
                 'timerProgressBar' => true,
@@ -268,9 +242,7 @@ class Semesters extends Component
                 'showCancelButton'  =>  false,
                 'showConfirmButton'  =>  false
             ]);
-
         } catch (\Throwable $th) {
-
             $message = $this->alert('error', $th->getMessage(), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
@@ -287,28 +259,25 @@ class Semesters extends Component
         }
     }
 
-    public function getSemestersProperty()
+    public function getLevelsProperty()
 	{
-        $searchString = $this->searchTerm;
-        $byStatus = $this->byStatus;
-
-        $semesters = Semester::where('status', $byStatus)
-            ->search(trim(($searchString)))
-            ->orderBy('start', 'asc')
-            ->orderBy('id','asc')
+        $levels = Level::query()
+            ->where('name', 'like', '%'.$this->searchTerm.'%')
+            ->orderBy('name', 'asc')
             ->paginate(30);
 
-        return $semesters;
+        return $levels;
 	}
 
     public function render()
     {
-        $semesters = $this->semesters;
+        $levels = $this->levels;
 
-        return view('livewire.backend.semesters.semesters', compact(
+        return view('livewire.backend.levels.levels', compact(
 
-            'semesters',
+            'levels',
 
         ))->layout('layouts.admin');
+
     }
 }

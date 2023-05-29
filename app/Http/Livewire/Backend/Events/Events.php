@@ -524,6 +524,8 @@ class Events extends Component
 
             $event->delete();
 
+            $event = null;
+
             $this->dispatchBrowserEvent('hide-delete-modal');
 
             $this->alert('success', __('site.deleteSuccessfully'), [

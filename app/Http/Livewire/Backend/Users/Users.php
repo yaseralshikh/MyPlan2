@@ -309,6 +309,8 @@ class Users extends Component
 
             $user->delete();
 
+            $user = null;
+
             $this->dispatchBrowserEvent('hide-delete-modal');
 
             $this->alert('success', __('site.deleteSuccessfully'), [
