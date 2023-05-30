@@ -82,6 +82,16 @@
                         </p>
                     </a>
                 </li>
+                {{-- Section Types --}}
+                <li class="nav-item">
+                    <a href="{{ route('admin.section_types') }}"
+                        class="nav-link {{ request()->is('admin/section_types') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-address-card"></i>
+                        <p>
+                            @lang('site.section_types')
+                        </p>
+                    </a>
+                </li>
                 {{-- Roles And Permissions  --}}
                 <li class="nav-item">
                     <a href="{{ url('/laratrust') }}"

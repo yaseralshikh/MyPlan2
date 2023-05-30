@@ -106,6 +106,7 @@ return [
     'type' => 'العمل الحالي',
     'jobType' => 'العمل الحالي',
     'job_types' => 'العمل الحالي',
+    'section_types' => 'المرجع الإداري',
     'sectionType' => 'المرجع الإداري',
     'statisticsUsersEvent' => 'احصائية خطط المشرفين',
     'eventsSchool' => 'زيارات مدارس',

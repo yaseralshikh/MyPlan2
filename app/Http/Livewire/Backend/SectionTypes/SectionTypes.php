@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Livewire\Backend\JobTypes;
+namespace App\Http\Livewire\Backend\SectionTypes;
 
-use App\Models\JobType;
 use Livewire\Component;
+use App\Models\SectionType;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class JobTypes extends Component
+class SectionTypes extends Component
 {
     use WithPagination;
     use LivewireAlert;
@@ -17,18 +17,18 @@ class JobTypes extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $data = [];
-    public $jobtype;
+    public $sectiontype;
 
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
     public $showEditModal = false;
 
-    public $jobtypesIdBeingRemoved = null;
+    public $sectiontypeIdBeingRemoved = null;
 
     public $selectedRows = [];
 	public $selectPageRows = false;
-    protected $listeners = ['deleteConfirmed' => 'deleteJobTypes'];
+    protected $listeners = ['deleteConfirmed' => 'deleteSectionTypes'];
 
 
     // Updated Select Page Rows
@@ -36,10 +36,13 @@ class JobTypes extends Component
     public function updatedSelectPageRows($value)
     {
         if ($value) {
-            $this->selectedRows = $this->jobtypes->pluck('id')->map(function ($id) {
+
+            $this->selectedRows = $this->sectiontypes->pluck('id')->map(function ($id) {
                 return (string) $id;
             });
+
         } else {
+
             $this->reset(['selectedRows', 'selectPageRows']);
         }
     }
@@ -58,11 +61,11 @@ class JobTypes extends Component
         $this->dispatchBrowserEvent('show-delete-alert-confirmation');
     }
 
-    // set All selected JobType As Active
+    // set All selected SectionType As Active
 
     public function setAllAsActive()
 	{
-		JobType::whereIn('id', $this->selectedRows)->update(['status' => 1]);
+		SectionType::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
         $this->alert('success', __('site.activeSuccessfully'), [
 
@@ -78,11 +81,11 @@ class JobTypes extends Component
 		$this->reset(['selectPageRows', 'selectedRows']);
 	}
 
-    // set All selected JobType As InActive
+    // set All selected SectionType As InActive
 
 	public function setAllAsInActive()
 	{
-		JobType::whereIn('id', $this->selectedRows)->update(['status' => 0]);
+		SectionType::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
         $this->alert('success', __('site.inActiveSuccessfully'), [
 
@@ -98,12 +101,12 @@ class JobTypes extends Component
 		$this->reset(['selectPageRows', 'selectedRows']);
 	}
 
-    // Delete Selected JobTypes
+    // Delete Selected SectionTypes
 
-    public function deleteJobTypes()
+    public function deleteSectionTypes()
     {
         // delete selected Levels from database
-        JobType::whereIn('id', $this->selectedRows)->delete();
+        SectionType::whereIn('id', $this->selectedRows)->delete();
 
         $this->alert('success', __('site.deleteSuccessfully'), [
 
@@ -127,23 +130,23 @@ class JobTypes extends Component
 
     // show add new Level form modal
 
-    public function addNewJobType()
+    public function addNewSectionType()
     {
         $this->reset('data');
         $this->showEditModal = false;
         $this->dispatchBrowserEvent('show-form');
     }
 
-    // Create new JobType
+    // Create new SectionType
 
-    public function createJobType()
+    public function createSectionType()
     {
         $validatedData = Validator::make($this->data, [
 			'name'                   => 'required|max:255',
 		])->validate();
 
 
-		JobType::create($validatedData);
+		SectionType::create($validatedData);
 
         $this->dispatchBrowserEvent('hide-form');
 
@@ -160,24 +163,24 @@ class JobTypes extends Component
         ]);
     }
 
-    // show Update new JobType form modal
+    // show Update new SectionType form modal
 
-    public function edit(JobType $jobtype)
+    public function edit(SectionType $sectiontype)
     {
         $this->reset('data');
 
         $this->showEditModal = true;
 
-        $this->jobtype = $jobtype;
+        $this->sectiontype = $sectiontype;
 
-        $this->data = $jobtype->toArray();
+        $this->data = $sectiontype->toArray();
 
         $this->dispatchBrowserEvent('show-form');
     }
 
-    // Update JobType
+    // Update SectionType
 
-    public function updateJobType()
+    public function updateSectionType()
     {
         try {
 
@@ -187,7 +190,7 @@ class JobTypes extends Component
 
             ])->validate();
 
-            $this->jobtype->update($validatedData);
+            $this->sectiontype->update($validatedData);
 
             $this->dispatchBrowserEvent('hide-form');
 
@@ -221,25 +224,25 @@ class JobTypes extends Component
         }
     }
 
-    // Show Modal Form to Confirm JobType Removal
+    // Show Modal Form to Confirm SectionType Removal
 
-    public function confirmJobTypeRemoval($JobTypeId)
+    public function confirmSectionTypeRemoval($SectionTypeId)
     {
-        $this->jobtypesIdBeingRemoved = $JobTypeId;
+        $this->sectiontypeIdBeingRemoved = $SectionTypeId;
 
         $this->dispatchBrowserEvent('show-delete-modal');
     }
 
-    // Delete JobType
+    // Delete SectionType
 
-    public function deleteJobType()
+    public function deleteSectionType()
     {
         try {
-            $job_type = JobType::findOrFail($this->jobtypesIdBeingRemoved);
+            $section_type = SectionType::findOrFail($this->sectiontypeIdBeingRemoved);
 
-            $job_type->delete();
+            $section_type->delete();
 
-            $job_type = null;
+            $section_type = null;
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
@@ -272,24 +275,22 @@ class JobTypes extends Component
         }
     }
 
-    public function getJobTypesProperty()
+    public function getSectionTypesProperty()
 	{
-        $JobTypes = JobType::query()
+        $SectionTypes = SectionType::query()
             ->where('name', 'like', '%'.$this->searchTerm.'%')
             ->orderBy('name' , 'asc')
             ->paginate(30);
 
-        return $JobTypes;
+        return $SectionTypes;
 	}
 
     public function render()
     {
-        $job_types = $this->JobTypes;
+        $section_types = $this->SectionTypes;
 
-        return view('livewire.backend.job-types.job-types', compact(
-
-            'job_types'
-
-        ))->layout('layouts.admin');
+        return view('livewire.backend.section-types.section-types', compact((
+            'section_types'
+        )))->layout('layouts.admin');
     }
 }

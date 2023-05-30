@@ -15,13 +15,13 @@
         <div class="container-fluid">
             <div class="mb-2 row">
                 <div class="col-sm-6">
-                    <h1 class="m-0">@lang('site.levels')</h1>
+                    <h1 class="m-0">@lang('site.section_types')</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">@lang('site.dashboard')</a>
                         </li>
-                        <li class="breadcrumb-item active">@lang('site.levels')</li>
+                        <li class="breadcrumb-item active">@lang('site.section_types')</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -36,16 +36,16 @@
             <div class="card">
                 <div class="card-header bg-light">
                     <h3 class="card-title">
-                        <button wire:click.prevent='addNewLevel' class="ml-1 btn btn-sm btn-primary" {{  auth()->user()->hasPermission('levels-create') ? '' : 'disabled' }}>
+                        <button wire:click.prevent='addNewSectionType' class="ml-1 btn btn-sm btn-primary" {{  auth()->user()->hasPermission('section_types-create') ? '' : 'disabled' }}>
                             <i class="mr-2 fa fa-plus-circle" aria-hidden="true">
-                                <span>@lang('site.addRecord', ['name' => 'مرحلة دراسية'])</span>
+                                <span>@lang('site.addRecord', ['name' => 'مرجع إداري'])</span>
                             </i>
                         </button>
 
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('levels-read') ? '' : 'disabled' }}>@lang('site.action')</button>
+                            <button type="button" class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('section_types-read') ? '' : 'disabled' }}>@lang('site.action')</button>
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon"
-                                {{  auth()->user()->hasPermission('levels-read') ? '' : 'disabled' }}
+                                {{  auth()->user()->hasPermission('section_types-read') ? '' : 'disabled' }}
                                 data-toggle="dropdown" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
@@ -55,7 +55,7 @@
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
                                     wire:click.prevent="setAllAsInActive" href="#">@lang('site.setInActive')</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item {{ $selectedRows && auth()->user()->hasPermission('levels-delete') ? 'text-danger' : 'disabled-link' }} delete-confirm"
+                                <a class="dropdown-item  {{ $selectedRows && auth()->user()->hasPermission('section_types-delete') ? 'text-danger' : 'disabled-link' }}  delete-confirm"
                                     wire:click.prevent="deleteSelectedRows" href="#">@lang('site.deleteSelected')</a>
                             </div>
                         </div>
@@ -65,9 +65,6 @@
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                             <i class="fas fa-minus"></i>
                         </button>
-                        {{-- <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                            <i class="fas fa-times"></i>
-                        </button> --}}
                     </div>
                 </div>
                 <div class="card-body">
@@ -85,8 +82,9 @@
                             </div>
                         </div>
 
-                        <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'المراحل']) : &nbsp{{
-                            $levels->total() }}</label>
+                        <label class="flex-wrap">
+                            @lang('site.totalRecord', ['name' => 'المراجع الإدارية']) : &nbsp{{ $section_types->total() }}
+                        </label>
 
                     </div>
 
@@ -113,9 +111,9 @@
                                             <label class="custom-control-label" for="customCheck"></label>
                                         </div>
                                     </td>
-                                    <th>#</th>
+                                    <th class="no-sort">#</th>
                                     <th>
-                                        @lang('site.level')
+                                        @lang('site.title')
                                     </th>
                                     <th>
                                         @lang('site.status')
@@ -124,36 +122,34 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($levels as $level)
+                                @forelse ($section_types as $job)
                                 <tr>
                                     <td scope="col">
                                         <div class="custom-control custom-checkbox small">
-                                            <input type="checkbox" wire:model="selectedRows" value="{{ $level->id }}"
-                                                class="custom-control-input" id="{{ $level->id }}">
-                                            <label class="custom-control-label" for="{{ $level->id }}"></label>
+                                            <input type="checkbox" wire:model="selectedRows" value="{{ $job->id }}"
+                                                class="custom-control-input" id="{{ $job->id }}">
+                                            <label class="custom-control-label" for="{{ $job->id }}"></label>
                                         </div>
                                     </td>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $level->name }}</td>
+                                    <td>{{ $job->name }}</td>
                                     <td>
                                         <span
-                                            class="font-weight-bold badge text-white {{ $level->status == 1 ? 'bg-success' : 'bg-secondary' }}">
-                                            {{ $level->status() }}
+                                            class="font-weight-bold badge text-white {{ $job->status == 1 ? 'bg-success' : 'bg-secondary' }}">
+                                            {{ $job->status() }}
                                         </span>
                                     </td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
-
-                                            <button wire:click.prevent="edit({{ $level }})"
-                                                class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('levels-update') ? '' : 'disabled' }}>
+                                            <button wire:click.prevent="edit({{ $job }})"
+                                                class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('section_types-update') ? '' : 'disabled' }}>
                                                 <i class="fa fa-edit"></i>
                                             </button>
 
-                                            <button wire:click.prevent="confirmLevelRemoval({{ $level->id }})"
-                                                class="btn btn-danger btn-sm" {{  auth()->user()->hasPermission('levels-delete') ? '' : 'disabled' }}>
+                                            <button wire:click.prevent="confirmSectionTypeRemoval({{ $job->id }})"
+                                                class="btn btn-danger btn-sm" {{  auth()->user()->hasPermission('section_types-delete') ? '' : 'disabled' }}>
                                                 <i class="fa fa-trash bg-danger"></i>
                                             </button>
-
                                         </div>
                                     </td>
                                 </tr>
@@ -164,19 +160,12 @@
                                 </tr>
                                 @endforelse
                             </tbody>
-                            {{-- <tfoot>
-                                <tr>
-                                    <td colspan="5">
-                                        {!! $levels->appends(request()->all())->links() !!}
-                                    </td>
-                                </tr>
-                            </tfoot> --}}
                         </table>
                     </div>
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer bg-light">
-                    {!! $levels->appends(request()->all())->links() !!}
+                    {!! $section_types->appends(request()->all())->links() !!}
                 </div>
                 <!-- /.card-footer-->
             </div>
@@ -190,14 +179,14 @@
     <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
         wire:ignore.self>
         <div class="modal-dialog" role="document">
-            <form autocomplete="off" wire:submit.prevent="{{ $showEditModal ? 'updateLevel' : 'createLevel' }}">
+            <form autocomplete="off" wire:submit.prevent="{{ $showEditModal ? 'updateSectionType' : 'createSectionType' }}">
                 <div class="modal-content">
                     <div class="modal-header bg-light">
                         <h5 class="modal-title" id="exampleModalLabel">
                             @if ($showEditModal)
-                            <span>@lang('site.updateRecord', ['name' => 'مرحلة'])</span>
+                            <span>@lang('site.updateRecord', ['name' => 'تصنيف'])</span>
                             @else
-                            <span>@lang('site.addRecord', ['name' => 'مرحلة'])</span>
+                            <span>@lang('site.addRecord', ['name' => 'تصنيف'])</span>
                             @endif
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -208,12 +197,12 @@
                         <div class="row h-100 justify-content-center align-items-center">
                             <div class="col-12">
 
-                                <!-- Modal Level Full Name -->
+                                <!-- Modal SectionType Name -->
                                 <div dir="rtl" class="form-group">
                                     <input type="text" tabindex="1" wire:model.defer="data.name"
                                         class="form-control @error('name') is-invalid @enderror" id="name"
                                         aria-describedby="nameHelp"
-                                        placeholder="@lang('site.enterFieldName', ['name' => 'اسم المرحلة'])">
+                                        placeholder="@lang('site.enterFieldName', ['name' => 'العمل'])">
                                     @error('name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -247,7 +236,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-light">
-                    <h5>@lang('site.deleteRecord', ['name' => 'مرحلة'])</h5>
+                    <h5>@lang('site.deleteRecord', ['name' => 'العمل'])</h5>
                 </div>
 
                 <div class="modal-body">
@@ -257,7 +246,7 @@
                 <div class="modal-footer bg-light">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
                             class="mr-1 fa fa-times"></i> @lang('site.cancel')</button>
-                    <button type="button" wire:click.prevent="deleteLevel" class="btn btn-danger"><i
+                    <button type="button" wire:click.prevent="deleteSectionType" class="btn btn-danger"><i
                             class="mr-1 fa fa-trash"></i>@lang('site.delete')</button>
                 </div>
             </div>

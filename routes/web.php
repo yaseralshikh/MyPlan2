@@ -12,6 +12,7 @@ use App\Http\Livewire\Backend\JobTypes\JobTypes;
 use App\Http\Controllers\OfficeDropdownController;
 use App\Http\Livewire\Backend\Dashboard\Dashboard;
 use App\Http\Livewire\Backend\Education\Education;
+use App\Http\Livewire\Backend\SectionTypes\SectionTypes;
 use App\Http\Livewire\Backend\Semesters\Semesters;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 use App\Http\Livewire\Backend\Specializations\Specializations;
@@ -55,6 +56,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'ro
     Route::get('semesters', Semesters::class )->name('semesters');
     Route::get('levels', Levels::class )->name('levels');
     Route::get('job_types', JobTypes::class )->name('job_types');
+    Route::get('section_types', SectionTypes::class )->name('section_types');
     Route::get('specializations', Specializations::class )->name('specializations');
     Route::get('/log-viewer', [LogViewerController::class, 'index'])->name('log-viewer');
 });
