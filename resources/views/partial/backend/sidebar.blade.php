@@ -105,7 +105,7 @@
                 @endrole
 
                 {{-- Events Section --}}
-                <li class="nav-header text-secondary">
+                <li class="nav-header text-secondary" style="border-top: 1px solid #4f5962;">
                     <h6>@lang('site.eventsSection')</h6>
                 </li>
                 {{-- Events --}}
@@ -119,7 +119,7 @@
                     </a>
                 </li>
 
-                <li class="nav-header text-secondary">
+                <li class="nav-header text-secondary" style="border-top: 1px solid #4f5962;">
                     <h6>@lang('site.tasksSection')</h6>
                 </li>
                 <li class="nav-item">
@@ -153,7 +153,7 @@
 
                 {{-- Education Section --}}
 
-                <li class="nav-header text-secondary">
+                <li class="nav-header text-secondary" style="border-top: 1px solid #4f5962;">
                     <h6>@lang('site.educationSection')</h6>
                 </li>
 
@@ -183,7 +183,7 @@
 
                 @role('operationsmanager|superadmin')
                     {{-- semester & week Section --}}
-                    <li class="nav-header text-secondary">
+                    <li class="nav-header text-secondary" style="border-top: 1px solid #4f5962;">
                         <h6>@lang('site.semestersSection')</h6>
                     </li>
                     @role('operationsmanager')
@@ -211,7 +211,7 @@
 
                 @role('operationsmanager')
                     {{-- Settings Section --}}
-                    <li class="nav-header text-secondary">
+                    <li class="nav-header text-secondary" style="border-top: 1px solid #4f5962;">
                         <h6>@lang('site.settingsSection')</h6>
                     </li>
 
