@@ -174,7 +174,7 @@
     </section>
     <!-- /.content -->
 
-    <!-- Modal Create or Update Level -->
+    <!-- Modal Create or Update SectionType -->
 
     <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
         wire:ignore.self>
@@ -184,9 +184,9 @@
                     <div class="modal-header bg-light">
                         <h5 class="modal-title" id="exampleModalLabel">
                             @if ($showEditModal)
-                            <span>@lang('site.updateRecord', ['name' => 'تصنيف'])</span>
+                            <span>@lang('site.updateRecord', ['name' => 'مرجع إداري'])</span>
                             @else
-                            <span>@lang('site.addRecord', ['name' => 'تصنيف'])</span>
+                            <span>@lang('site.addRecord', ['name' => 'مرجع إداري'])</span>
                             @endif
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -202,7 +202,7 @@
                                     <input type="text" tabindex="1" wire:model.defer="data.name"
                                         class="form-control @error('name') is-invalid @enderror" id="name"
                                         aria-describedby="nameHelp"
-                                        placeholder="@lang('site.enterFieldName', ['name' => 'العمل'])">
+                                        placeholder="@lang('site.enterFieldName', ['name' => 'اسم المرجع الإداري'])">
                                     @error('name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
