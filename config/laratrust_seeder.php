@@ -36,7 +36,7 @@ return [
         'admin' => [
             'events'    => 'c,r,u,d',
             'users'     => 'c,r,u',
-            'tasks'     => 'c,r,u',
+            'tasks'     => 'r',
             'subtasks'  => 'c,r,u,d',
             'profile' => 'r,u'
         ],

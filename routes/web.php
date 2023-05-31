@@ -3,18 +3,20 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Livewire\Backend\Tasks\Tasks;
 use App\Http\Livewire\Backend\Users\Users;
 use App\Http\Livewire\Backend\Weeks\Weeks;
 use App\Http\Livewire\Backend\Events\Events;
 use App\Http\Livewire\Backend\Levels\Levels;
 use App\Http\Livewire\Backend\Offices\Offices;
 use App\Http\Livewire\Backend\JobTypes\JobTypes;
+use App\Http\Livewire\Backend\SubTasks\SubTasks;
 use App\Http\Controllers\OfficeDropdownController;
 use App\Http\Livewire\Backend\Dashboard\Dashboard;
 use App\Http\Livewire\Backend\Education\Education;
-use App\Http\Livewire\Backend\SectionTypes\SectionTypes;
 use App\Http\Livewire\Backend\Semesters\Semesters;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
+use App\Http\Livewire\Backend\SectionTypes\SectionTypes;
 use App\Http\Livewire\Backend\Specializations\Specializations;
 
 /*
@@ -47,6 +49,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'ro
     Route::get('users', Users::class)->name('users');
     Route::get('events', Events::class )->name('events');
     Route::get('weeks', Weeks::class )->name('weeks');
+    Route::get('tasks', Tasks::class )->name('tasks');
+    Route::get('subtasks', SubTasks::class )->name('subtasks');
 });
 
 //Backend -> log-viewer

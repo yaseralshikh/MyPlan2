@@ -123,7 +123,7 @@
                     <h6>@lang('site.tasksSection')</h6>
                 </li>
                 <li class="nav-item">
-                    <a href="#"
+                    <a href="{{ route('admin.tasks') }}"
                         class="nav-link {{ request()->is('admin/tasks') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tasks"></i>
                         <p>
@@ -132,7 +132,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#"
+                    <a href="{{ route('admin.subtasks') }}"
                         class="nav-link {{ request()->is('admin/subtasks') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tasks"></i>
                         <p>
