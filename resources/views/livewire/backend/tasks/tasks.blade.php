@@ -48,11 +48,9 @@
                         </button>
 
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm" {{
-                                auth()->user()->hasPermission('tasks-read') ? '' : 'disabled'
-                                }}>@lang('site.action')</button>
-                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon" {{
-                                auth()->user()->hasPermission('tasks-read') ? '' : 'disabled' }}
+                            <button type="button" class="btn btn-primary btn-sm" {{ auth()->user()->hasPermission('tasks-read') ? '' : 'disabled' }}>@lang('site.action')</button>
+                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon"
+                                {{ auth()->user()->hasPermission('tasks-read') ? '' : 'disabled' }}
                                 data-toggle="dropdown" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>

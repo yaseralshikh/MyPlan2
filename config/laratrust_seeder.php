@@ -39,7 +39,7 @@ return [
             'users'     => 'c,r,u',
             'tasks'     => 'r',
             'subtasks'  => 'c,r,u,d',
-            'profile' => 'r,u'
+            'profile'   => 'r,u'
         ],
         'user' => [
             'events' => 'c,r,u,d',
