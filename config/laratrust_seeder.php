@@ -30,6 +30,7 @@ return [
         'superadmin' => [
             'users'             => 'c,r,u',
             'events'            => 'c,r,u,d',
+            'subtasks'          => 'c,r,u,d',
             'offices'           => 'c,r,u',
             'profile'           => 'r,u'
         ],

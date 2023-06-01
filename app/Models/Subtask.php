@@ -11,7 +11,7 @@ class Subtask extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
+        'name',
         'section',
         'edu_type',
         'office_id',
@@ -25,6 +25,11 @@ class Subtask extends Model
         return $this->belongsTo(Office::class);
     }
 
+    public function section_type(): BelongsTo
+    {
+        return $this->belongsTo(SectionType::class);
+    }
+
     public function status(): string
     {
         return $this->status ? __('site.active') : __('site.inActive');
@@ -35,7 +40,7 @@ class Subtask extends Model
         $term = "%$term%";
 
         $query->where(function($query) use ($term){
-            $query->where('title', 'like' , $term);
+            $query->where('name', 'like' , $term);
         });
     }
 }

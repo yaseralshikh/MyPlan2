@@ -7,10 +7,10 @@
             text-decoration: none;
             color: rgb(174, 172, 172);
         }
-        .sortable th.no-sort {
-        pointer-events: none;
-        }
 
+        .sortable th.no-sort {
+            pointer-events: none;
+        }
     </style>
     @endsection
 
@@ -40,16 +40,19 @@
             <div class="card">
                 <div class="card-header bg-light">
                     <h3 class="card-title">
-                        <button wire:click.prevent='addNewTask' class="ml-1 btn btn-sm btn-primary" {{  auth()->user()->hasPermission('tasks-create') ? '' : 'disabled' }}>
+                        <button wire:click.prevent='addNewTask' class="ml-1 btn btn-sm btn-primary" {{
+                            auth()->user()->hasPermission('tasks-create') ? '' : 'disabled' }}>
                             <i class="mr-2 fa fa-plus-circle" aria-hidden="true">
-                                <span>@lang('site.addRecord', ['name' => 'مهمة'])</span>
+                                <span>@lang('site.addRecord', ['name' => 'مدرسة / مهمة'])</span>
                             </i>
                         </button>
 
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('tasks-read') ? '' : 'disabled' }}>@lang('site.action')</button>
-                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon"
-                                {{  auth()->user()->hasPermission('tasks-read') ? '' : 'disabled' }}
+                            <button type="button" class="btn btn-primary btn-sm" {{
+                                auth()->user()->hasPermission('tasks-read') ? '' : 'disabled'
+                                }}>@lang('site.action')</button>
+                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon" {{
+                                auth()->user()->hasPermission('tasks-read') ? '' : 'disabled' }}
                                 data-toggle="dropdown" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
@@ -79,7 +82,8 @@
 
                         {{-- search --}}
                         <div class="input-group" style="width: 200px;">
-                            <input dir="rtl" type="search" wire:model="searchTerm" class="form-control" placeholder="@lang('site.searchFor')..." value="">
+                            <input dir="rtl" type="search" wire:model="searchTerm" class="form-control"
+                                placeholder="@lang('site.searchFor')..." value="">
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-default">
                                     <i class="fa fa-search"></i>
@@ -102,8 +106,7 @@
 
                         {{-- levels Filter --}}
                         <div>
-                            <select dir="rtl" name="level_id" wire:model="byLevel"
-                                class="form-control form-control-sm">
+                            <select dir="rtl" name="level_id" wire:model="byLevel" class="form-control form-control-sm">
                                 <option value="" selected>@lang('site.choise', ['name' => 'المرحلة'])</option>
                                 @foreach ($levels as $level)
                                 <option value="{{ $level->id }}">{{ $level->name }}</option>
@@ -112,7 +115,8 @@
                         </div>
 
                         <div>
-                            <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'المهام']) : &nbsp{{ $tasks->total() }}</label>
+                            <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'المدارس والمهام']) : &nbsp{{
+                                $tasks->total() }}</label>
                         </div>
 
                     </div>
@@ -136,6 +140,7 @@
                                     <td class="align-middle no-sort" scope="col">
                                         <div class="custom-control custom-checkbox small">
                                             <input type="checkbox" wire:model="selectPageRows" value=""
+                                                {{  auth()->user()->hasPermission('tasks-read') ? '' : 'disabled' }}
                                                 class="custom-control-input" id="customCheck">
                                             <label class="custom-control-label" for="customCheck"></label>
                                         </div>
@@ -165,6 +170,7 @@
                                     <td scope="col">
                                         <div class="custom-control custom-checkbox small">
                                             <input type="checkbox" wire:model="selectedRows" value="{{ $task->id }}"
+                                                {{  auth()->user()->hasPermission('tasks-read') ? '' : 'disabled' }}
                                                 class="custom-control-input" id="{{ $task->id }}">
                                             <label class="custom-control-label" for="{{ $task->id }}"></label>
                                         </div>
@@ -189,9 +195,12 @@
                                     <td>
                                         <div class="btn-group btn-group-sm">
                                             <button wire:click.prevent="edit({{ $task }})"
-                                                class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('tasks-update') ? '' : 'disabled' }}><i class="fa fa-edit"></i></button>
+                                                class="btn btn-primary btn-sm" {{
+                                                auth()->user()->hasPermission('tasks-update') ? '' : 'disabled' }}><i
+                                                    class="fa fa-edit"></i></button>
                                             <button wire:click.prevent="confirmTaskRemoval({{ $task->id }})"
-                                                class="btn btn-danger btn-sm" {{  auth()->user()->hasPermission('tasks-delete') ? '' : 'disabled' }}><i
+                                                class="btn btn-danger btn-sm" {{
+                                                auth()->user()->hasPermission('tasks-delete') ? '' : 'disabled' }}><i
                                                     class="fa fa-trash bg-danger"></i></button>
                                         </div>
                                     </td>
@@ -227,9 +236,9 @@
                     <div class="modal-header bg-light">
                         <h5 class="modal-title" id="exampleModalLabel">
                             @if ($showEditModal)
-                            <span>@lang('site.updateRecord', ['name' => 'مهمة'])</span>
+                            <span>@lang('site.updateRecord', ['name' => 'مدرسة / مهمة'])</span>
                             @else
-                            <span>@lang('site.addRecord', ['name' => 'مهمة'])</span>
+                            <span>@lang('site.addRecord', ['name' => 'مدرسة / مهمة'])</span>
                             @endif
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -263,10 +272,11 @@
                                 <!-- Modal Task Full Name -->
 
                                 <div class="form-group">
-                                    <label for="name">@lang('site.task')</label>
+                                    <label for="name">@lang('site.task_school')</label>
                                     <input type="text" wire:model.defer="data.name"
                                         class="form-control @error('name') is-invalid @enderror" id="name"
-                                        aria-describedby="nameHelp" dir="rtl" placeholder="@lang('site.enterFieldName', ['name' => 'اسم المهمة'])">
+                                        aria-describedby="nameHelp" dir="rtl"
+                                        placeholder="@lang('site.enterFieldName', ['name' => 'اسم المدرسة أو المهمة'])">
                                     @error('name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -278,8 +288,7 @@
 
                                 <div class="form-group">
                                     <label for="level_id">@lang('site.level')</label>
-                                    <select id="level_id"
-                                        class="form-control @error('level_id') is-invalid @enderror"
+                                    <select id="level_id" class="form-control @error('level_id') is-invalid @enderror"
                                         wire:model.defer="data.level_id">
                                         <option hidden>@lang('site.choise', ['name' => 'المرحلة'])</option>
                                         @foreach ($levels as $level)

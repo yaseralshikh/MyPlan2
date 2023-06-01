@@ -44,33 +44,27 @@
             <div class="card">
                 <div class="card-header bg-light">
                     <h3 class="card-title">
-                        <button wire:click.prevent='addNewSubtask' class="ml-1 btn btn-sm btn-primary">
+                        <button wire:click.prevent='addNewSubtask' class="ml-1 btn btn-sm btn-primary" {{  auth()->user()->hasPermission('subtasks-create') ? '' : 'disabled' }}>
                             <i class="mr-2 fa fa-plus-circle" aria-hidden="true">
                                 <span>@lang('site.addRecord', ['name' => 'مهمة فرعية'])</span>
                             </i>
                         </button>
 
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm">@lang('site.action')</button>
+                            <button type="button" class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('subtasks-read') ? '' : 'disabled' }}>@lang('site.action')</button>
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon"
+                                {{  auth()->user()->hasPermission('subtasks-read') ? '' : 'disabled' }}
                                 data-toggle="dropdown" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <div class="dropdown-menu" role="menu" style="">
-                                {{-- <a class="dropdown-item" wire:click.prevent="exportExcel" href="#"
-                                    aria-disabled="true">Export to Excel</a> --}}
-                                {{-- <a class="dropdown-item" wire:click.prevent="exportPDF" href="#">Export to PDF</a>
-                                --}}
-                                {{-- <div class="dropdown-divider"></div> --}}
-                                {{-- @if ($selectedRows) --}}
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
                                     wire:click.prevent="setAllAsActive" href="#">@lang('site.setActive')</a>
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
                                     wire:click.prevent="setAllAsInActive" href="#">@lang('site.setInActive')</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item {{ $selectedRows ? 'text-danger' : 'disabled-link' }}  delete-confirm"
+                                <a class="dropdown-item  {{ $selectedRows && auth()->user()->hasPermission('subtasks-delete') ? 'text-danger' : 'disabled-link' }} delete-confirm"
                                     wire:click.prevent="deleteSelectedRows" href="#">@lang('site.deleteSelected')</a>
-                                {{-- @endif --}}
                             </div>
                         </div>
                     </h3>
@@ -79,9 +73,6 @@
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                             <i class="fas fa-minus"></i>
                         </button>
-                        {{-- <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                            <i class="fas fa-times"></i>
-                        </button> --}}
                     </div>
                 </div>
                 <div class="card-body">
@@ -97,7 +88,7 @@
                         </div>
 
                         {{-- offices Filter --}}
-                        @role('superadmin')
+                        @role('superadmin|operationsmanager')
                         <div>
                             <select dir="rtl" name="office_id" wire:model="byOffice"
                                 class="form-control form-control-sm">
@@ -111,11 +102,11 @@
 
                         {{-- Education type Filter --}}
                         <div>
-                            <select dir="rtl" name="edu_type" wire:model="byEduType" class="form-control form-control-sm mr-5">
+                            <select dir="rtl" name="section_type" wire:model="bySectionType" class="form-control form-control-sm mr-5">
                                 <option value="" hidden selected>@lang('site.choise', [ 'name' => 'المرجع الإداري'])</option>
                                 {{-- <option value="">@lang('site.all')</option> --}}
-                                @foreach ($educationTypes as $eduType)
-                                    <option class="bg-light" value="{{ $eduType['title'] }}">{{ $eduType['title'] }}</option>
+                                @foreach ($sectionTypes as $sectionType)
+                                    <option class="bg-light" value="{{ $sectionType->id }}">{{ $sectionType->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -137,91 +128,77 @@
                     </span>
                     @endif
 
-                    <div class="table-responsive">
-                        <table id="example2" class="table text-center table-hover dataTable dtr-inline"
+                    <div class="table-responsive" data-aos="fade-up" wire:ignore.self>
+                        <table id="example2" class="table text-center table-hover sortable dtr-inline"
                             aria-describedby="example2_info">
                             <thead class="bg-light">
                                 <tr>
-                                    <th></th>
-                                    <th scope="col">
+                                    <td class="no-sort"></td>
+                                    <td class="no-sort"scope="col">
                                         <div class="custom-control custom-checkbox small">
                                             <input type="checkbox" wire:model="selectPageRows" value=""
+                                                {{  auth()->user()->hasPermission('subtasks-read') ? '' : 'disabled' }}
                                                 class="custom-control-input" id="customCheck">
                                             <label class="custom-control-label" for="customCheck"></label>
                                         </div>
-                                    </th>
-                                    <th>#</th>
+                                    </td>
+                                    <th class="no-sort">#</th>
                                     <th>@lang('site.subTask')</th>
                                     <th>@lang('site.section')</th>
-                                    <th>@lang('site.eduType')</th>
+                                    <th>@lang('site.sectionType')</th>
                                     <th>
                                         @lang('site.status')
-                                        <span wire:click="sortBy('status')" class="text-sm float-sm-right"
-                                            style="cursor: pointer;font-size:10px;">
-                                            <i class="mr-1 fa fa-arrow-up"
-                                                style="color:{{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                            <i class="fa fa-arrow-down"
-                                                style="color : {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                        </span>
                                     </th>
                                     <th colspan="2">@lang('site.action')</th>
                                 </tr>
                             </thead>
                             <tbody wire:sortable="updateSubtaskPosition">
                                 @forelse ($subtasks as $subtask)
-                                <tr wire:sortable.item="{{ $subtask->id }}" wire:key="subtask-{{ $subtask->id }}" style="background-color: {{ $subtask->section == "مهمة فرعية" ? '#EFFBFB' : '#FBF8EF' }}">
-                                    <td wire:sortable.handle style="width:10px; cursor: move;" width="10px"><i
-                                            class="fa fa-arrows-alt text-muted"></i></td>
-                                    <td scope="col">
-                                        <div class="custom-control custom-checkbox small">
-                                            <input type="checkbox" wire:model="selectedRows" value="{{ $subtask->id }}"
-                                                class="custom-control-input" id="{{ $subtask->id }}">
-                                            <label class="custom-control-label" for="{{ $subtask->id }}"></label>
-                                        </div>
-                                    </td>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td dir="rtl" class="text-justify">{{ $subtask->title }}</td>
-                                    <td dir="rtl" class="text-justify text-center">
-                                        {{ $subtask->section }}
-                                    </td>
-                                    <td dir="rtl" class="text-justify text-center" style="color: {{ $subtask->edu_type == "الشؤون التعليمية" ? 'blue' : 'green' }}">
-                                        {{ $subtask->edu_type }}
-                                    </td>
-                                    <td>
-                                        <span
-                                            class="font-weight-bold badge text-center text-white {{ $subtask->status == 1 ? 'bg-success' : 'bg-secondary' }}">
-                                            {{ $subtask->status() }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <button wire:click.prevent="edit({{ $subtask }})"
-                                                class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
-                                            <button wire:click.prevent="confirmSubtaskRemoval({{ $subtask->id }})"
-                                                class="btn btn-danger btn-sm"><i class="fa fa-trash bg-danger"></i>
-                                            </button>
-                                        </div>
-                                        {{-- <form action="" method="post" id="delete-subtask-{{ $subtask->id }}"
-                                            class="d-none">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form> --}}
-                                    </td>
-                                </tr>
+                                    <tr wire:sortable.item="{{ $subtask->id }}" wire:key="subtask-{{ $subtask->id }}" style="background-color: {{ $subtask->section == "مهمة فرعية" ? '#EFFBFB' : '#FBF8EF' }}">
+                                        <td wire:sortable.handle style="width:10px; cursor: move;" width="10px"><i
+                                                class="fa fa-arrows-alt text-muted"></i></td>
+                                        <td scope="col">
+                                            <div class="custom-control custom-checkbox small">
+                                                <input type="checkbox" wire:model="selectedRows" value="{{ $subtask->id }}"
+                                                    {{  auth()->user()->hasPermission('subtasks-read') ? '' : 'disabled' }}
+                                                    class="custom-control-input" id="{{ $subtask->id }}">
+                                                <label class="custom-control-label" for="{{ $subtask->id }}"></label>
+                                            </div>
+                                        </td>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td dir="rtl" class="text-justify">{{ $subtask->name }}</td>
+                                        <td dir="rtl" class="text-justify text-center">
+                                            {{ $subtask->section }}
+                                        </td>
+                                        <td dir="rtl" class="text-justify text-center">
+                                            {{ $subtask->section_type->name }}
+                                        </td>
+                                        <td>
+                                            <span
+                                                class="font-weight-bold badge text-center text-white {{ $subtask->status == 1 ? 'bg-success' : 'bg-secondary' }}">
+                                                {{ $subtask->status() }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <button wire:click.prevent="edit({{ $subtask }})"
+                                                    class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('subtasks-update') ? '' : 'disabled' }}>
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                                <button wire:click.prevent="confirmSubtaskRemoval({{ $subtask->id }})"
+                                                    class="btn btn-danger btn-sm" {{  auth()->user()->hasPermission('subtasks-delete') ? '' : 'disabled' }}>
+                                                    <i class="fa fa-trash bg-danger"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
 
                                 @empty
-                                <tr>
-                                    <td colspan="8" class="text-center">@lang('site.noDataFound')</td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="8" class="text-center">@lang('site.noDataFound')</td>
+                                    </tr>
                                 @endforelse
                             </tbody>
-                            {{-- <tfoot>
-                                <tr>
-                                    <td colspan="5">
-                                        {!! $subtasks->appends(request()->all())->links() !!}
-                                    </td>
-                                </tr>
-                            </tfoot> --}}
                         </table>
                     </div>
                 </div>
@@ -261,7 +238,7 @@
 
                                 <!-- Modal Office -->
 
-                                @role('superadmin')
+                                @role('superadmin|operationsmanager')
                                 <div class="form-group">
                                     <label for="office_id">@lang('site.office')</label>
                                     <select id="office_id" class="form-control @error('office_id') is-invalid @enderror"
@@ -279,16 +256,16 @@
                                 </div>
                                 @endrole
 
-                                <!-- Modal Subtask Title -->
+                                <!-- Modal Subtask name -->
 
                                 <div class="form-group">
-                                    <label for="title">@lang('site.subTask')</label>
+                                    <label for="name">@lang('site.subTask')</label>
 
-                                    <textarea dir="rtl" wire:model.defer="data.title"
-                                        class="text-justify form-control @error('title') is-invalid @enderror" rows="3"
-                                        id="title" aria-describedby="titleHelp"
+                                    <textarea dir="rtl" wire:model.defer="data.name"
+                                        class="text-justify form-control @error('name') is-invalid @enderror" rows="3"
+                                        id="name" aria-describedby="nameHelp"
                                         dir="rtl" placeholder="@lang('site.enterFieldName', ['name' => 'المهمة الفرعية / الحاشية'])"></textarea>
-                                    @error('title')
+                                    @error('name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -303,7 +280,7 @@
                                         wire:model.defer="data.section">
                                         <option hidden>@lang('site.choise', ['name' => 'القسم'])</option>
                                         @foreach ($sections as $section)
-                                        <option class="bg-light" value="{{ $section['title'] }}">{{ $section['title'] }}
+                                        <option class="bg-light" value="{{ $section['name'] }}">{{ $section['name'] }}
                                         </option>
                                         @endforeach
                                     </select>
@@ -314,18 +291,18 @@
                                     @enderror
                                 </div>
 
-                                <!-- Modal Subtask edu_type -->
+                                <!-- Modal Subtask section_type_id -->
 
                                 <div class="form-group">
-                                    <label for="edu_type">@lang('site.eduType')</label>
-                                    <select id="edu_type" class="form-control @error('edu_type') is-invalid @enderror"
-                                        wire:model.defer="data.edu_type">
+                                    <label for="section_type">@lang('site.sectionType')</label>
+                                    <select id="section_type" class="form-control @error('section_type_id') is-invalid @enderror"
+                                        wire:model.defer="data.section_type_id">
                                         <option hidden selected>@lang('site.choise', ['name' => 'المرجع الإداري'])</option>
-                                        @foreach ($educationTypes as $eduType)
-                                            <option class="bg-light" value="{{ $eduType['title'] }}">{{ $eduType['title'] }}</option>
+                                        @foreach ($sectionTypes as $sectionType)
+                                            <option class="bg-light" value="{{ $sectionType->id }}">{{ $sectionType->name }}</option>
                                         @endforeach
                                     </select>
-                                    @error('edu_type')
+                                    @error('section_type_id')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
