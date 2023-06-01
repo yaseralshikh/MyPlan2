@@ -2,27 +2,28 @@
 
 namespace App\Http\Livewire\Backend\Events;
 
-use App\Exports\EventsExport;
-use App\Models\Event;
-use App\Models\Level;
-use App\Models\Office;
-use App\Models\SectionType;
-use App\Models\Semester;
-use App\Models\Subtask;
+use PDF;
+use Carbon\Carbon;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Week;
-use App\Rules\DateOutService;
+use App\Models\Event;
+use App\Models\Level;
+use App\Models\Office;
+use App\Models\Subtask;
+use Livewire\Component;
+use App\Models\Semester;
 use App\Rules\UserOverLap;
-use Carbon\Carbon;
+use App\Models\SectionType;
+use App\Rules\NoteRequired;
+use Livewire\WithPagination;
+use App\Exports\EventsExport;
+use App\Rules\DateOutService;
+use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\Component;
-use Livewire\WithFileUploads;
-use Livewire\WithPagination;
-use Maatwebsite\Excel\Facades\Excel;
-use PDF;
 
 class Events extends Component
 {
@@ -266,9 +267,10 @@ class Events extends Component
     public function createEvent()
     {
         $validatedData = Validator::make($this->data, [
+
             'user_id'   => 'required',
             'level_id'  => 'required',
-            'task_id'   => 'required',
+            'task_id'   => ['required', new NoteRequired($this->data['note'] ?? null)],
             //'start'     => ['required', new UserOverLap($this->data['start'], $this->data['user_id']), new DateOutService($this->data['start'], $this->data['start'])],
             'start' => [
                 'required',
@@ -277,6 +279,7 @@ class Events extends Component
             ],
             'note'      => 'nullable|max:255',
             'status'    => 'required',
+
         ])->validate();
 
         $taskName = Task::whereStatus(true)->where('id', $this->data['task_id'])->pluck('name')->first();
@@ -420,12 +423,14 @@ class Events extends Component
     public function updateEvent()
     {
         $validatedData = Validator::make($this->data, [
-            'task_id' => 'required',
-            'user_id' => 'required',
-            'level_id' => 'required',
-            'start' => ['required', new DateOutService($this->data['start'])],
-            'note' => 'nullable|max:255',
-            'status' => 'required',
+
+            'task_id'   => ['required', new NoteRequired($this->data['note'] ?? null)],
+            'user_id'   => 'required',
+            'level_id'  => 'required',
+            'start'     => ['required', new DateOutService($this->data['start'])],
+            'note'      => 'nullable|max:255',
+            'status'    => 'required',
+
         ])->validate();
 
         $taskName = Task::whereStatus(true)->where('id', $this->data['task_id'])->pluck('name')->first();

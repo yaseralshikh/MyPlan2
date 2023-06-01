@@ -14,6 +14,7 @@ use App\Rules\UserOverLap;
 use App\Rules\EventOverLap;
 use App\Rules\DateOutService;
 use App\Models\Specialization;
+use App\Rules\NoteRequired;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -111,7 +112,7 @@ class Calendar extends Component
     {
         return ([
             'level_id'  => ['required'],
-            'task_id'   => ['required', new EventOverLap($this->start), new UserOverLap($this->start, auth()->user()->id), new DateOutService($this->start, $this->end)],
+            'task_id'   => ['required', new EventOverLap($this->start), new UserOverLap($this->start, auth()->user()->id), new DateOutService($this->start, $this->end), new NoteRequired($this->note)],
         ]);
     }
 
@@ -124,11 +125,11 @@ class Calendar extends Component
     {
         $this->validate();
 
-        $taskName = Task::whereStatus(true)->where('id', $this->task_id)->pluck('name')->first();
+        $taskName = Task::findOrFail($this->task_id);
 
         $color = null;
 
-        switch ($taskName) {
+        switch ($taskName->name) {
             case 'إجازة':
                 $color = '#f5e7fe';
                 break;
@@ -201,6 +202,7 @@ class Calendar extends Component
     {
         $this->data = [
             'office_id' => $this->office_id,
+            'level_id'  => $this->level_id,
             'task_id'   => $this->task_id,
             'note'      => $this->note,
             'start'     => $this->start,
@@ -212,7 +214,10 @@ class Calendar extends Component
         if ($eventTaskOriginalId <> $this->task_id) {
 
             $validatedData = Validator::make($this->data, [
-                'task_id' => ['required', new EventOverLap($this->start)],
+
+                'level_id'  => ['required'],
+                'task_id'   => ['required', new EventOverLap($this->start), new NoteRequired($this->note)],
+
             ])->validate();
 
         }

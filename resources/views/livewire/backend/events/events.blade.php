@@ -401,7 +401,7 @@
 
                                 <!-- Modal Office -->
                                 @if(auth()->user()->office->office_type == 0)
-                                <div dir="rtl" class="form-group mb-3" wire:ignore.self>
+                                <div class="form-group mb-3" wire:ignore.self>
                                     <label for="office_id" class="col-form-label">@lang('site.offices') :</label>
                                     <select wire:model.defer="data.office_id" id="office_id"
                                         wire:change="OfficeOption($event.target.value)"
@@ -464,9 +464,9 @@
                                 </div>
 
                                 <!-- Modal Task ( Note ) -->
-                                <div dir="rtl" class="form-group mb-3" wire:ignore.self>
-                                    <label for="note" class="col-form-label text-secondary">@lang('site.note') :</label>
-                                    <input type="text" wire:model.defer="data.note" class="form-control" id="note">
+                                <div dir="" class="form-group mb-3" wire:ignore.self>
+                                    <label for="note" class="col-form-label">@lang('site.note') :</label>
+                                    <input type="text" wire:model.defer="data.note" class="form-control" placeholder="@lang('site.notePlaceholder')" id="note">
 
                                     @error('note')
                                     <span class="invalid-feedback d-block" role="alert">
