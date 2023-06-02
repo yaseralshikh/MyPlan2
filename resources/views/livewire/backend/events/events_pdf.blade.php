@@ -173,12 +173,12 @@
                                     <img src="{{ $office->assistant_url }}" style="" width="75px" alt="">
                                 @endif
                             @elseif ($subtasks[0]->section_type_id == 2)
-                                @if ($office->assistant_signature_path)
-                                    <img src="{{ $office->assistant_url }}" style="" width="75px" alt="">
-                                @endif
-                            @else
                                 @if ($office->assistant2_signature_path)
                                     <img src="{{ $office->assistant2_url }}" style="" width="75px" alt="">
+                                @endif
+                            @elseif ($subtasks[0]->section_type_id == 3)
+                                @if ($office->assistant3_signature_path)
+                                    <img src="{{ $office->assistant3_url }}" style="" width="75px" alt="">
                                 @endif
                             @endif
                         </ol>

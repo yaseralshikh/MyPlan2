@@ -330,7 +330,7 @@ class Offices extends Component
                 if($this->office->assistant3_signature_path){
                     Storage::disk('signature_photos')->delete($this->office->assistant3_signature_path);
                 }
-                $validatedData['assistant2_signature_path'] = $this->assistant3_signature_image->store('/', 'signature_photos');
+                $validatedData['assistant3_signature_path'] = $this->assistant3_signature_image->store('/', 'signature_photos');
             }
 
             $this->office->update($validatedData);

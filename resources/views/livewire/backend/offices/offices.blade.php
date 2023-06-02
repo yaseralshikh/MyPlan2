@@ -305,7 +305,7 @@
                         <div class="row h-100 justify-content-center align-items-center">
                             <div class="col-12">
 
-                                <!-- Modal Office ( Education ) -->
+                                <!-- Modal ( Education ) -->
                                 <div dir="rtl" class="form-group mb-3" wire:ignore.self>
                                     <label for="education_id" class="col-form-label">@lang('site.education') :</label>
                                     <select wire:model.defer="data.education_id" id="education_id"
