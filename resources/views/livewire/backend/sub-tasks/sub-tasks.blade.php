@@ -133,8 +133,8 @@
                             aria-describedby="example2_info">
                             <thead class="bg-light">
                                 <tr>
-                                    <td class="no-sort"></td>
-                                    <td class="no-sort"scope="col">
+                                    <td class="align-middle"><i class="fa fa-list text-muted"></i></td>
+                                    <td class="no-sort align-middle"scope="col">
                                         <div class="custom-control custom-checkbox small">
                                             <input type="checkbox" wire:model="selectPageRows" value=""
                                                 {{  auth()->user()->hasPermission('subtasks-read') ? '' : 'disabled' }}
@@ -142,14 +142,14 @@
                                             <label class="custom-control-label" for="customCheck"></label>
                                         </div>
                                     </td>
-                                    <th class="no-sort">#</th>
-                                    <th>@lang('site.subTask')</th>
-                                    <th>@lang('site.section')</th>
-                                    <th>@lang('site.sectionType')</th>
-                                    <th>
+                                    <th class="no-sort align-middle">#</th>
+                                    <th class="align-middle">@lang('site.subTask')</th>
+                                    <th class="align-middle">@lang('site.section')</th>
+                                    <th class="align-middle">@lang('site.sectionType')</th>
+                                    <th class="align-middle">
                                         @lang('site.status')
                                     </th>
-                                    <th colspan="2">@lang('site.action')</th>
+                                    <th class="align-middle no-sort" colspan="2">@lang('site.action')</th>
                                 </tr>
                             </thead>
                             <tbody wire:sortable="updateSubtaskPosition">

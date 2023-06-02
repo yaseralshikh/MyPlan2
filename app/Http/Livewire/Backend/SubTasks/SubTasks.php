@@ -298,6 +298,7 @@ class SubTasks extends Component
             })
             ->search(trim(($searchString)))
             ->orderBy('position', 'asc')
+            ->orderBy('section', 'asc')
             ->paginate(30);
 
         return $subtasks;
