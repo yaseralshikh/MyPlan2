@@ -39,3 +39,10 @@ git status
 git add .
 git commit -m "Constructed index Dashboard"
 git push -u origin Laratrust
+
+
+--------------------------------------
+Slack Notifications:
+Before you can send notifications via Slack, you must install the Slack notification channel via Composer:
+
+composer require laravel/slack-notification-channel

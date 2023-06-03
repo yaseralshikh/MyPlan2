@@ -10,9 +10,18 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      */
+
+    protected $commands = [
+        Commands\BackupCron::class
+    ];
+
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->command('auto:remembarmakepLans')->weeklyOn(2, '8:00');
+        $schedule->command('backup:clean')->daily()->at('01:00');
+        $schedule->command('backup:run')->daily()->at('01:15');
+        $schedule->command('backup:monitor')->daily()->at('01:30');
     }
 
     /**

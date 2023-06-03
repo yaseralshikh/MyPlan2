@@ -63,4 +63,5 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'ro
     Route::get('section_types', SectionTypes::class )->name('section_types');
     Route::get('specializations', Specializations::class )->name('specializations');
     Route::get('/log-viewer', [LogViewerController::class, 'index'])->name('log-viewer');
+
 });

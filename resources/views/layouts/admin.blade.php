@@ -43,7 +43,6 @@
         {{-- AOS, called Animate on Scroll --}}
         <link href="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.css" rel="stylesheet">
 
-
         @yield('style')
         <style>
             body{

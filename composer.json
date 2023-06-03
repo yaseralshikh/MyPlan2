@@ -12,6 +12,7 @@
         "jantinnerezo/livewire-alert": "^2.2",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
+        "laravel/slack-notification-channel": "^2.5",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.2",
         "livewire/livewire": "^2.12",
@@ -19,7 +20,8 @@
         "mpdf/mpdf": "^8.1",
         "psr/log": "2.0",
         "rap2hpoutre/laravel-log-viewer": "^2.3",
-        "santigarcor/laratrust": "^8.0"
+        "santigarcor/laratrust": "^8.0",
+        "spatie/laravel-backup": "^8.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
