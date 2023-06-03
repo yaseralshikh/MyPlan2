@@ -347,9 +347,9 @@
 
     <!-- Modal Create or Update Event -->
 
-    <div class="modal fade" id="form" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    <div class="modal fade" tabindex="-1" id="form" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
         wire:ignore.self>
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog" role="document">
             <form autocomplete="off" wire:submit.prevent="{{ $showEditModal ? 'updateEvent' : 'createEvent' }}">
                 <div class="modal-content">
                     <div class="modal-header bg-light">
@@ -466,7 +466,12 @@
                                 <!-- Modal Task ( Note ) -->
                                 <div dir="" class="form-group mb-3" wire:ignore.self>
                                     <label for="note" class="col-form-label">@lang('site.note') :</label>
-                                    <input type="text" wire:model.defer="data.note" class="form-control" placeholder="@lang('site.notePlaceholder')" id="note">
+
+                                    <textarea dir="rtl" wire:model.defer="data.note"
+                                        class="text-justify form-control @error('note') is-invalid @enderror" rows="3"
+                                        id="note" aria-describedby="noteHelp"
+                                        dir="rtl" placeholder="@lang('site.notePlaceholder')">
+                                    </textarea>
 
                                     @error('note')
                                     <span class="invalid-feedback d-block" role="alert">

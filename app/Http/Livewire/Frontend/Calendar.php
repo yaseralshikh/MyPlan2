@@ -113,6 +113,7 @@ class Calendar extends Component
         return ([
             'level_id'  => ['required'],
             'task_id'   => ['required', new EventOverLap($this->start), new UserOverLap($this->start, auth()->user()->id), new DateOutService($this->start, $this->end), new NoteRequired($this->note)],
+            'note'      => ['max:255'],
         ]);
     }
 
@@ -217,6 +218,7 @@ class Calendar extends Component
 
                 'level_id'  => ['required'],
                 'task_id'   => ['required', new EventOverLap($this->start), new NoteRequired($this->note)],
+                'note'      => ['max:255'],
 
             ])->validate();
 

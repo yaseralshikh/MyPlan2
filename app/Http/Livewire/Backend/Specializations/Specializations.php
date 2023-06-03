@@ -177,7 +177,7 @@ class Specializations extends Component
     {
         try {
             $validatedData = Validator::make($this->data, [
-                'name'                      => 'required',
+                'name'  => 'required',
             ])->validate();
 
             $this->specialization->update($validatedData);

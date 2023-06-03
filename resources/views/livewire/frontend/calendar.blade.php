@@ -143,7 +143,12 @@
                         <!-- Modal Task ( Note ) -->
                         <div dir="rtl" class="form-group mb-3" wire:ignore.self>
                             <label for="note" class="col-form-label text-secondary">@lang('site.note') :</label>
-                            <input type="text" wire:model.defer="note" class="form-control" id="note">
+
+                            <textarea dir="rtl" wire:model.defer="note"
+                                class="text-justify form-control @error('note') is-invalid @enderror" rows="3"
+                                id="note" aria-describedby="noteHelp"
+                                dir="rtl" placeholder="@lang('site.notePlaceholder')">
+                            </textarea>
 
                             @error('note')
                             <span class="invalid-feedback d-block" role="alert">
@@ -261,12 +266,17 @@
                         <!-- Modal-Edit Task ( Note ) -->
                         <div dir="rtl" class="form-group mb-3" wire:ignore.self>
                             <label for="note_edit" class="col-form-label text-secondary">@lang('site.note') :</label>
-                            <input type="text" wire:model.defer="note" class="form-control" id="_edit">
+
+                            <textarea dir="rtl" wire:model.defer="note"
+                                class="text-justify form-control @error('note') is-invalid @enderror" rows="3"
+                                id="_edit" aria-describedby="noteHelp"
+                                dir="rtl" placeholder="@lang('site.notePlaceholder')">
+                            </textarea>
 
                             @error('note')
-                            <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
                             @enderror
                         </div>
 

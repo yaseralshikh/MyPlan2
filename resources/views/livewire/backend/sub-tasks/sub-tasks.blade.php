@@ -264,7 +264,9 @@
                                     <textarea dir="rtl" wire:model.defer="data.name"
                                         class="text-justify form-control @error('name') is-invalid @enderror" rows="3"
                                         id="name" aria-describedby="nameHelp"
-                                        dir="rtl" placeholder="@lang('site.enterFieldName', ['name' => 'المهمة الفرعية / الحاشية'])"></textarea>
+                                        dir="rtl" placeholder="@lang('site.enterFieldName', ['name' => 'المهمة الفرعية / الحاشية'])">
+                                    </textarea>
+                                    
                                     @error('name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
