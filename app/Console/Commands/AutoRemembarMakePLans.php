@@ -13,7 +13,7 @@ class AutoRemembarMakePLans extends Command
      *
      * @var string
      */
-    protected $signature = 'app:remembarmakepLans';
+    protected $signature = 'auto:remembarmakepLans';
 
     /**
      * The console command description.
