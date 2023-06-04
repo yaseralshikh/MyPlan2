@@ -430,11 +430,11 @@ class Users extends Component
 
         $roles           = Role::whereNotIn('id',[1,2])->get();
 
-        $jobs_type       = JobType::whereStatus(true)->get();
+        $jobs_type       = JobType::whereStatus(true)->orderBy('name', 'asc')->get();
 
-        $educations      = Education::where('status', true)->get();
+        $educations      = Education::where('status', true)->orderBy('name', 'asc')->get();
 
-        $section_types   = SectionType::whereStatus(true)->get();
+        $section_types   = SectionType::whereStatus(true)->orderBy('name', 'asc')->get();
 
         $genders = [
             [
