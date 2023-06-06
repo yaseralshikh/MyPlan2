@@ -42,13 +42,65 @@
         </div>
         <h4 class="alert-heading">ملاحظة :</h4>
         <ul class="list-group list-group-flush">
-            <li>الالتزام بإعداد الخطة الاسبوعية قبل نهاية دوام كل يوم ثلاثاء من كل اسبوع دراسي.</li>
-            <li>مراعاة عدم حضور اكثر من مشرف تربوي في المدرسة الواحدة قدر الإمكان.</li>
-            <li>الالتزام بالأيام المكتبية المتفق عليها حسب تعليمات إدارة المكتب.</li>
+            <li>أخر موعد لإدخال خطة التكاليف نهاية دوام الثلاثاء من كل أسبوع لإكمال إجراءات التعديل والتصديق والتصدير.</li>
+            <li>في حال وجود أكثر من مشرف للمدرسة المخطط لزيارتها ، يجب التواصل مع المسؤول المباشر للتنسيق.</li>
+            <li>الالتزام بالأيام المكتبية المتفق عليها.</li>
             <li>التعديل عند اللزوم قبل اعتماد الخطط.</li>
         </ul>
         <hr>
         <p class="mb-0">مع تحيات ادارة {{ auth()->user()->office->name }}.</p>
+    </div>
+
+    {{-- User Plan Details --}}
+    <div class="table-responsive pb-4" dir="rtl" data-aos="fade-up" wire:ignore.self>
+        <div class="shadow rounded p-4 border">
+            <div class="table-responsive">
+                <table id="example2"
+                    class="table text-center table-bordered table-hover dtr-inline display nowrap sortable"
+                    aria-describedby="example2_info" style="width:100%">
+                    <thead class="text-info-emphasis bg-info-subtle">
+                        {{-- <tr>
+                            <th class="no-sort" colspan="12"><h4>@lang('site.statisticsUsersEvent')</h4></th>
+                        </tr> --}}
+                        <tr>
+                            <th>@lang('site.name')</th>
+                            <th>@lang('site.specialization')</th>
+                            <th>@lang('site.type')</th>
+                            <th>@lang('site.eventsSchool')</th>
+                            <th>@lang('site.eventsOffice')</th>
+                            <th>@lang('site.eventsTraining')</th>
+                            <th>@lang('site.eventsTask')</th>
+                            <th>@lang('site.vacation')</th>
+                            <th>@lang('site.eventsTotal')</th>
+                            <th>@lang('site.eventsStatus')</th>
+                            <th>@lang('site.eventsTaskDone')</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ auth()->user()->name }}</td>
+                            <td>{{ auth()->user()->specialization->name }}</td>
+                            <td>{{ auth()->user()->job_type->name }}</td>
+                            <td>{{ auth()->user()->events->whereNotIn('task.name',['يوم مكتبي','برنامج تدريبي','إجازة','مكلف بمهمة'])->where('status',true)->Where('task_done' , 1)->count() }}</td>
+                            <td>{{ auth()->user()->events->where('task.name','يوم مكتبي')->where('status',true)->Where('task_done' , 1)->count() }}</td>
+                            <td>{{ auth()->user()->events->where('task.name','برنامج تدريبي')->where('status',true)->Where('task_done' , 1)->count() }}</td>
+                            <td>{{ auth()->user()->events->where('task.name','مكلف بمهمة')->where('status',true)->Where('task_done' , 1)->count() }}</td>
+                            <td>{{ auth()->user()->events->where('task.name','إجازة')->where('status',true)->Where('task_done' , 1)->count() }}</td>
+                            <td class="bg-light">{{ auth()->user()->events->where('status',true)->Where('task_done' , 1)->count() }}</td>
+                            <td style="{{ auth()->user()->events->where('status', false)->count() == 0 ? '' : 'background-color: #F0F8FF;color:red;' }}">{{ auth()->user()->events->where('status', false)->count() }}</td>
+                            <td style="{{ auth()->user()->events->where('task_done', false)->count() == 0 ? '' : 'background-color: #F0FFF0;color:red;' }}">{{ auth()->user()->events->where('task_done', false)->count() }}</td>
+                        </tr>
+                    </tbody>
+                    {{-- <tfoot>
+                        <tr>
+                        <td colspan="12">
+                            <h6>hi</h6>
+                        </td>
+                        </tr>
+                    </tfoot> --}}
+                </table>
+            </div>
+        </div>
     </div>
 
     {{-- Calender --}}

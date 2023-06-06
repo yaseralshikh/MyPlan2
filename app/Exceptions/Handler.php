@@ -2,10 +2,10 @@
 
 namespace App\Exceptions;
 
-use Throwable;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Session\TokenMismatchException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -43,8 +43,9 @@ class Handler extends ExceptionHandler
      */
     public function report(Throwable $e)
     {
-        if($e->getMessage() != 'Unauthenticated.'){
-            Log::channel('slack')->critical($e);
+        if ($e->getMessage() != 'Unauthenticated.') {
+            //Log::channel('slack')->critical($e->getMessage());
+            Log::error($e->getMessage());
         }
 
         if ($e instanceof TokenMismatchException) {

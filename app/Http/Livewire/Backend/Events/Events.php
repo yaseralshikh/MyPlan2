@@ -746,18 +746,20 @@ class Events extends Component
                                 })
                                 ->orderBy('start', 'asc');
                         }])
-                        // ->whereHas('events', function ($query) use ($byWeek, $selectedRows) {
-                        //     $query->whereIn('id', $selectedRows)
-                        //         ->where('week_id', $byWeek)
-                        //         ->where('status', true)
-                        //         ->orderBy('start', 'asc');
-                        // })
+                        ->whereHas('events', function ($query) use ($byWeek, $selectedRows) {
+                            $query->whereIn('id', $selectedRows)
+                                ->where('week_id', $byWeek)
+                                ->where('status', true)
+                                ->orderBy('start', 'asc');
+                        })
                         ->get();
 
                     if ($users->count() != null) {
 
                         $subtasks = Subtask::where('status', 1)->where('office_id', $byOffice)->where('section_type_id', $bySectionType)->orderBy('position', 'asc')->get();
                         $office = Office::where('id', $byOffice)->first();
+                        $office = Office::findOrFail($byOffice);
+                        //dd($office);
 
                         if ($subtasks->count() == null) {
 
@@ -803,7 +805,7 @@ class Events extends Component
 
                 } else {
 
-                    $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.selectEduType'), [
+                    $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.sectionType'), [
                         'position' => 'center',
                         'timer' => 6000,
                         'timerProgressBar' => true,
