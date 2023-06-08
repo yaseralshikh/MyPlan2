@@ -55,7 +55,7 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
             $user->job_type->name,
             $user->section_type->name,
             $user->office->name,
-            $user->roles[0]->name,
+            $user->email_verified_at ? 'موثق' : 'غير موثق',
             $user->status ? 'مفعل' : 'غير مفعل',
         ] ;
     }
@@ -70,7 +70,7 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
             'العمل الحالي',
             'المرجع الإداري',
             'الإدارة / مكتب التعليم',
-            'الصلاحية',
+            'توثيق البريد الإلكتروني',
             'الحالة',
         ];
     }

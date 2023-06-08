@@ -69,7 +69,7 @@
                         <th>العمل الحالي</th>
                         <th>المرجع الإداري</th>
                         <th>الادارة / مكتب التعليم</th>
-                        <th>الصلاحية</th>
+                        <th>توثيق البريد الإلكتروني</th>
                         <th>الحالة</th>
                     </tr>
                 </thead>
@@ -83,8 +83,8 @@
                             <td>{{ $user->job_type->name }}</td>
                             <td>{{ $user->section_type->name }}</td>
                             <td>{{ $user->office->name }}</td>
-                            <td>{{ $user->roles[0]->name }}</td>
-                            <td>{{ $user->status() }}</td>
+                            <td style="color:{{ $user->email_verified_at ? '' : 'red' }};">{{ $user->email_verified_at ? 'موثق' : 'غير موثق' }}</td>
+                            <td style="color:{{ $user->status ? '' : 'red' }}">{{ $user->status() }}</td>
                         </tr>
 
                         <htmlpagefooter name="page-footer">
