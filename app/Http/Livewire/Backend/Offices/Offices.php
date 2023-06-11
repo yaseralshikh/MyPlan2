@@ -2,8 +2,9 @@
 
 namespace App\Http\Livewire\Backend\Offices;
 
-use Throwable;
 use PDF;
+use Throwable;
+use App\Models\Task;
 use App\Models\Office;
 use Livewire\Component;
 use App\Models\Education;
@@ -255,7 +256,32 @@ class Offices extends Component
             $validatedData['assistant3_signature_path'] = $this->assistant3_signature_image->store('/', 'signature_photos');
 		}
 
-		Office::create($validatedData);
+		$$new_office = Office::create($validatedData);
+
+        $tasks = [
+            [
+                'name' => 'يوم مكتبي',
+            ],
+            [
+                'name' => 'إجازة',
+            ],
+            [
+                'name' => 'برنامج تدريبي',
+            ],
+            [
+                'name' => 'مكلف بمهمة',
+            ],
+        ];
+
+
+        foreach($tasks as $task){
+            Task::create([
+                'name' => $task['name'],
+                'office_id' => $$new_office->id,
+                'level_id' => 7,
+                'status' => 1,
+            ]);
+        };
 
         $this->dispatchBrowserEvent('hide-form');
 

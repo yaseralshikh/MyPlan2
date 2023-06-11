@@ -327,12 +327,12 @@
 
                                 <!-- Modal Office Name -->
                                 <div class="form-group">
-                                    <label for="title">@lang('site.office')</label>
+                                    <label for="name">@lang('site.office')</label>
                                     <input type="text" wire:model.defer="data.name"
-                                        class="form-control @error('title') is-invalid @enderror" id="title"
+                                        class="form-control @error('name') is-invalid @enderror" id="name"
                                         aria-describedby="titleHelp" dir="rtl"
                                         placeholder="@lang('site.enterFieldName', ['name' => 'اسم المكتب / الإدارة'])">
-                                    @error('title')
+                                    @error('name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>

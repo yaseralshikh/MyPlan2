@@ -303,9 +303,13 @@ class Tasks extends Component
 
         $byOffice = $selected_office_id ? $selected_office_id : $user_office_id;
 
-        $this->levels = Level::whereIn('id', [1, 2, 3, 4, 5, 6, 7])
-            ->whereHas('tasks', function ($query) use ($byOffice) {$query->where('office_id', $byOffice);})
-            ->get();
+        $office_type = Office::where('id', $byOffice)->pluck('office_type')->first();
+
+        $this->levels = Level::whereIn('id', $office_type == 1 ? [1, 2, 3, 4, 5, 6, 7] : [7])->get();
+
+        // $this->levels = Level::whereIn('id', [1, 2, 3, 4, 5, 6, 7])
+        //     ->whereHas('tasks', function ($query) use ($byOffice) {$query->where('office_id', $byOffice);})
+        //     ->get();
     }
 
     public function OfficeOption($id)
