@@ -139,7 +139,7 @@ class JobTypes extends Component
     public function createJobType()
     {
         $validatedData = Validator::make($this->data, [
-			'name'                   => 'required|max:255',
+			'name'  => 'required|max:255|unique:job_types',
 		])->validate();
 
 
@@ -183,7 +183,7 @@ class JobTypes extends Component
 
             $validatedData = Validator::make($this->data, [
 
-                'name'                   => 'required|max:255',
+                'name'  => 'required|max:255|unique:job_types,name,'.$this->jobtype->id,
 
             ])->validate();
 

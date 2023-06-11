@@ -134,7 +134,7 @@ class Education extends Component
     {
         $validatedData = Validator::make($this->data, [
 
-			'name'     => 'required',
+			'name'     => 'required|unique:education',
 			'status'   => 'required',
 
 		])->validate();
@@ -176,8 +176,8 @@ class Education extends Component
 
         $validatedData = Validator::make($this->data, [
 
-            'name'                       => 'required',
-            'status'                     => 'required',
+            'name'      => 'required|unique:education,name,'.$this->education->id,
+            'status'    => 'required',
 
         ])->validate();
 

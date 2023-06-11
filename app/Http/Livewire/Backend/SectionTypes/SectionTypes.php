@@ -142,7 +142,7 @@ class SectionTypes extends Component
     public function createSectionType()
     {
         $validatedData = Validator::make($this->data, [
-			'name'                   => 'required|max:255',
+			'name'  => 'required|max:255|unique:section_types',
 		])->validate();
 
 
@@ -186,7 +186,7 @@ class SectionTypes extends Component
 
             $validatedData = Validator::make($this->data, [
 
-                'name'                   => 'required|max:255',
+                'name'  => 'required|max:255|unique:section_types,name,'.$this->sectiontype->id,
 
             ])->validate();
 

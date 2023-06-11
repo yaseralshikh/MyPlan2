@@ -136,7 +136,7 @@ class Levels extends Component
     public function createLevel()
     {
         $validatedData = Validator::make($this->data, [
-			'name'                  => 'required',
+			'name'  => 'required|unique:levels',
 		])->validate();
 
 
@@ -176,7 +176,7 @@ class Levels extends Component
     {
         try {
             $validatedData = Validator::make($this->data, [
-                'name'                      => 'required',
+                'name'  => 'required|unique:levels,name,'.$this->level->id,
             ])->validate();
 
             $this->level->update($validatedData);
