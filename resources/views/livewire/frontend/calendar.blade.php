@@ -114,7 +114,7 @@
             <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}"
                 class="img-thumbnail border border-0 rounded mx-auto d-block mt-3 mb-3" alt="sorry">
             <div class="card-body mb-3" dir="rtl">
-                <h2 class="card-text">المعذرة .. حسب توجيهات إدارة المكتب فقد تم إقفال إدخال الخطط من قبل المشرفين مؤقتاً
+                <h2 class="card-text">المعذرة .. حسب توجيهات مدير {{ auth()->user()->office->name }} فقد تم إقفال إدخال الخطط من قبل المشرفين مؤقتاً
                     وسيتم فتحها في وقت لاحق ، شكراُ على اهتمامكم .</h2>
             </div>
         </div>
