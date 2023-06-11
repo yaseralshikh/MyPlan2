@@ -1,7 +1,7 @@
 <div>
     @push('style')
         <style>
-            /*  */
+            /* Style */
         </style>
     @endpush
     <!-- Content Header (Page header) -->
@@ -548,14 +548,15 @@
                     tooltip: {
                         backgroundColor: '#FCFFC5',
                         borderWidth: 2,
-                        // borderColor: '#AAA',
-                        headerFormat: '<span style="font-size:12px">{point.key}</span><table>',
-                        pointFormat: '<tr><td style="padding:0">{series.name}: </td>' +
-                            '<td style="color:green;"><b>{point.y: 1f}</b></td></tr>',
-                        footerFormat: '</table>',
                         shared: true,
-                        format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
                         useHTML: true,
+                        //borderColor: '#AAA',
+                        headerFormat: '<table><tr><th style="border-bottom: 1px solid silver;" colspan="2">{point.key}</th></tr>',
+                        pointFormat: '<tr><td style="color: green"><span style="color: black">{series.name}</span></td>' +
+                            '<td style="text-align: right"><b>{point.y}</b></td></tr>',
+                        footerFormat: '</table>',
+                        valueDecimals: 0,
+                        // format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
                     },
                     plotOptions: {
                         column: {
@@ -649,14 +650,14 @@
                             tooltip: {
                                 backgroundColor: '#FCFFC5',
                                 borderWidth: 2,
-                                // borderColor: '#AAA',
-                                headerFormat: '<span style="font-size:12px">{point.key}</span><table>',
-                                pointFormat: '<tr><td style="padding:0">{series.name}: </td>' +
-                                    '<td style="color:green;"><b>{point.y: 1f}</b></td></tr>',
-                                footerFormat: '</table>',
                                 shared: true,
-                                format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
                                 useHTML: true,
+                                //borderColor: '#AAA',
+                                headerFormat: '<table><tr><th style="border-bottom: 1px solid silver;" colspan="2">{point.key}</th></tr>',
+                                pointFormat: '<tr><td style="color: green"><span style="color: black">{series.name}</span></td>' +
+                                    '<td style="text-align: right"><b>{point.y}</b></td></tr>',
+                                footerFormat: '</table>',
+                                valueDecimals: 0,
                             },
                             plotOptions: {
                                 column: {
