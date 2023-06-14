@@ -104,7 +104,7 @@
 
         <footer class="text-center bg-dark text-white">
             <!-- Grid container -->
-            <div class="container p-4">
+            <div class="container-fluid p-4">
                 <!-- Section: Social media -->
                 <section>
                     <!-- Facebook -->

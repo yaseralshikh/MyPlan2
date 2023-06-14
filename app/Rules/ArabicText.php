@@ -14,11 +14,13 @@ class ArabicText implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        $words = preg_split('/\s+/', $value);
+        $wordCount = count($words);
         $textValue = preg_match('/\p{Arabic}/u', $value);
 
-        if (!$textValue) {
+        if (!$textValue or $wordCount < 4) {
 
-            $fail('يسمح بكتابة الحروف العربية فقط');
+            $fail('يجب كتابة الاسم رباعي كما يجب الكتابة بالأحرف العربية فقط');
 
         }
     }

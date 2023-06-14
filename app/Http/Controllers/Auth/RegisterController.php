@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
 use App\Rules\Recaptcha;
+use App\Rules\ArabicText;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Providers\RouteServiceProvider;
@@ -51,7 +52,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name'                  => ['required', 'string', 'max:255'],
+            'name'                  => ['required', 'string', 'max:255', new ArabicText, 'unique:users'],
             'education_id'          => ['required',],
             'office_id'             => ['required',],
             'specialization_id'     => ['required',],

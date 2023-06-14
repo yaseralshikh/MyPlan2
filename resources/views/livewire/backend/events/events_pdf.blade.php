@@ -118,7 +118,6 @@
                                 </td>
                                 <td class="logo_header">
                                     <img src="{{ asset('backend/img/events/moe_logo_l.jpg') }}" width="150px" style="padding-bottom: 0.3cm;" alt="">
-                                    <span style="font-size: 11px">{{ $users[0]->events[0]->week->name }} {{ $users[0]->events[0]->week->semester->school_year }}</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -217,6 +216,9 @@
                         <tbody>
                             <tr style="border-top: 1px solid rgb(100, 100, 100);">
                                 <td class="logo_header" style="text-align:right;font-size: 12px; padding-right:10px">رؤيتنا : تعليم ريادي.</td>
+                                <td class="logo_header" >
+                                    <span style="font-size: 11px">{{ $users[0]->events[0]->week->name }} {{ $users[0]->events[0]->week->semester->school_year }} هـ</span>
+                                </td>
                                 <td class="logo_header" style="text-align:left;font-size: 12px; padding-left:10px">{{ $users[0]->office->name }}</td>
                             </tr>
                         </tbody>

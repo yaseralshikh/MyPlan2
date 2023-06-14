@@ -10,11 +10,12 @@ use App\Models\Level;
 use App\Models\Office;
 use Livewire\Component;
 use App\Models\Semester;
+use App\Rules\ArabicText;
 use App\Rules\UserOverLap;
 use App\Rules\EventOverLap;
+use App\Rules\NoteRequired;
 use App\Rules\DateOutService;
 use App\Models\Specialization;
-use App\Rules\NoteRequired;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -58,53 +59,40 @@ class Calendar extends Component
 
     public function updateProfile()
     {
-        try {
-            $emailVerifiedMessage = null;
+        $emailVerifiedMessage = null;
 
-            $validatedData = Validator::make($this->profileData, [
-                'name'              => 'required',
-                'email'             => 'required|email|unique:users,email,' . $this->userProfile->id,
-                'specialization_id' => 'required',
-                'email_verified_at' => 'nullable',
-                'password'          => 'sometimes|confirmed',
-                'status'            => 'nullable',
-            ])->validate();
+        $validatedData = Validator::make($this->profileData, [
+            'name'              => ['required', 'string', 'max:255', new ArabicText, 'unique:users,name,'.$this->profileData['id']],
+            'email'             => 'required|email|unique:users,email,' . $this->userProfile->id,
+            'specialization_id' => 'required',
+            'email_verified_at' => 'nullable',
+            'password'          => 'sometimes|confirmed',
+            'status'            => 'nullable',
+        ])->validate();
 
-            if (!empty($validatedData['password'])) {
-                $validatedData['password'] = bcrypt($validatedData['password']);
-            }
-
-            if ($validatedData['email'] != $this->userProfile->email) {
-                $validatedData['email_verified_at'] = null;
-                $validatedData['status'] = 0;
-                $emailVerifiedMessage = true;
-                $this->userProfile->sendEmailVerificationNotification();
-            }
-
-            $this->userProfile->update($validatedData);
-
-            $this->dispatchBrowserEvent('hide-profile');
-
-            $this->alert('success', __('site.updateSuccessfully') . ($emailVerifiedMessage ? ' <p dir="rtl"> <br> ' . __('site.emailVerifiedMessage') . '</p>' : ''), [
-                'position' => 'top-end',
-                'timer' => 4000,
-                'toast' => true,
-                'text' => null,
-                'showCancelButton' => false,
-                'showConfirmButton' => false,
-            ]);
-
-        } catch (\Throwable$th) {
-            $message = $this->alert('error', $th->getMessage(), [
-                'position' => 'top-end',
-                'timer' => 3000,
-                'toast' => true,
-                'text' => null,
-                'showCancelButton' => false,
-                'showConfirmButton' => false,
-            ]);
-            return $message;
+        if (!empty($validatedData['password'])) {
+            $validatedData['password'] = bcrypt($validatedData['password']);
         }
+
+        if ($validatedData['email'] != $this->userProfile->email) {
+            $validatedData['email_verified_at'] = null;
+            $validatedData['status'] = 0;
+            $emailVerifiedMessage = true;
+            $this->userProfile->sendEmailVerificationNotification();
+        }
+
+        $this->userProfile->update($validatedData);
+
+        $this->dispatchBrowserEvent('hide-profile');
+
+        $this->alert('success', __('site.updateSuccessfully') . ($emailVerifiedMessage ? ' <p dir="rtl"> <br> ' . __('site.emailVerifiedMessage') . '</p>' : ''), [
+            'position' => 'top-end',
+            'timer' => 4000,
+            'toast' => true,
+            'text' => null,
+            'showCancelButton' => false,
+            'showConfirmButton' => false,
+        ]);
     }
     // End update user profile
 
