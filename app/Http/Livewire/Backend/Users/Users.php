@@ -14,6 +14,7 @@ use App\Exports\UsersExport;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\Specialization;
+use App\Rules\ArabicText;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
@@ -173,7 +174,7 @@ class Users extends Component
     public function createUser()
     {
         $validatedData = Validator::make($this->data, [
-            'name'                  => ['required', 'string', 'max:255'],
+            'name'                  => ['required', 'string', 'max:255', new ArabicText, 'unique:users'],
             'email'                 => ['required', 'string', 'email', 'regex:/@moe\.gov.sa$/i', 'max:50', 'unique:users'],
             'office_id'             => 'nullable',
             'specialization_id'     => 'required',
@@ -227,7 +228,7 @@ class Users extends Component
     public function updateUser()
     {
         $validatedData = Validator::make($this->data, [
-            'name'                  => 'required',
+            'name'                  => ['required', 'string', 'max:255', new ArabicText, 'unique:users,name,'.$this->user->id],
             'email'                 => ['required', 'string', 'email', 'regex:/@moe\.gov.sa$/i', 'max:50', 'unique:users,email,'.$this->user->id],
             'office_id'             => 'nullable',
             'specialization_id'     => 'required',

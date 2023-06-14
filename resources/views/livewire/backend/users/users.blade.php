@@ -200,7 +200,7 @@
                                                 <i class="fa fa-edit"></i>
                                             </button>
                                             {{-- users-read --}}
-                                            <button wire:click.prevent="edit({{ $user }})"
+                                            <button wire:click.prevent="show({{ $user }})"
                                                 class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('users-read') ? '' : 'disabled' }}>
                                                 <i class="fa fa-user"></i>
                                             </button>

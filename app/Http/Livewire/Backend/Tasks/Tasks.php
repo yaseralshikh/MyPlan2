@@ -164,8 +164,8 @@ class Tasks extends Component
     public function createTask()
     {
         $validatedData = Validator::make($this->data, [
-			'name'                  => 'required',
-			'office_id'              => 'nullable',
+			'name'                  => 'required|unique:tasks',
+			'office_id'             => 'nullable',
 			'level_id'              => 'required',
 		])->validate();
 
@@ -207,45 +207,26 @@ class Tasks extends Component
 
     public function updateTask()
     {
-        try {
-            $validatedData = Validator::make($this->data, [
-                'name'            => 'required',
-                'office_id'       => 'nullable',
-                'level_id'        => 'required',
-            ])->validate();
+        $validatedData = Validator::make($this->data, [
+            'name'            => 'required|unique:tasks,name,'.$this->task->id,
+            'office_id'       => 'nullable',
+            'level_id'        => 'required',
+        ])->validate();
 
-            $this->task->update($validatedData);
+        $this->task->update($validatedData);
 
-            $this->dispatchBrowserEvent('hide-form');
+        $this->dispatchBrowserEvent('hide-form');
 
-            $this->alert('success', __('site.updateSuccessfully'), [
+        $this->alert('success', __('site.updateSuccessfully'), [
 
-                'position'  =>  'top-end',
-                'timer'  =>  2000,
-                'timerProgressBar' => true,
-                'toast'  =>  true,
-                'text'  =>  null,
-                'showCancelButton'  =>  false,
-                'showConfirmButton'  =>  false
-            ]);
-
-        } catch (\Throwable $th) {
-
-            $message = $this->alert('error', $th->getMessage(), [
-
-                'position'  =>  'top-end',
-                'timer'  =>  3000,
-                'timerProgressBar' => true,
-                'toast'  =>  true,
-                'text'  =>  null,
-                'showCancelButton'  =>  false,
-                'showConfirmButton'  =>  false
-            ]);
-
-            Log::error($th->getMessage());
-
-            return $message;
-        }
+            'position'  =>  'top-end',
+            'timer'  =>  2000,
+            'timerProgressBar' => true,
+            'toast'  =>  true,
+            'text'  =>  null,
+            'showCancelButton'  =>  false,
+            'showConfirmButton'  =>  false
+        ]);
     }
 
     // Show Modal Form to Confirm Task Removal
