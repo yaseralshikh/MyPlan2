@@ -181,6 +181,7 @@ class Users extends Component
             'job_type_id'           => 'required',
             'section_type_id'       => 'required',
             'gender'                => 'required',
+            'email_verified_at'     => 'nullable|date',
             'password'              => 'required|min:8|confirmed',
             'status'                => 'required',
         ])->validate();
@@ -220,6 +221,8 @@ class Users extends Component
 
 		$this->data = $user->toArray();
 
+        $this->data['email_verified_at'] = $this->user->email_verified_at ? $this->user->email_verified_at->format('Y-m-d\TH:i:s') : '';
+
 		$this->dispatchBrowserEvent('show-form');
     }
 
@@ -237,7 +240,7 @@ class Users extends Component
             'gender'                => 'required',
             'status'                => 'required',
             'password'              => 'sometimes|min:8|confirmed',
-            'email_verified_at'     => 'nullable',
+            'email_verified_at'     => 'nullable|date',
         ])->validate();
 
         if(!empty($validatedData['password'])) {

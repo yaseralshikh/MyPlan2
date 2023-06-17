@@ -244,7 +244,7 @@
 
     <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
         wire:ignore.self>
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog" role="document">
             <form autocomplete="off" wire:submit.prevent="{{ $showEditModal ? 'updateUser' : 'createUser' }}">
                 <div class="modal-content">
                     <div class="modal-header bg-light">
@@ -384,6 +384,20 @@
                                     </div>
                                     @enderror
                                 </div>
+
+                                <!-- Modal email_verified_at -->
+                                @role('operationsmanager')
+                                <div class="form-group">
+                                    <label for="email_verified_at">@lang('site.emailVerified')</label>
+                                    <input type="datetime-local" class="form-control @error('email_verified_at') is-invalid @enderror"
+                                            id="email_verified_at" wire:model.defer="data.email_verified_at">
+                                    @error('email_verified_at')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                @endrole
 
                                 <!-- Modal User Password -->
 
