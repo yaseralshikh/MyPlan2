@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Semester;
 use Illuminate\Http\Request;
 
 class CalendarController extends Controller
@@ -15,7 +16,8 @@ class CalendarController extends Controller
             ->with('week:id,name')
             ->with('semester:id,name,school_year')
             ->with('office:id,name')
-            ->Where('office_id', auth()->user()->office_id)->get();
+            ->Where('office_id', auth()->user()->office_id)
+            ->get();
         return $events ;
     }
 }

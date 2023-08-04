@@ -389,6 +389,12 @@ class Calendar extends Component
             ->get();
     }
 
+    public function semesterActive()
+    {
+        $semester_active = Semester::whereActive(1)->first();
+        return $semester_active->id;
+    }
+
     public function render()
     {
         $education_offices = Office::where('office_type', 1)
@@ -409,11 +415,14 @@ class Calendar extends Component
             ->orderBy('name', 'asc')
             ->get();
 
+        $semester_id = $this->semesterActive();
+
         return view('livewire.frontend.calendar', compact(
             'offices',
             'levels',
             'tasks',
             'specializations',
+            'semester_id'
         ));
     }
 }

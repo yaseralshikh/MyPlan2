@@ -283,7 +283,8 @@ class Dashboard extends Component
 
         // for chart
         $chartData = $this->getChartData();
-        $current_semester_name = Semester::where('id', $bySemester)->pluck('name')->first();
+        $current_semester = Semester::where('id', $bySemester)->first();
+        $current_semester_name = $current_semester->name . ' ( ' . $current_semester->school_year . ' )';
         $this->dispatchBrowserEvent('refreshEventChart', ['refresh' => true , 'data' => $chartData, 'current_semester_name' => $current_semester_name]);
 
         // for counting Data

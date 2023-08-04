@@ -81,14 +81,14 @@
                             <td>{{ auth()->user()->name }}</td>
                             <td>{{ auth()->user()->specialization->name }}</td>
                             <td>{{ auth()->user()->job_type->name }}</td>
-                            <td>{{ auth()->user()->events->whereNotIn('task.name',['يوم مكتبي','برنامج تدريبي','إجازة','مكلف بمهمة'])->where('status',true)->Where('task_done' , 1)->count() }}</td>
-                            <td>{{ auth()->user()->events->where('task.name','يوم مكتبي')->where('status',true)->Where('task_done' , 1)->count() }}</td>
-                            <td>{{ auth()->user()->events->where('task.name','برنامج تدريبي')->where('status',true)->Where('task_done' , 1)->count() }}</td>
-                            <td>{{ auth()->user()->events->where('task.name','مكلف بمهمة')->where('status',true)->Where('task_done' , 1)->count() }}</td>
-                            <td>{{ auth()->user()->events->where('task.name','إجازة')->where('status',true)->Where('task_done' , 1)->count() }}</td>
-                            <td class="bg-light">{{ auth()->user()->events->where('status',true)->Where('task_done' , 1)->count() }}</td>
-                            <td style="{{ auth()->user()->events->where('status', false)->count() == 0 ? '' : 'background-color: #F0F8FF;color:red;' }}">{{ auth()->user()->events->where('status', false)->count() }}</td>
-                            <td style="{{ auth()->user()->events->where('task_done', false)->count() == 0 ? '' : 'background-color: #F0FFF0;color:red;' }}">{{ auth()->user()->events->where('task_done', false)->count() }}</td>
+                            <td>{{ auth()->user()->events->whereNotIn('task.name',['يوم مكتبي','برنامج تدريبي','إجازة','مكلف بمهمة'])->where('status',true)->Where('task_done' , 1)->Where('semester_id', $semester_id)->count() }}</td>
+                            <td>{{ auth()->user()->events->where('task.name','يوم مكتبي')->where('status',true)->Where('task_done' , 1)->Where('semester_id', $semester_id)->count() }}</td>
+                            <td>{{ auth()->user()->events->where('task.name','برنامج تدريبي')->where('status',true)->Where('task_done' , 1)->Where('semester_id', $semester_id)->count() }}</td>
+                            <td>{{ auth()->user()->events->where('task.name','مكلف بمهمة')->where('status',true)->Where('task_done' , 1)->Where('semester_id', $semester_id)->count() }}</td>
+                            <td>{{ auth()->user()->events->where('task.name','إجازة')->where('status',true)->Where('task_done' , 1)->Where('semester_id', $semester_id)->count() }}</td>
+                            <td class="bg-light">{{ auth()->user()->events->where('status',true)->Where('task_done' , 1)->Where('semester_id', $semester_id)->count() }}</td>
+                            <td style="{{ auth()->user()->events->where('status', false)->Where('semester_id', $semester_id)->count() == 0 ? '' : 'background-color: #F0F8FF;color:red;' }}">{{ auth()->user()->events->where('status', false)->Where('semester_id', $semester_id)->count() }}</td>
+                            <td style="{{ auth()->user()->events->where('task_done', false)->Where('semester_id', $semester_id)->count() == 0 ? '' : 'background-color: #F0FFF0;color:red;' }}">{{ auth()->user()->events->where('task_done', false)->Where('semester_id', $semester_id)->count() }}</td>
                         </tr>
                     </tbody>
                     {{-- <tfoot>

@@ -91,7 +91,7 @@
                                 @foreach ($semesters as $semester)
                                 <option value="{{ $semester->id }}" style="{{
                                     $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{ $semester->name
-                                    }}</option>
+                                    }} ({{ $semester->school_year }})</option>
                                 @endforeach
                             </select>
                         </div>
