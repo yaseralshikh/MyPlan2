@@ -105,6 +105,14 @@
                                 @endforeach
                             </select>
                         </div>
+
+                        {{-- byGender Filter --}}
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" wire:model="byGender" class="custom-control-input"
+                                id="customSwitchByGender">
+                            <label dir="rtl" class="custom-control-label"
+                                for="customSwitchByGender">@lang('site.gender') ( بنين ) </label>
+                        </div>
                         @endrole
 
                         <div>

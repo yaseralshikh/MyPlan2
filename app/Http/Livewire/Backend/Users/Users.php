@@ -36,6 +36,7 @@ class Users extends Component
     protected $queryString = ['searchTerm' => ['except' => '']];
 
     public $byOffice = null; //filter by office_id
+    public $byGender = 1;
 
     public $showEditModal = false;
 
@@ -409,6 +410,7 @@ class Users extends Component
 	{
 
         $searchString = $this->searchTerm;
+        $byGender   = $this->byGender;
         $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
 
         $users = User::where('office_id', $byOffice)
@@ -418,6 +420,7 @@ class Users extends Component
                         });
                     })
                     ->search(trim(($searchString)))
+                    ->where('gender', $byGender)
                     ->latest()
                     ->paginate(50);
 
@@ -426,11 +429,12 @@ class Users extends Component
 
     public function render()
     {
-        $users = $this->users;
+        $users      = $this->users;
+        $byGender   = $this->byGender;
 
         $specializations = Specialization::whereStatus(true)->orderBy('name', 'asc')->get();
 
-        $offices         = Office::whereStatus(true)->where('gender', auth()->user()->gender)->where('education_id' , auth()->user()->office->education_id)->get();
+        $offices         = Office::whereStatus(true)->where('gender', $byGender)->where('education_id' , auth()->user()->office->education_id)->get();
 
         $roles           = Role::whereNotIn('id',[1,2])->get();
 

@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\Level;
 use App\Models\Office;
 use Livewire\Component;
+use App\Models\Semester;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -27,6 +28,7 @@ class Tasks extends Component
 
     public $byOffice = null; //filter by office_id
     public $byLevel = null; //filter by Level_id
+    public $byGender = 1;
 
     public $showEditModal = false;
 
@@ -301,14 +303,16 @@ class Tasks extends Component
 
     public function getTasksProperty()
 	{
-        $searchString = $this->searchTerm;
-        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
-        $byLevel = $this->byLevel;
+        $searchString   = $this->searchTerm;
+        $byOffice       = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
+        $byLevel        = $this->byLevel;
+        $byGender       = $this->byGender;
 
         $tasks = Task::with('events')->where('office_id', $byOffice)
             ->when($byLevel, function ($query) use($byLevel) {
                 $query->where('level_id', $byLevel);
             })
+            ->whereHas('office', function ($query) use ($byGender) {$query->where('gender', $byGender);})
             //->where('level_id', $byLevel)
             ->search(trim(($searchString)))
             ->orderBy('level_id','ASC')
@@ -318,20 +322,31 @@ class Tasks extends Component
         return $tasks;
 	}
 
+    public function semesterActive()
+    {
+        $semester_active = Semester::whereActive(1)->first();
+        return $semester_active->id;
+    }
+
     public function render()
     {
-        $tasks = $this->tasks;
-        $levels = $this->getLevelsData();
+        $tasks      = $this->tasks;
+        $levels     = $this->getLevelsData();
+        $byGender   = $this->byGender;
+
+        $semester_id = $this->semesterActive();
 
         $offices = Office::whereStatus(true)
-            ->where('gender', auth()->user()->gender)
+            ->where('gender', $byGender)
             ->where('education_id', auth()->user()->office->education->id)
+            ->where('office_type' , 1)
             ->get();
 
         return view('livewire.backend.tasks.tasks' ,compact(
             'tasks',
             'offices',
             'levels',
+            'semester_id',
         ))->layout('layouts.admin');
     }
 }
