@@ -27,6 +27,7 @@ class Dashboard extends Component
     public $byOffice = null; // filter bt Office
     public $bySemester = null; // filter bt Semester
     public $byLevel = 2; // filter bt Task Level
+    public $byGender = 1;
 
     // for chart
     public $chartData = [];
@@ -280,6 +281,7 @@ class Dashboard extends Component
         // parameters values
         $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
         $bySemester = $this->bySemester ? $this->bySemester : $this->semesterActive();
+        $byGender   =  auth()->user()->roles[0]->name == 'admin' ? auth()->user()->gender : $this->byGender;
 
         // for chart
         $chartData = $this->getChartData();
@@ -303,7 +305,7 @@ class Dashboard extends Component
 
         // for Data tables
         $offices = Office::whereStatus(true)
-            ->where('gender', auth()->user()->gender)
+            ->where('gender', $byGender)
             ->where('education_id', auth()->user()->office->education->id)
             ->get();
 
@@ -333,6 +335,7 @@ class Dashboard extends Component
             'eventsTaskCount'       => $eventsTaskCount,
             'eventsCount'           => $eventsCount,
             'current_semester_name' => $current_semester_name,
+            'genders'               => $byGender,
 
         ])->layout('layouts.admin');
     }

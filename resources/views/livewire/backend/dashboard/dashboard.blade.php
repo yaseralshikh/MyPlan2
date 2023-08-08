@@ -29,21 +29,32 @@
 
             {{-- Office and Semester Filters --}}
             <div class="row">
-                <div class="col-lg-6 col-6">
-                    {{-- Office Filter --}}
-                    @role('superadmin|operationsmanager')
-                        <div class="d-inline pr-3">
-                            <select dir="rtl" wire:model="byOffice" class="form-control form-control-sm mr-5">
-                                <option value="" hidden selected>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
-                                @foreach ($offices as $office)
-                                    <option value="{{ $office->id }}">{{ $office->name }}</option>
-                                @endforeach
-                            </select>
+                @role('superadmin|operationsmanager')
+                    <div class="col-lg-8 col-8">
+                        <div class="d-flex justify-content-center align-items-center">
+                            {{-- byGender Filter --}}
+                            <div class="d-inline pr-3">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" wire:model="byGender" class="custom-control-input"
+                                        id="customSwitchByGender">
+                                    <label dir="rtl" class="custom-control-label"
+                                        for="customSwitchByGender">@lang('site.gender') ( بنين ) </label>
+                                </div>
+                            </div>
+                            {{-- Office Filter --}}
+                            <div class="d-inline pr-3">
+                                <select dir="rtl" wire:model="byOffice" class="form-control form-control-sm mr-5">
+                                    <option value="" hidden selected>@lang('site.choise', ['name' => 'الإدارة'])</option>
+                                    @foreach ($offices as $office)
+                                        <option value="{{ $office->id }}">{{ $office->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    @endrole
-                </div>
+                    </div>
+                @endrole
 
-                <div class="col-lg-6 col-6">
+                <div class="col-lg-4 col-4">
                     {{-- Semester Filter --}}
                     <div class="d-inline pr-3">
                         <select dir="rtl" wire:model="bySemester" class="form-control form-control-sm mr-5">
