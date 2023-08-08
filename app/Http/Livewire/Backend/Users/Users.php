@@ -410,7 +410,9 @@ class Users extends Component
 	{
 
         $searchString = $this->searchTerm;
-        $byGender   = $this->byGender;
+
+        $byGender   =  auth()->user()->roles[0]->name == 'admin' ? auth()->user()->gender : $this->byGender;
+
         $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
 
         $users = User::where('office_id', $byOffice)
@@ -430,7 +432,7 @@ class Users extends Component
     public function render()
     {
         $users      = $this->users;
-        $byGender   = $this->byGender;
+        $byGender   =  auth()->user()->roles[0]->name == 'admin' ? auth()->user()->gender : $this->byGender;
 
         $specializations = Specialization::whereStatus(true)->orderBy('name', 'asc')->get();
 

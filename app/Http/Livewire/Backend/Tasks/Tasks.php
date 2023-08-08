@@ -306,7 +306,7 @@ class Tasks extends Component
         $searchString   = $this->searchTerm;
         $byOffice       = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
         $byLevel        = $this->byLevel;
-        $byGender       = $this->byGender;
+        $byGender       =  auth()->user()->roles[0]->name == 'admin' ? auth()->user()->gender : $this->byGender;
 
         $tasks = Task::with('events')->where('office_id', $byOffice)
             ->when($byLevel, function ($query) use($byLevel) {
@@ -332,7 +332,7 @@ class Tasks extends Component
     {
         $tasks      = $this->tasks;
         $levels     = $this->getLevelsData();
-        $byGender   = $this->byGender;
+        $byGender   =  auth()->user()->roles[0]->name == 'admin' ? auth()->user()->gender : $this->byGender;
 
         $semester_id = $this->semesterActive();
 
