@@ -36,7 +36,7 @@ use App\Http\Livewire\Backend\Specializations\Specializations;
 
 Auth::routes(['verify' => true]);
 
-Route::get('/getOffices/{education_id}',[OfficeDropdownController::class, 'getOffices']);
+Route::post('/getOffices',[OfficeDropdownController::class, 'getOffices']);
 
 //Frontend
 Route::group(['middleware' => ['auth', 'verified']], function (){

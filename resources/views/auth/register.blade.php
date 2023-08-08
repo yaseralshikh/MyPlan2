@@ -62,9 +62,28 @@
                         </span>
                         @enderror
                     </div>
+                    <!-- Gender -->
+                    <div class="input-group mb-3">
+                        <select name="gender" class="custom-select gender-education-select @error('gender') is-invalid @enderror"
+                            id="inputGroupSelectgender">
+                            <option disabled selected>@lang('site.gender')</option>
+                            @foreach ($genders as $gender)
+                            <option value="{{ $gender['id'] }}">{{ $gender['name'] }}</option>@json($gender['id'])
+                            @endforeach
+                        </select>
+                        <div class="input-group-append">
+                            <label class="input-group-text" for="inputGroupSelectgender"><i class="fa fa-venus-mars"
+                                    aria-hidden="true"></i></label>
+                        </div>
+                        @error('gender')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
                     <!-- education -->
                     <div class="input-group mb-3">
-                        <select name="education_id" class="custom-select @error('education_id') is-invalid @enderror"
+                        <select name="education_id" class="custom-select gender-education-select @error('education_id') is-invalid @enderror"
                             id="education">
                             <option disabled selected>@lang('site.education')</option>
                             @foreach ($educations as $education)
@@ -174,25 +193,6 @@
                         </span>
                         @enderror
                     </div>
-                    <!-- Gender -->
-                    <div class="input-group mb-3">
-                        <select name="gender" class="custom-select @error('gender') is-invalid @enderror"
-                            id="inputGroupSelectgender">
-                            <option disabled selected>@lang('site.gender')</option>
-                            @foreach ($genders as $gender)
-                            <option value="{{ $gender['id'] }}">{{ $gender['name'] }}</option>@json($gender['id'])
-                            @endforeach
-                        </select>
-                        <div class="input-group-append">
-                            <label class="input-group-text" for="inputGroupSelectgender"><i class="fa fa-venus-mars"
-                                    aria-hidden="true"></i></label>
-                        </div>
-                        @error('gender')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                    </div>
                     <!-- Password -->
                     <div class="input-group mb-3">
                         <input id="password" type="password"
@@ -277,22 +277,29 @@
     <script>
         $(document).ready(function() {
 
-            $('#education').change(function() {
-                var education_id = $(this).val();
+            $('.gender-education-select').change(function() {
+                var selectedGenderValue = $('#inputGroupSelectgender').val();
+                var education_id = $('#education').val();
+
                 if (education_id) {
                     $.ajax({
-                        url: '/getOffices/' + education_id,
-                        type: 'GET',
+                        url: '/getOffices',
+                        type: 'POST',
                         dataType: 'json',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            education_id: education_id,
+                            gender: selectedGenderValue
+                        },
                         success: function(data) {
                             $('#office').empty();
                             $.each(data.offices, function(key, value) {
                                 $('#office').append('<option value="' + value.id + '">' + value.name + '</option>');
                             });
                         },
-                        error: function(){
-                            alert('failure');
-                        },
+                        error: function() {
+                            alert('Failed to fetch data');
+                        }
                     });
                 } else {
                     $('#office').empty();
