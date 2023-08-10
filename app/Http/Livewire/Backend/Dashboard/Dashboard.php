@@ -258,7 +258,7 @@ class Dashboard extends Component
 
         $schools = Task::whereStatus(true)
             ->where('office_id', $byOffice)
-            ->whereIn('level_id', [1,2,3,4,5,6])
+            ->whereIn('level_id', [1,2,3,4,5])
             ->withCount([
                 'events' => function ($query) use($bySemester) {
                     $query->where('semester_id', $bySemester)
@@ -289,19 +289,26 @@ class Dashboard extends Component
         $current_semester_name = $current_semester->name . ' ( ' . $current_semester->school_year . ' )';
         $this->dispatchBrowserEvent('refreshEventChart', ['refresh' => true , 'data' => $chartData, 'current_semester_name' => $current_semester_name]);
 
-        // for counting Data
+        // Count all schools
+        $schoolsCount = Task::where('office_id', $byOffice)->whereStatus(1)->whereNotIn('level_id',[6,7])->count();
+        // Count all Users
         $usersCount = User::where('office_id', $byOffice)->whereStatus(1)->count();
+        // Count all events
         $eventsCount = Event::whereStatus(1)->where('office_id', $byOffice)->where('semester_id', $bySemester)->count();
+        // Count all weeks of semester
         $weeksCount = Week::whereStatus(1)->where('semester_id', $bySemester)->count();
+        // Count events Kind of visit School only
         $eventsSchoolCount = Event::whereStatus(1)->where('office_id', $byOffice)->where('semester_id', $bySemester)
             ->whereHas('task', function ($q) {$q->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة']);})->count();
+        // Count events Kind of Office day
         $eventsOfficeCount = Event::whereStatus(1)->where('office_id', $byOffice)->where('semester_id', $bySemester)
             ->whereHas('task', function ($q) {$q->where('name','يوم مكتبي' );})->count();
+        // Count events Kind of Training
         $eventsTrainingCount = Event::whereStatus(1)->where('office_id', $byOffice)->where('semester_id', $bySemester)
             ->whereHas('task', function ($q) {$q->where('name','برنامج تدريبي' );})->count();
+        // Count events Kind of Task
         $eventsTaskCount = Event::whereStatus(1)->where('office_id', $byOffice)->where('semester_id', $bySemester)
             ->whereHas('task', function ($q) {$q->where('name','مكلف بمهمة' );})->count();
-        $schoolsCount = Task::where('office_id', $byOffice)->whereStatus(1)->whereNotIn('level_id',[6,7])->count();
 
         // for Data tables
         $offices = Office::whereStatus(true)
