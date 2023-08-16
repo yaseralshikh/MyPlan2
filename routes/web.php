@@ -49,7 +49,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'ro
     Route::get('users', Users::class)->name('users');
     Route::get('events', Events::class )->name('events');
     Route::get('weeks', Weeks::class )->name('weeks');
-    Route::get('tasks', Tasks::class )->name('tasks');
+    Route::get('tasks', Tasks::class )->name('tasks')->middleware('checkOfficeType');
     Route::get('subtasks', SubTasks::class )->name('subtasks');
 });
 

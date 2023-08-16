@@ -122,15 +122,17 @@
                 <li class="nav-header text-secondary" style="border-top: 1px solid #4f5962;">
                     <h6>@lang('site.tasksSection')</h6>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.tasks') }}"
-                        class="nav-link {{ request()->is('admin/tasks') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-tasks"></i>
-                        <p>
-                            @lang('site.tasks')
-                        </p>
-                    </a>
-                </li>
+                @if (auth()->user()->office->office_type == 1)
+                    <li class="nav-item">
+                        <a href="{{ route('admin.tasks') }}"
+                            class="nav-link {{ request()->is('admin/tasks') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-tasks"></i>
+                            <p>
+                                @lang('site.tasks')
+                            </p>
+                        </a>
+                    </li>
+                @endif
                 <li class="nav-item">
                     <a href="{{ route('admin.subtasks') }}"
                         class="nav-link {{ request()->is('admin/subtasks') ? 'active' : '' }}">

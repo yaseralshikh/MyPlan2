@@ -288,7 +288,8 @@ class Tasks extends Component
 
         $office_type = Office::where('id', $byOffice)->pluck('office_type')->first();
 
-        $this->levels = Level::whereIn('id', $office_type == 1 ? [1, 2, 3, 4, 5, 6, 7] : [7])->get();
+        // $this->levels = Level::whereIn('id', $office_type == 1 ? [1, 2, 3, 4, 5, 6, 7] : [7])->get();
+        $this->levels = Level::whereIn('id', auth()->user()->roles[0]->name == "operationsmanager" ? [1, 2, 3, 4, 5, 6, 7] : [1, 2, 3, 4, 5, 6])->get();
 
         // $this->levels = Level::whereIn('id', [1, 2, 3, 4, 5, 6, 7])
         //     ->whereHas('tasks', function ($query) use ($byOffice) {$query->where('office_id', $byOffice);})
@@ -313,7 +314,6 @@ class Tasks extends Component
                 $query->where('level_id', $byLevel);
             })
             ->whereHas('office', function ($query) use ($byGender) {$query->where('gender', $byGender);})
-            //->where('level_id', $byLevel)
             ->search(trim(($searchString)))
             ->orderBy('level_id','ASC')
             ->orderBy('name', 'asc')
