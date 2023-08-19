@@ -227,7 +227,7 @@ class Offices extends Component
         $validatedData = Validator::make($this->data, [
 
 			'education_id'               => 'required',
-			'name'                       => 'required|unique:offices',
+			'name'                       => 'required',
 			'director'                   => 'required',
             'director_signature_path'    => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'assistant_signature_path'   => 'image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -319,7 +319,7 @@ class Offices extends Component
             $validatedData = Validator::make($this->data, [
 
                 'education_id'               => 'required',
-                'name'                       => 'required|unique:offices,name,'.$this->office->id,
+                'name'                       => 'required',
                 'director'                   => 'required',
                 'director_signature_path'    => 'max:2048',
                 'assistant_signature_path'   => 'max:2048',
