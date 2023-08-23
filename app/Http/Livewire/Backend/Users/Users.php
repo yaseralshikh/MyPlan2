@@ -252,9 +252,10 @@ class Users extends Component
             $validatedData['email_verified_at'] = null;
         }
 
-        // Remove 'email_verified_at' key if its value is null
         if ($validatedData['email_verified_at'] == null) {
-            unset($validatedData['email_verified_at']);
+            // Remove 'email_verified_at' key if its value is null
+            //unset($validatedData['email_verified_at']);
+            $validatedData['email_verified_at'] = null;
         }
 
         $this->user->update($validatedData);
