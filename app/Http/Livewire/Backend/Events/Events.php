@@ -41,6 +41,8 @@ class Events extends Component
 
     public $event;
 
+
+    public $byGender = 1;
     public $byOffice = null; //filter by Office_id
     public $byLevel = null; //filter by Office_id
     public $byWeek = null; //filter by week_id
@@ -72,8 +74,10 @@ class Events extends Component
 
     public function update_allowed_create_plans()
     {
+        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
+
         $this->allowed_create_plans === 0 ? 1 : 0;
-        $office = Office::where('id', auth()->user()->office_id)->first();
+        $office = Office::where('id', $byOffice)->first();
 
         $office->update(['allowed_create_plans' => $this->allowed_create_plans]);
 
@@ -307,6 +311,8 @@ class Events extends Component
 
         $week_Id = Week::where('start', '<=', $validatedData['start'])->where('end', '>=', $validatedData['start'])->pluck('id')->first();
 
+        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
+
         $eventStatus = Event::where('task_id', $validatedData['task_id'])->where('start', $validatedData['start'])
             ->whereHas('task', function ($q) {$q->whereNotIn('name', ['إجازة', 'برنامج تدريبي', 'يوم مكتبي', 'مكلف بمهمة']);})
             ->count() <= 0;
@@ -316,7 +322,7 @@ class Events extends Component
             $this->overLapData = [
 
                 'user_id' => $this->data['user_id'],
-                'office_id' => auth()->user()->office_id,
+                'office_id' => $byOffice,
                 'task_id' => $this->data['task_id'],
                 'start' => $this->data['start'],
                 'end' => $this->data['start'],
@@ -338,7 +344,7 @@ class Events extends Component
         } else {
 
             $validatedData['color'] = $color;
-            $validatedData['office_id'] = auth()->user()->office_id;
+            $validatedData['office_id'] = $byOffice;
             $validatedData['semester_id'] = $semester_Id;
             $validatedData['week_id'] = $week_Id;
             $validatedData['end'] = $validatedData['start'];
@@ -457,6 +463,8 @@ class Events extends Component
         $semester_Id = Semester::where('start', '<=', $validatedData['start'])->where('end', '>=', $validatedData['start'])->pluck('id')->first();
         $week_Id = Week::where('start', '<=', $validatedData['start'])->where('end', '>=', $validatedData['start'])->pluck('id')->first();
 
+        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
+
         $eventStatus = Event::where('task_id', $validatedData['task_id'])->where('start', $validatedData['start'])
             ->whereHas('task', function ($q) {$q->whereNotIn('name', ['إجازة', 'برنامج تدريبي', 'يوم مكتبي', 'مكلف بمهمة']);})
             ->count() <= 0;
@@ -466,7 +474,7 @@ class Events extends Component
             $this->overLapData = [
 
                 'user_id' => $this->data['user_id'],
-                'office_id' => auth()->user()->office_id,
+                'office_id' => $byOffice,
                 'task_id' => $this->data['task_id'],
                 'start' => $this->data['start'],
                 'end' => $this->data['start'],
@@ -488,7 +496,7 @@ class Events extends Component
 
         } else {
 
-            $validatedData['office_id'] = auth()->user()->office_id;
+            $validatedData['office_id'] = $byOffice;
             $validatedData['semester_id'] = $semester_Id;
             $validatedData['week_id'] = $week_Id;
             $validatedData['end'] = $validatedData['start'];
@@ -567,7 +575,7 @@ class Events extends Component
 
         $byWeek = $this->byWeek;
         $bySectionType = $this->bySectionType;
-        $byOffice = auth()->user()->office_id;
+        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
 
         if ($byWeek && $bySectionType) {
 
@@ -587,7 +595,7 @@ class Events extends Component
 
             $this->usersPlansIncomplete = User::where('status', true)
                 ->where('section_type_id', $bySectionType)
-                ->where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)
+                ->where('office_id', $byOffice)
                 ->with(['events' => function ($query) use ($byWeek) {
                         $query->where('week_id', $byWeek)->orderBy('start', 'asc');
                     }])
@@ -654,13 +662,15 @@ class Events extends Component
 
         $Office_id = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
 
+        $byGender   =  auth()->user()->roles[0]->name == 'admin' ? auth()->user()->gender : $this->byGender;
+
         $schoolsHasEvents = Event::where('week_id', $week)
             ->pluck('task_id')
             ->toArray();
 
         $this->schoolsWithNoVisits = Task::where('office_id', $Office_id)
             ->whereNotIn('id', array_values($schoolsHasEvents))->whereNotIn('level_id', [7])
-            ->whereHas('office', function ($q) {$q->where('office_type', 1)->where('gender', auth()->user()->gender);})
+            ->whereHas('office', function ($q) use($byGender) {$q->where('office_type', 1)->where('gender', $byGender);})
             ->orderBy('level_id', 'asc')
             ->orderBy('name', 'asc')
             ->get();
@@ -671,7 +681,7 @@ class Events extends Component
     {
         $byWeek = $this->byWeek;
         $bySectionType = $this->bySectionType;
-        $byOffice = auth()->user()->office_id;
+        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
 
         try {
 
@@ -725,7 +735,7 @@ class Events extends Component
         $selectedRows = $this->selectedRows;
         $byWeek = $this->byWeek;
         $bySectionType = $this->bySectionType;
-        $byOffice = auth()->user()->office_id;
+        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
 
         try {
 
@@ -859,10 +869,11 @@ class Events extends Component
     {
         $paginateValue = $this->paginateValue;
         $searchString = $this->searchTerm;
-        $byOffice = auth()->user()->office_id;
+        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
         $byWeek = $this->byWeek;
         $bySectionType = $this->bySectionType;
         $byStatus = $this->byStatus;
+        $byGender   =  auth()->user()->roles[0]->name == 'admin' ? auth()->user()->gender : $this->byGender;
 
         $events = Event::where('status', $byStatus)->where('semester_id', $this->semesterActive())
             ->when($byOffice, function ($query) use ($byOffice) {
@@ -870,9 +881,10 @@ class Events extends Component
             })
             ->when($byWeek, function ($query) use ($byWeek) {
                 $query->where('week_id', $byWeek);
-            })->when($bySectionType, function ($query) use ($bySectionType) {
-                $query->whereHas('user', function ($q) use ($bySectionType) {
-                    $q->where('section_type_id', $bySectionType);
+            })->when($bySectionType, function ($query) use ($bySectionType, $byGender) {
+                $query->whereHas('user', function ($q) use ($bySectionType, $byGender) {
+                    $q->where('section_type_id', $bySectionType)
+                    ->where('gender', $byGender);
                 });
             })
             ->search(trim(($searchString)))
@@ -934,17 +946,21 @@ class Events extends Component
 
     public function render()
     {
+        $byGender   =  auth()->user()->roles[0]->name == 'admin' ? auth()->user()->gender : $this->byGender;
+
+        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
+
         $events = $this->events;
 
         $levels = $this->getLevelsData();
 
         $tasks = $this->getTaskesData();
 
-        $users = User::whereStatus(1)->where('office_id', auth()->user()->office_id)->orderBy('name', 'asc')->get();
+        $users = User::whereStatus(1)->where('office_id', $byOffice)->where('gender', $byGender)->orderBy('name', 'asc')->get();
 
         $weeks = Week::whereStatus(1)->where('semester_id', $this->semesterActive())->get();
 
-        $this->allowed_create_plans = Office::where('id', auth()->user()->office_id)->pluck('allowed_create_plans')->first();
+        $this->allowed_create_plans = Office::where('id', $byOffice)->pluck('allowed_create_plans')->first();
 
         $sctionsType = SectionType::all();
 
@@ -953,7 +969,7 @@ class Events extends Component
             ->toArray();
 
         $offices = Office::whereStatus(true)
-            ->where('gender', auth()->user()->gender)
+            ->where('gender', $byGender)
             ->where('education_id', auth()->user()->office->education->id)
             //->whereIn('id', array_merge($education_offices, [auth()->user()->office->id]))
             ->get();

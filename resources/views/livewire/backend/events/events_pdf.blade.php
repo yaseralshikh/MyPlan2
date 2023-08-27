@@ -127,9 +127,9 @@
 
                 <div class="content">
                     <div style="padding-bottom: 0.30cm">
-                        <h3 style="font-size: 30px;">تكليف مشرف تربوي</h3>
-                        <h3>المكرم المشرف التربوي : <span style="font-size: 22px;background-color:#f4f4f4;">&nbsp;{{ $user->name
-                                }}&nbsp;</span> &nbsp;&nbsp;&nbsp;وفقه الله</h3>
+                        <h3 style="font-size: 30px;">تكليف {{ $user->gender == 1 ? 'مشرف تربوي' : 'مشرفة تربوية' }}</h3>
+                        <h3>{{ $user->gender == 1 ? 'المكرم المشرف التربوي' : 'المكرمة المشرفة التربوية' }} : <span style="font-size: 22px;background-color:#f4f4f4;">&nbsp;{{ $user->name
+                                }}&nbsp;</span> &nbsp;&nbsp;&nbsp;{{ $user->gender == 1 ? 'وفقه الله' : 'وفقها الله' }}</h3>
                         <h3>السلام عليكم ورحمة الله وبركاته</h3>
                         <h3>اعتمدوا القيام بالزيارات والمهام المحددة أدناه، سائلين الله لكم التوفيق</h3>
                     </div>

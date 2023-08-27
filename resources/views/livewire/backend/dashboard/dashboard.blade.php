@@ -581,16 +581,16 @@
                     series: [{
                         name: 'المهام المنفذة',
                         data: counts,
-                        //cursor: 'pointer',
-                        // events: {
-                        //     click: function (event) {
-                        //         // Get the current xAxis name
-                        //         const xAxisName = names[event.point.x];
-                        //         // Redirect to the desired route with the xAxis name
-                        //         //window.open('../admin/events/'+ xAxisName);
-                        //         Livewire.emit('openRoute', xAxisName);
-                        //     }
-                        // },
+                        cursor: 'pointer',
+                        events: {
+                            click: function (event) {
+                                // Get the current xAxis name
+                                const xAxisName = names[event.point.x];
+                                // Redirect to the desired route with the xAxis name
+                                window.open('../admin/events/?searchTerm='+ xAxisName, '_self');
+                                //Livewire.emit('../admin/events/?searchTerm=', xAxisName);
+                            }
+                        },
                         colorByPoint: true,
                         format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
                         useHTML: true,
@@ -686,16 +686,16 @@
                             series: [{
                                 name: 'المهام المنفذة',
                                 data: counts,
-                                //cursor: 'pointer',
-                                // events: {
-                                //     click: function (event) {
-                                //         // Get the current xAxis name
-                                //         const xAxisName = names[event.point.x];
-                                //         // Redirect to the desired route with the xAxis name
-                                //         //window.open('../admin/events/'+ xAxisName);
-                                //         Livewire.emit('openRoute', xAxisName);
-                                //     }
-                                // },
+                                cursor: 'pointer',
+                                events: {
+                                    click: function (event) {
+                                        // Get the current xAxis name
+                                        const xAxisName = names[event.point.x];
+                                        // Redirect to the desired route with the xAxis name
+                                        window.open('../admin/events/?searchTerm='+ xAxisName, '_self');
+                                        //Livewire.emit('../admin/events/?searchTerm=', xAxisName);
+                                    }
+                                },
                                 colorByPoint: true,
                                 format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
                                 useHTML: true,

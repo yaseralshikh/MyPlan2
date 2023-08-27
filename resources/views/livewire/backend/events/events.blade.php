@@ -191,6 +191,27 @@
                             </select>
                         </div>
 
+                        @role('superadmin|operationsmanager')
+                        {{-- offices Filter --}}
+                        <div>
+                            <select dir="rtl" name="office_id" wire:model="byOffice"
+                                class="form-control form-control-sm">
+                                <option value="" selected>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
+                                @foreach ($offices as $office)
+                                <option value="{{ $office->id }}">{{ $office->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        {{-- byGender Filter --}}
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" wire:model="byGender" class="custom-control-input"
+                                id="customSwitchByGender">
+                            <label dir="rtl" class="custom-control-label"
+                                for="customSwitchByGender">@lang('site.gender') ( بنين ) </label>
+                        </div>
+                        @endrole
+
                         {{-- Status Filter --}}
                         <div class="custom-control custom-switch">
                             <input type="checkbox" wire:model="byStatus" class="custom-control-input"
@@ -588,7 +609,7 @@
         </div>
     </div>
 
-    <!-- Modal show Users whose plans are incomplete -->
+    <!-- Modal show Users whose plans are Incomplete -->
 
     <div dir="rtl" class="modal fade" id="UsersPlansIncompleteModal" data-keyboard="false" data-backdrop="static"
         role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
@@ -610,14 +631,15 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $index =0;
+                                @endphp
                                 @forelse ($usersPlansIncomplete as $user)
                                     <tr>
                                         @if ($user->events->count() < $workDaysOfTheWeek )
-                                            <td class="align-middle">{{ $loop->iteration }}</td>
+                                            <td class="align-middle">{{ $index += 1 }}</td>
                                             <td class="align-middle">{{ $user->name }}</span></td>
                                             <td class="align-middle"><span style="color:red">( {{ $user->events->count() }} )</span></td>
-                                        @else
-                                            <td colspan="3" class="text-center">@lang('site.noReviews')</td>
                                         @endif
                                     </tr>
                                 @empty

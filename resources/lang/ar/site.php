@@ -197,7 +197,7 @@ return [
     'day' => 'اليوم',
     'eventsStatus' => 'الخطط الغير معتمدة',
     'eventsTaskDone' => 'الخطط الغير منفذة',
-    'usersPlansIncomplete' => '! مشرفين خططهم غير مكتملة',
+    'usersPlansIncomplete' => 'مشرفين خططهم غير مكتملة !',
     'plansCount' => 'عدد الخطط المدخلة',
     'close' => 'إغلاق',
     'schoolsWithNoVisits' => '! مدارس لم تدرج في خطة هذا الاسبوع',
