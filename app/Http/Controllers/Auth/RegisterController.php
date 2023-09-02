@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use App\Rules\Recaptcha;
 use App\Rules\ArabicText;
+use App\Rules\MobileNumber;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Providers\RouteServiceProvider;
@@ -60,6 +61,7 @@ class RegisterController extends Controller
             'section_type_id'       => ['required'],
             'gender'                => ['required'],
             'email'                 => ['required', 'string', 'email', 'regex:/@moe\.gov.sa$/i', 'max:255', 'unique:users'],
+            'mobile'                => ['required', new MobileNumber],
             'password'              => ['required', 'string', 'min:8', 'confirmed'],
             'g-recaptcha-response'  => ['required', new Recaptcha],
         ]);
@@ -76,6 +78,7 @@ class RegisterController extends Controller
         $user = User::create([
             'name'              => $data['name'],
             'email'             => $data['email'],
+            'mobile'            => $data['mobile'],
             'specialization_id' => $data['specialization_id'],
             'office_id'         => $data['office_id'],
             'job_type_id'       => $data['job_type_id'],

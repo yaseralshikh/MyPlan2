@@ -26,6 +26,7 @@ class User extends Authenticatable implements LaratrustUser , MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
+        'mobile',
         'specialization_id',
         'office_id',
         'job_type_id',

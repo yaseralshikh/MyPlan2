@@ -65,10 +65,13 @@
                         <th>م</th>
                         <th>الاسم</th>
                         <th>البريد الإلكتروني</th>
+                        <th>الجوال</th>
                         <th>ألتخصص</th>
                         <th>العمل الحالي</th>
                         <th>المرجع الإداري</th>
-                        <th>الادارة / مكتب التعليم</th>
+                        @if (auth()->user()->roles[0]->name != 'admin')
+                            <th>الادارة / مكتب التعليم</th>
+                        @endif
                         <th>توثيق البريد الإلكتروني</th>
                         <th>الحالة</th>
                     </tr>
@@ -79,10 +82,13 @@
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
+                            <td>{{ $user->mobile }}</td>
                             <td>{{ $user->specialization->name }}</td>
                             <td>{{ $user->job_type->name }}</td>
                             <td>{{ $user->section_type->name }}</td>
-                            <td>{{ $user->office->name }}</td>
+                            @if (auth()->user()->roles[0]->name !=  'admin')
+                                <td>{{ $user->office->name }}</td>
+                            @endif
                             <td style="color:{{ $user->email_verified_at ? '' : 'red' }};">{{ $user->email_verified_at ? 'موثق' : 'غير موثق' }}</td>
                             <td style="color:{{ $user->status ? '' : 'red' }}">{{ $user->status() }}</td>
                         </tr>

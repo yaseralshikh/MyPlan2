@@ -299,6 +299,20 @@
                                     @enderror
                                 </div>
 
+                                <!-- Modal User Email -->
+
+                                <div class="form-group">
+                                    <label for="mobile">@lang('site.mobile')</label>
+                                    <input type="number" wire:model.defer="data.mobile"
+                                        class="form-control @error('mobile') is-invalid @enderror" id="mobile"
+                                        aria-describedby="mobilelHelp" placeholder="@lang('site.enterMobile')">
+                                    @error('mobile')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
                                 <!-- Modal User Office -->
                                 @role('superadmin|operationsmanager')
                                 <div class="form-group">
@@ -496,6 +510,9 @@
                                 </li>
                                 <li class="list-group-item">
                                     <b class="float-right">@lang('site.email') :</b> <a>{{ $data['email'] ?? '' }}</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <b class="float-right">@lang('site.mobile') :</b> <a>{{ $data['mobile'] ?? '' }}</a>
                                 </li>
                                 <li class="list-group-item">
                                     <b class="float-right">@lang('site.memberSince') :</b> <a>{{

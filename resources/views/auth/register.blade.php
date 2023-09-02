@@ -62,6 +62,22 @@
                         </span>
                         @enderror
                     </div>
+                    <!-- Mobile number -->
+                    <div class="input-group mb-3">
+                        <input type="number" id="mobile" class="form-control @error('mobile') is-invalid @enderror"
+                            placeholder="@lang('site.mobile')" name="mobile" value="{{ old('mobile') }}" required
+                            autocomplete="mobile" autofocus>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-mobile"></span>
+                            </div>
+                        </div>
+                        @error('mobile')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
                     <!-- Gender -->
                     <div class="input-group mb-3">
                         <select name="gender" class="custom-select gender-education-select @error('gender') is-invalid @enderror"

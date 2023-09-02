@@ -16,6 +16,7 @@ use App\Rules\EventOverLap;
 use App\Rules\NoteRequired;
 use App\Rules\DateOutService;
 use App\Models\Specialization;
+use App\Rules\MobileNumber;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -63,7 +64,8 @@ class Calendar extends Component
 
         $validatedData = Validator::make($this->profileData, [
             'name'              => ['required', 'string', 'max:255', new ArabicText, 'unique:users,name,'.$this->profileData['id']],
-            'email'             => 'required|email|unique:users,email,' . $this->userProfile->id,
+            'email'             => ['required', 'string', 'email', 'regex:/@moe\.gov.sa$/i', 'max:50', 'unique:users,email,'.$this->userProfile->id],
+            'mobile'            => ['required', new MobileNumber],
             'specialization_id' => 'required',
             'email_verified_at' => 'nullable',
             'password'          => 'sometimes|confirmed',

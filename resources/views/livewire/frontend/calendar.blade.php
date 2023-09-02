@@ -100,6 +100,11 @@
                     </tfoot> --}}
                 </table>
             </div>
+            @if (auth()->user()->mobile == null)
+                <div dir="rtl" class="alert alert-warning text-center text-danger" role="alert" data-aos="fade-up">
+                    <strong>الرجاء اضافة رقم الجوال للملف الشخصي للأهمية وشكراً!</strong>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -403,9 +408,23 @@
                                     @enderror
                                 </div>
 
-                                <!-- Modal User Specialization -->
+                                <!-- Modal User Mobile -->
 
                                 <div class="form-group">
+                                    <label for="mobile">@lang('site.mobile') *</label>
+                                    <input type="number" wire:model.defer="profileData.mobile"
+                                        class="form-control @error('mobile') is-invalid @enderror" id="mobile"
+                                        aria-describedby="emailHelp" placeholder="@lang('site.enterMobile')">
+                                    @error('mobile')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Modal User Specialization -->
+
+                                {{-- <div class="form-group">
                                     <label for="specialization_id">@lang('site.specialization') *</label>
                                     <select id="specialization_id"
                                         class="form-control @error('specialization_id') is-invalid @enderror"
@@ -421,7 +440,7 @@
                                         {{ $message }}
                                     </div>
                                     @enderror
-                                </div>
+                                </div> --}}
 
                                 <!-- Modal User Password -->
 

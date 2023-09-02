@@ -51,6 +51,7 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
             $user->id ? $this->index : '',
             $user->name,
             $user->email,
+            $user->mobile,
             $user->specialization->name,
             $user->job_type->name,
             $user->section_type->name,
@@ -66,6 +67,7 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
             'م',
             'الاسم',
             'البريد الإلكتروني',
+            'الجوال',
             'التخصص',
             'العمل الحالي',
             'المرجع الإداري',
@@ -95,7 +97,7 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange = 'A1:I1'; // All headers
+                $cellRange = 'A1:J1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray(
                     array(
