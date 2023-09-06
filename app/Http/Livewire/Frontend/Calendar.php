@@ -145,19 +145,25 @@ class Calendar extends Component
             $users = User::where('office_id', auth()->user()->office_id)->whereStatus(1)->get();
 
             foreach ($users as $user) {
-                Event::create([
-                    'user_id' => $user->id,
-                    'office_id' => $user->office_id,
-                    'semester_id' => $semester_Id,
-                    'week_id' => $week_Id,
-                    'task_id' => $this->task_id,
-                    'note' => $this->note,
-                    'start' => $this->start,
-                    'end' => $this->end,
-                    'color' => $color,
-                    'status' => 1,
-                ]);
+
+                $event = Event::where('start', $this->start)->where('user_id', $user->id)->count() == 0;
+
+                if ($event) {
+                    Event::create([
+                        'user_id' => $user->id,
+                        'office_id' => $user->office_id,
+                        'semester_id' => $semester_Id,
+                        'week_id' => $week_Id,
+                        'task_id' => $this->task_id,
+                        'note' => $this->note,
+                        'start' => $this->start,
+                        'end' => $this->end,
+                        'color' => $color,
+                        'status' => 1,
+                    ]);
+                }
             }
+            
         } else {
 
             Event::create([
