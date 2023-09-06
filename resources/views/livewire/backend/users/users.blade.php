@@ -36,16 +36,19 @@
             <div class="card">
                 <div class="card-header bg-light">
                     <h3 class="card-title">
-                        <button wire:click.prevent='addNewUser' class="ml-1 btn btn-sm btn-primary" {{  auth()->user()->hasPermission('users-create') ? '' : 'disabled' }}>
+                        <button wire:click.prevent='addNewUser' class="ml-1 btn btn-sm btn-primary" {{
+                            auth()->user()->hasPermission('users-create') ? '' : 'disabled' }}>
                             <i class="mr-2 fa fa-plus-circle" aria-hidden="true">
                                 <span>@lang('site.addRecord', ['name' => 'مستخدم'])</span>
                             </i>
                         </button>
 
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('users-read') ? '' : 'disabled' }}>@lang('site.action')</button>
-                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon"
-                                {{  auth()->user()->hasPermission('users-read') ? '' : 'disabled' }}
+                            <button type="button" class="btn btn-primary btn-sm" {{
+                                auth()->user()->hasPermission('users-read') ? '' : 'disabled'
+                                }}>@lang('site.action')</button>
+                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon" {{
+                                auth()->user()->hasPermission('users-read') ? '' : 'disabled' }}
                                 data-toggle="dropdown" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
@@ -64,6 +67,13 @@
                                     wire:click.prevent="setAllAsActive" href="#">@lang('site.setActive')</a>
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
                                     wire:click.prevent="setAllAsInActive" href="#">@lang('site.setInActive')</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
+                                wire:click.prevent="setAllAs_EmailVerified"
+                                href="#">@lang('site.EmailVerified')</a>
+                                <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
+                                    wire:click.prevent="setAllAsNot_EmailVerified"
+                                    href="#">@lang('site.Not_EmailVerified')</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item {{ $selectedRows && auth()->user()->hasPermission('users-delete') ? 'text-danger' : 'disabled-link' }}  delete-confirm"
                                     wire:click.prevent="deleteSelectedRows" href="#">@lang('site.deleteSelected')</a>
@@ -123,14 +133,14 @@
                     </div>
 
                     @if ($selectedRows)
-                        <span class="mb-2 text-success">
-                            <i class="fa fa-user" aria-hidden="true"></i>
-                            selected
-                            <span class="text-dark font-weight-bold">{{ count($selectedRows) }}</span> {{
-                            Str::plural('user', count($selectedRows)) }}
-                            <a class="ml-2 text-gray" href="" wire:click="resetSelectedRows" data-toggle="tooltip"
-                                data-placement="top" title="Reset Selected Rows"><i class="fas fa-times"></i></a>
-                        </span>
+                    <span class="mb-2 text-success">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        selected
+                        <span class="text-dark font-weight-bold">{{ count($selectedRows) }}</span> {{
+                        Str::plural('user', count($selectedRows)) }}
+                        <a class="ml-2 text-gray" href="" wire:click="resetSelectedRows" data-toggle="tooltip"
+                            data-placement="top" title="Reset Selected Rows"><i class="fas fa-times"></i></a>
+                    </span>
                     @endif
 
                     <div class="table-responsive" data-aos="fade-up" wire:ignore.self>
@@ -180,7 +190,8 @@
                                     <td>{{ $user->job_type->name }}</td>
                                     <td>{{ $user->section_type->name }}</td>
                                     <td class="align-middle">
-                                        <select class="form-control form-control-sm" {{ $user->roles[0]->name == 'operationsmanager' ? 'disabled' : ''}}
+                                        <select class="form-control form-control-sm" {{ $user->roles[0]->name ==
+                                            'operationsmanager' ? 'disabled' : ''}}
                                             wire:change='updateUserRole({{ $user }}, $event.target.value)'>
                                             @foreach ($roles as $role)
                                             <option value="{{ $role->id }}" {{ $user->roles[0]->name == $role->name ?
@@ -204,17 +215,20 @@
                                         <div class="btn-group btn-group-sm">
                                             {{-- users-update --}}
                                             <button wire:click.prevent="edit({{ $user }})"
-                                                class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('users-update') ? '' : 'disabled' }}>
+                                                class="btn btn-primary btn-sm" {{
+                                                auth()->user()->hasPermission('users-update') ? '' : 'disabled' }}>
                                                 <i class="fa fa-edit"></i>
                                             </button>
                                             {{-- users-read --}}
                                             <button wire:click.prevent="show({{ $user }})"
-                                                class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('users-read') ? '' : 'disabled' }}>
+                                                class="btn btn-primary btn-sm" {{
+                                                auth()->user()->hasPermission('users-read') ? '' : 'disabled' }}>
                                                 <i class="fa fa-user"></i>
                                             </button>
                                             {{-- users-delete --}}
                                             <button wire:click.prevent="confirmUserRemoval({{ $user->id }})"
-                                                class="btn btn-danger btn-sm" {{  auth()->user()->hasPermission('users-delete') ? '' : 'disabled' }}>
+                                                class="btn btn-danger btn-sm" {{
+                                                auth()->user()->hasPermission('users-delete') ? '' : 'disabled' }}>
                                                 <i class="fa fa-trash bg-danger"></i>
                                             </button>
                                         </div>
@@ -273,7 +287,7 @@
 
                                 <!-- Modal User Full Name -->
 
-                                <div  class="form-group">
+                                <div class="form-group">
                                     <label for="name">@lang('site.fullName')</label>
                                     <input dir="rtl" type="text" wire:model.defer="data.name"
                                         class="form-control @error('name') is-invalid @enderror" id="name"
@@ -356,9 +370,11 @@
 
                                 <div class="form-group">
                                     <label for="job_type_id">@lang('site.type')</label>
-                                    <select id="job_type_id" class="form-control @error('job_type_id') is-invalid @enderror"
+                                    <select id="job_type_id"
+                                        class="form-control @error('job_type_id') is-invalid @enderror"
                                         wire:model.defer="data.job_type_id">
-                                        <option hidden selected>@lang('site.choise', ['name' => 'العمل الحالي'])</option>
+                                        <option hidden selected>@lang('site.choise', ['name' => 'العمل الحالي'])
+                                        </option>
                                         @foreach ($jobs_type as $job_type)
                                         <option class="bg-light" value="{{ $job_type->id }}">{{ $job_type->name }}
                                         </option>
@@ -375,11 +391,14 @@
 
                                 <div class="form-group">
                                     <label for="section_type_id">@lang('site.sectionType')</label>
-                                    <select id="section_type_id" class="form-control @error('section_type_id') is-invalid @enderror"
+                                    <select id="section_type_id"
+                                        class="form-control @error('section_type_id') is-invalid @enderror"
                                         wire:model.defer="data.section_type_id">
-                                        <option hidden selected>@lang('site.choise', ['name' => 'المرجع الإداري'])</option>
+                                        <option hidden selected>@lang('site.choise', ['name' => 'المرجع الإداري'])
+                                        </option>
                                         @foreach ($section_types as $section)
-                                            <option class="bg-light" value="{{ $section->id }}">{{ $section->name }}</option>
+                                        <option class="bg-light" value="{{ $section->id }}">{{ $section->name }}
+                                        </option>
                                         @endforeach
                                     </select>
                                     @error('section_type_id')
@@ -397,7 +416,8 @@
                                         wire:model.defer="data.gender">
                                         <option hidden selected>@lang('site.gender')</option>
                                         @foreach ($genders as $gender)
-                                            <option class="bg-light" value="{{ $gender['id'] }}">{{ $gender['name'] }}</option>
+                                        <option class="bg-light" value="{{ $gender['id'] }}">{{ $gender['name'] }}
+                                        </option>
                                         @endforeach
                                     </select>
                                     @error('gender')
@@ -408,23 +428,25 @@
                                 </div>
 
                                 <!-- Modal email_verified_at -->
-                                @role('operationsmanager')
+                                {{-- @role('operationsmanager')
                                 <div class="form-group">
                                     <label for="email_verified_at">@lang('site.emailVerified')</label>
-                                    <input type="datetime-local" class="form-control @error('email_verified_at') is-invalid @enderror"
-                                            id="email_verified_at" wire:model.defer="data.email_verified_at">
+                                    <input type="datetime-local"
+                                        class="form-control @error('email_verified_at') is-invalid @enderror"
+                                        id="email_verified_at" wire:model.defer="data.email_verified_at">
                                     @error('email_verified_at')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
                                     @enderror
                                 </div>
-                                @endrole
+                                @endrole --}}
 
                                 <!-- Modal User Password -->
 
                                 <div class="form-group">
-                                    <label for="password">@lang('site.password'){{ $showEditModal ? ' ( اختياري )' : '' }}</label>
+                                    <label for="password">@lang('site.password'){{ $showEditModal ? ' ( اختياري )' : ''
+                                        }}</label>
                                     <input type="password" wire:model.defer="data.password"
                                         class="form-control @error('password') is-invalid @enderror" id="password"
                                         placeholder="@lang('site.enterPassword')">
@@ -439,7 +461,8 @@
                                 <!-- Modal User Password Confirmation -->
 
                                 <div class="form-group">
-                                    <label for="passwordConfirmation">@lang('site.passwordConfirmation'){{ $showEditModal ? ' ( اختياري )' : '' }}</label>
+                                    <label for="passwordConfirmation">@lang('site.passwordConfirmation'){{
+                                        $showEditModal ? ' ( اختياري )' : '' }}</label>
                                     <input type="password" wire:model.defer="data.password_confirmation"
                                         class="form-control" id="passwordConfirmation"
                                         placeholder="@lang('site.enterConfirmPassword')">
@@ -503,10 +526,12 @@
                                         $data['specialization'] ?? '' }}</a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b class="float-right">@lang('site.type') : </b> <a>{{ $data['job_type'] ?? '' }}</a>
+                                    <b class="float-right">@lang('site.type') : </b> <a>{{ $data['job_type'] ?? ''
+                                        }}</a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b class="float-right">@lang('site.sectionType') : </b> <a>{{ $data['section_type'] ?? '' }}</a>
+                                    <b class="float-right">@lang('site.sectionType') : </b> <a>{{ $data['section_type']
+                                        ?? '' }}</a>
                                 </li>
                                 <li class="list-group-item">
                                     <b class="float-right">@lang('site.email') :</b> <a>{{ $data['email'] ?? '' }}</a>
@@ -612,4 +637,3 @@
     @endsection
 
 </div>
-
