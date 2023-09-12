@@ -41,6 +41,8 @@ class Calendar extends Component
 
     public $weeks = [];
 
+    public $schoolsHasEvents  = [];
+
     // update User Profile
 
     public $profileData = [];
@@ -163,7 +165,7 @@ class Calendar extends Component
                     ]);
                 }
             }
-            
+
         } else {
 
             Event::create([
@@ -372,6 +374,10 @@ class Calendar extends Component
 
     public function LevelOption()
     {
+        $this->schoolsHasEvents = null;
+
+        $this->schoolsHasEvents = Event::where('start', $this->start)->pluck('task_id')->toArray();
+
         $this->getTaskesData();
     }
 
@@ -392,6 +398,7 @@ class Calendar extends Component
 
         $this->tasks = Task::where('office_id', $officeId)
             ->whereStatus(1)->where('level_id', $this->level_id)
+            ->whereNotIn('id', array_values($this->schoolsHasEvents))->whereNotIn('level_id', [7])
             ->orderBy('level_id', 'asc')
             ->orderBy('name', 'asc')
             ->get();

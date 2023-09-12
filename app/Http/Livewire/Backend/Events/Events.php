@@ -662,7 +662,7 @@ class Events extends Component
 
         $Office_id = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
 
-        $byGender   =  auth()->user()->roles[0]->name == 'admin' ? auth()->user()->gender : $this->byGender;
+        $byGender  =  auth()->user()->roles[0]->name == 'admin' ? auth()->user()->gender : $this->byGender;
 
         $schoolsHasEvents = Event::where('week_id', $week)
             ->pluck('task_id')

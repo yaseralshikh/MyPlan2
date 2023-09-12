@@ -94,12 +94,13 @@
                     {{-- <tfoot>
                         <tr>
                         <td colspan="12">
-                            <h6>hi</h6>
+                            <h1>hi</h1>
                         </td>
                         </tr>
                     </tfoot> --}}
                 </table>
             </div>
+
             @if (auth()->user()->mobile == null)
                 <div dir="rtl" class="alert alert-warning text-center text-danger" role="alert" data-aos="fade-up">
                     <strong>الرجاء اضافة رقم الجوال للملف الشخصي للأهمية وشكراً!</strong>
