@@ -376,7 +376,10 @@ class Calendar extends Component
     {
         $this->schoolsHasEvents = null;
 
-        $this->schoolsHasEvents = Event::where('start', $this->start)->pluck('task_id')->toArray();
+        $this->schoolsHasEvents = Event::where('start', $this->start)
+            ->whereHas('task', function ($query) {$query->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة']);})
+            ->pluck('task_id')
+            ->toArray();
 
         $this->getTaskesData();
     }
@@ -388,7 +391,7 @@ class Calendar extends Component
 
         $this->levels = Level::whereIn('id', [1,2,3,4,5,6, $user_office_id == $officeId ? 7 : ''])
             ->whereHas('tasks', function ($query) use ($officeId) {
-            $query->where('office_id', $officeId);})
+                $query->where('office_id', $officeId);})
             ->get();
     }
 
@@ -398,7 +401,7 @@ class Calendar extends Component
 
         $this->tasks = Task::where('office_id', $officeId)
             ->whereStatus(1)->where('level_id', $this->level_id)
-            ->whereNotIn('id', array_values($this->schoolsHasEvents))->whereNotIn('level_id', [7])
+            ->whereNotIn('id', array_values($this->schoolsHasEvents))
             ->orderBy('level_id', 'asc')
             ->orderBy('name', 'asc')
             ->get();
