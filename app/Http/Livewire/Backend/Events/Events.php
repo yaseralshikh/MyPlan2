@@ -922,7 +922,7 @@ class Events extends Component
 
         $byOffice = $selected_office_id ? $selected_office_id : $user_office_id;
 
-        $this->levels = Level::whereIn('id', [1, 2, 3, 4, 5, 6, $user_office_id == $byOffice ? 7 : ''])
+        $this->levels = Level::whereIn('id', [1, 2, 3, 4, 5, 6, 8, $user_office_id == $byOffice ? 7 : ''])
             ->whereHas('tasks', function ($query) use ($byOffice) {$query->where('office_id', $byOffice);})
             ->get();
     }

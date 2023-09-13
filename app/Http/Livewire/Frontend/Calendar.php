@@ -389,7 +389,7 @@ class Calendar extends Component
         $user_office_id = auth()->user()->office_id;
         $officeId = $this->office_id ? $this->office_id : $user_office_id;
 
-        $this->levels = Level::whereIn('id', [1,2,3,4,5,6, $user_office_id == $officeId ? 7 : ''])
+        $this->levels = Level::whereIn('id', [1,2,3,4,5,6,8, $user_office_id == $officeId ? 7 : ''])
             ->whereHas('tasks', function ($query) use ($officeId) {
                 $query->where('office_id', $officeId);})
             ->get();

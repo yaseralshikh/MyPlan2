@@ -118,6 +118,9 @@
                                         @lang('site.level')
                                     </th>
                                     <th>
+                                        @lang('site.count')
+                                    </th>
+                                    <th>
                                         @lang('site.status')
                                     </th>
                                     <th class="no-sort" colspan="2">@lang('site.action')</th>
@@ -134,7 +137,8 @@
                                         </div>
                                     </td>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $level->name }}</td>
+                                    <td data-toggle="tooltip" data-placement="top" title="@lang('site.id') : {{ $level->id }}">{{ $level->name }}</td>
+                                    <td>{{ $level->tasks->where('office_id', auth()->user()->office_id)->count() }}</td>
                                     <td>
                                         <span
                                             class="font-weight-bold badge text-white {{ $level->status == 1 ? 'bg-success' : 'bg-secondary' }}">
