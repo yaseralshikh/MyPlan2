@@ -228,6 +228,17 @@
                             </p>
                         </a>
                     </li>
+                    {{-- DownloadDatabase --}}
+                    <li class="nav-item">
+                        <a href="{{ route('admin.DownloadDatabase') }}"
+                            target="_blank"
+                            class="nav-link">
+                            <i class="nav-icon far fa-file-archive"></i>
+                            <p>
+                                @lang('site.DownloadDatabase')
+                            </p>
+                        </a>
+                    </li>
                 @endrole
 
             </ul>

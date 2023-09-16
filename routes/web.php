@@ -12,6 +12,7 @@ use App\Http\Livewire\Backend\Offices\Offices;
 use App\Http\Livewire\Backend\JobTypes\JobTypes;
 use App\Http\Livewire\Backend\SubTasks\SubTasks;
 use App\Http\Controllers\OfficeDropdownController;
+use App\Http\Controllers\DatabaseController;
 use App\Http\Livewire\Backend\Dashboard\Dashboard;
 use App\Http\Livewire\Backend\Education\Education;
 use App\Http\Livewire\Backend\Semesters\Semesters;
@@ -63,5 +64,5 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'ro
     Route::get('section_types', SectionTypes::class )->name('section_types');
     Route::get('specializations', Specializations::class )->name('specializations');
     Route::get('/log-viewer', [LogViewerController::class, 'index'])->name('log-viewer');
-
+    Route::get('/download-database', [DatabaseController::class, 'downloadDatabase'])->name('DownloadDatabase');
 });
