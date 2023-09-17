@@ -165,6 +165,8 @@ class Tasks extends Component
 
     public function createTask()
     {
+        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
+
         $validatedData = Validator::make($this->data, [
 			'name'                  => 'required|unique:tasks',
 			'office_id'             => 'nullable',
@@ -172,7 +174,7 @@ class Tasks extends Component
 		])->validate();
 
         if(empty($validatedData['office_id'])) {
-            $validatedData['office_id'] = auth()->user()->office_id;
+            $validatedData['office_id'] = $byOffice;
         }
 
 		Task::create($validatedData);
