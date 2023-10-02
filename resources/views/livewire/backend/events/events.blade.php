@@ -18,7 +18,7 @@
 
         #event-table th,
         #event-table td {
-            border: 1px solid #ddd;
+            border: 2px 1px solid #ddd;
             padding: 8px;
         }
     </style>
@@ -668,15 +668,20 @@
         role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header bg-light">
+                {{-- <div class="modal-header bg-light">
                     <h5>@lang('site.usersPlansIncomplete')</h5>
-                </div>
+                </div> --}}
 
-                <div class="modal-body">
+                <div class="modal-body" id="capture">
                     <div class="table-responsive">
                         <table id="example2" class="table text-center table-bordered table-hover dtr-inline sortable"
                             aria-describedby="example2_info">
                             <thead class="bg-light ">
+                                <tr>
+                                    <th class="no-sort" colspan="3">
+                                        <h5>@lang('site.usersPlansIncomplete')</h5>
+                                    </th>
+                                </tr>
                                 <tr>
                                     <th class="no-sort">#</th>
                                     <th>@lang('site.name')</th>
@@ -707,6 +712,7 @@
                 </div>
 
                 <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-success" onclick="takeScreenshot()"><i class="fa fa-camera"></i> @lang('site.Screenshot')</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
                             class="mr-1 fa fa-times"></i> @lang('site.close')</button>
                 </div>
@@ -790,6 +796,8 @@
 
     {{-- <script src="{{ asset('backend/js/jquery.printPage.js') }}" type="text/javascript"></script> --}}
 
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
     <script>
         $(document).ready(function() {
 
@@ -872,6 +880,19 @@
                 }
             })
         })
+    </script>
+
+    <script>
+        function takeScreenshot() {
+            var element = document.getElementById('capture');
+            html2canvas(element).then(function(canvas) {
+                var imgData = canvas.toDataURL('image/jpeg');
+                var a = document.createElement('a');
+                a.href = imgData;
+                a.download = 'downloaded_image.jpg';
+                a.click();
+            });
+        }
     </script>
 
     @endsection
