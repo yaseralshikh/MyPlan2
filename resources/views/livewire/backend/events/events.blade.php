@@ -15,6 +15,12 @@
         .hover-item:hover {
             background-color: rgb(174, 172, 172);
         }
+
+        #event-table th,
+        #event-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
     </style>
     @endsection
 
@@ -51,9 +57,11 @@
                             </i>
                         </button>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm" {{ auth()->user()->hasPermission('events-read') ? '' : 'disabled' }}>@lang('site.action')</button>
-                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon"
-                                {{ auth()->user()->hasPermission('events-read') ? '' : 'disabled' }}
+                            <button type="button" class="btn btn-primary btn-sm" {{
+                                auth()->user()->hasPermission('events-read') ? '' : 'disabled'
+                                }}>@lang('site.action')</button>
+                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon" {{
+                                auth()->user()->hasPermission('events-read') ? '' : 'disabled' }}
                                 data-toggle="dropdown" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
@@ -111,6 +119,10 @@
                                 <label class="custom-control-label"
                                     for="customSwitchallowed_create_plans">@lang('site.allowed_create_plans')</label>
                             </div>
+                            <a class="btn btn-default btn-sm ml-3"
+                                onclick="window.scrollTo(0, document.body.scrollHeight)">
+                                <i class="fas fa-arrow-circle-down"></i>
+                            </a>
                             {{-- <a href="#" class="btn btn-outline-secondary btn-sm hover-item" data-toggle="tooltip"
                                 data-placement="top" title="@lang('site.exportExcel')" wire:click.prevent="exportExcel">
                                 <i class="fa fa-file-excel text-success"></i>
@@ -157,6 +169,21 @@
                             </div>
                         </div>
 
+                        {{-- OrderBy Filter --}}
+                        <div>
+                            <select dir="rtl" wire:model="byOrderBy" class="form-control form-control-sm">
+                                <option disabled selected>@lang('site.choise', [ 'name' => 'الفرز المناسب'])</option>
+                                <option value="user_id" selected>@lang('site.name')</option>
+                                <option value="task_id" selected>@lang('site.task')</option>
+                                <option value="note" selected>@lang('site.note')</option>
+                                <option value="start" selected>@lang('site.date')</option>
+                                <option value="week_id" selected>@lang('site.schoolWeek')</option>
+                                <option value="created_at" selected>@lang('site.createdAt')</option>
+                                <option value="status" selected>@lang('site.status')</option>
+                                <option value="task_done" selected>@lang('site.taskDone')</option>
+                            </select>
+                        </div>
+
                         {{-- Paginate Filter --}}
                         <div>
                             <select dir="rtl" wire:model="paginateValue" class="form-control form-control-sm">
@@ -170,7 +197,7 @@
                         {{-- Week Filter --}}
                         <div>
                             <select dir="rtl" name="week_id" wire:model="byWeek"
-                                class="form-control form-control-sm mr-5">
+                                wire:click="resetSelectedRows" class="form-control form-control-sm mr-5">
                                 <option value="" selected>@lang('site.choise', [ 'name' => 'الأسبوع الدراسي'])</option>
                                 @foreach ($weeks as $week)
                                 <option value="{{ $week->id }}" {{ $week->active ? 'selected' : '' }} style="{{
@@ -183,7 +210,7 @@
                         {{-- Section type Filter --}}
                         <div>
                             <select dir="rtl" name="bySectionType" wire:model="bySectionType"
-                                class="form-control form-control-sm mr-5">
+                                class="form-control form-control-sm mr-5" wire:click="resetSelectedRows">
                                 <option value="" selected>@lang('site.choise', [ 'name' => 'المرجع الإداري'])</option>
                                 @foreach ($sctionsType as $sctionType)
                                 <option class="bg-light" value="{{ $sctionType->id }}">{{ $sctionType->name }}</option>
@@ -195,7 +222,7 @@
                         {{-- offices Filter --}}
                         <div>
                             <select dir="rtl" name="office_id" wire:model="byOffice"
-                                class="form-control form-control-sm">
+                                class="form-control form-control-sm" wire:click="resetSelectedRows">
                                 <option value="" selected>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
                                 @foreach ($offices as $office)
                                 <option value="{{ $office->id }}">{{ $office->name }}</option>
@@ -205,7 +232,7 @@
 
                         {{-- byGender Filter --}}
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" wire:model="byGender" class="custom-control-input"
+                            <input type="checkbox" wire:model="byGender" wire:click="resetSelectedRows" class="custom-control-input"
                                 id="customSwitchByGender">
                             <label dir="rtl" class="custom-control-label"
                                 for="customSwitchByGender">@lang('site.gender') ( بنين ) </label>
@@ -214,7 +241,7 @@
 
                         {{-- Status Filter --}}
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" wire:model="byStatus" class="custom-control-input"
+                            <input type="checkbox" wire:model="byStatus" wire:click="resetSelectedRows" class="custom-control-input"
                                 id="customSwitch1">
                             <label class="custom-control-label" for="customSwitch1">@lang('site.activeEvents')</label>
                         </div>
@@ -237,9 +264,9 @@
                     </span>
                     @endif
 
-                    <div class="table-responsive" data-aos="fade-up" wire:ignore.self>
-                        <table id="example2" class="table text-center table-bordered table-hover dtr-inline sortable"
-                            aria-describedby="example2_info">
+                    <div class="table-responsive" wire:ignore.self>
+                        <table id="event-table" class="table text-center table-bordered table-hover dtr-inline sortable"
+                            aria-describedby="event-table">
                             <thead class="bg-light ">
                                 <tr>
                                     <td scope="col" class="no-sort">
@@ -275,6 +302,9 @@
                                         @lang('site.schoolWeek')
                                     </th>
                                     <th>
+                                        @lang('site.createdAt')
+                                    </th>
+                                    <th>
                                         @lang('site.status')
                                     </th>
                                     <th>
@@ -286,13 +316,23 @@
                             <tbody>
                                 @forelse ($events as $event)
                                 <tr>
-                                    <td class="align-middle" scope="col">
+                                    {{-- <td class="align-middle" scope="col">
                                         <div class="custom-control custom-checkbox small">
                                             <input type="checkbox" wire:model="selectedRows" value="{{ $event->id }}"
                                                 class="custom-control-input" id="{{ $event->id }}">
                                             <label class="custom-control-label" for="{{ $event->id }}"></label>
                                         </div>
+                                    </td> --}}
+
+                                    <td class="align-middle" scope="col">
+                                        <div class="custom-control custom-checkbox small">
+                                            <input type="checkbox" wire:click="toggleRow('{{ $event->id }}')"
+                                                {{ in_array($event->id, $selectedRows) ? 'checked' : '' }}
+                                                class="custom-control-input" id="{{ $event->id }}">
+                                            <label class="custom-control-label" for="{{ $event->id }}"></label>
+                                        </div>
                                     </td>
+
                                     <td class="align-middle">{{ $loop->iteration }}</td>
                                     <td class="dtr-control align-middle">{{ $event->user->name }}</td>
                                     <td class="align-middle">{{ $event->user->specialization->name }}</td>
@@ -312,8 +352,13 @@
                                     {{-- <td>{{
                                         (Carbon\Carbon::parse($event->end))->diffInDays(Carbon\Carbon::parse($event->start))
                                         }}</td> --}}
-                                    <td class="align-middle">{{ $event->week->name . ' (' .
+                                    <td class="align-middle">{{ $event->week->name . ' ( ' .
                                         $event->week->semester->school_year . ' )' }}
+                                    </td>
+                                    <td class="align-middle"
+                                        data-sort="{{ Carbon\Carbon::parse($event->created_at)->format('d/m/Y h:i A') }}">
+                                        {{ Carbon\Carbon::parse($event->created_at)->format('d/m/Y') }} <br>
+                                        {{ Carbon\Carbon::parse($event->created_at)->format('h:i A') }}
                                     </td>
                                     <td class="align-middle">
                                         <span
@@ -334,12 +379,14 @@
                                     <td class="align-middle">
                                         <div class="btn-group btn-group-sm">
                                             <button wire:click.prevent="edit({{ $event }})"
-                                                class="btn btn-primary btn-sm" {{  auth()->user()->hasPermission('events-update') ? '' : 'disabled' }}>
+                                                class="btn btn-primary btn-sm" {{
+                                                auth()->user()->hasPermission('events-update') ? '' : 'disabled' }}>
                                                 <i class="fa fa-edit"></i>
                                             </button>
 
                                             <button wire:click.prevent="confirmEventRemoval({{ $event->id }})"
-                                                class="btn btn-danger btn-sm" {{  auth()->user()->hasPermission('events-delete') ? '' : 'disabled' }}>
+                                                class="btn btn-danger btn-sm" {{
+                                                auth()->user()->hasPermission('events-delete') ? '' : 'disabled' }}>
                                                 <i class="fa fa-trash bg-danger"></i>
                                             </button>
                                         </div>
@@ -353,6 +400,11 @@
                                 @endforelse
                             </tbody>
                         </table>
+                    </div>
+                    <div class="text-right">
+                        <a class="btn btn-default btn-sm" onclick="window.scrollTo(0, 0)">
+                            <i class="fas fa-arrow-alt-circle-up"></i>
+                        </a>
                     </div>
                 </div>
                 <!-- /.card-body -->
@@ -429,10 +481,11 @@
                                         class="form-control fw-bold @error('office_id') is-invalid @enderror">
                                         <option value="" hidden selected>@lang('site.choise', ['name' => 'مكتب التعليم /
                                             إدارة']) :</option>
-                                        @foreach ($offices->whereIn('id', array_merge($education_offices, [auth()->user()->office->id])) as $office)
-                                            <option class="fw-bold {{ $loop->last ? 'bg-body-tertiary text-primary' : '' }}"
-                                                value="{{ $office->id }}">{{ $office->name }}
-                                            </option>
+                                        @foreach ($offices->whereIn('id', array_merge($education_offices,
+                                        [auth()->user()->office->id])) as $office)
+                                        <option class="fw-bold {{ $loop->last ? 'bg-body-tertiary text-primary' : '' }}"
+                                            value="{{ $office->id }}">{{ $office->name }}
+                                        </option>
                                         @endforeach
                                     </select>
 
@@ -490,8 +543,8 @@
 
                                     <textarea dir="rtl" wire:model.defer="data.note"
                                         class="text-justify form-control @error('note') is-invalid @enderror" rows="3"
-                                        id="note" aria-describedby="noteHelp"
-                                        dir="rtl" placeholder="@lang('site.notePlaceholder')">
+                                        id="note" aria-describedby="noteHelp" dir="rtl"
+                                        placeholder="@lang('site.notePlaceholder')">
                                     </textarea>
 
                                     @error('note')
@@ -632,20 +685,21 @@
                             </thead>
                             <tbody>
                                 @php
-                                    $index =0;
+                                $index =0;
                                 @endphp
                                 @forelse ($usersPlansIncomplete as $user)
-                                    <tr>
-                                        @if ($user->events->count() < $workDaysOfTheWeek )
-                                            <td class="align-middle">{{ $index += 1 }}</td>
-                                            <td class="align-middle">{{ $user->name }}</span></td>
-                                            <td class="align-middle"><span style="color:red">( {{ $user->events->count() }} )</span></td>
+                                <tr>
+                                    @if ($user->events->count() < $workDaysOfTheWeek ) <td class="align-middle">{{
+                                        $index += 1 }}</td>
+                                        <td class="align-middle">{{ $user->name }}</span></td>
+                                        <td class="align-middle"><span style="color:red">( {{ $user->events->count() }}
+                                                )</span></td>
                                         @endif
-                                    </tr>
+                                </tr>
                                 @empty
-                                    <tr>
-                                        <td colspan="3" class="text-center">@lang('site.noReviews')</td>
-                                    </tr>
+                                <tr>
+                                    <td colspan="3" class="text-center">@lang('site.noReviews')</td>
+                                </tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -662,8 +716,8 @@
 
     <!-- Modal show Schools that doesn't have users to visit -->
 
-    <div dir="rtl" class="modal fade" id="SchoolsWithNoVisitsModal"
-        role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+    <div dir="rtl" class="modal fade" id="SchoolsWithNoVisitsModal" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-light">
@@ -674,25 +728,25 @@
 
                     <!-- Modal Office -->
                     @if(auth()->user()->office->office_type == 0)
-                        <div class="form-group mb-3" wire:ignore.self>
-                            <label dir="rtl" for="office_id" class="col-form-label">@lang('site.offices') :</label>
-                            <select wire:model.defer="data.office_id" id="office_id"
-                                wire:change="OfficeOption($event.target.value)"
-                                class="form-control fw-bold @error('office_id') is-invalid @enderror">
-                                <option value="" hidden selected>@lang('site.choise', ['name' => 'مكتب التعليم /
-                                    إدارة']) :</option>
-                                @foreach ($offices->where('office_type' , 1) as $office)
-                                <option class="fw-bold {{ $loop->last ? 'bg-body-tertiary text-primary' : '' }}"
-                                    value="{{ $office->id }}">{{ $office->name }}</option>
-                                @endforeach
-                            </select>
+                    <div class="form-group mb-3" wire:ignore.self>
+                        <label dir="rtl" for="office_id" class="col-form-label">@lang('site.offices') :</label>
+                        <select wire:model.defer="data.office_id" id="office_id"
+                            wire:change="OfficeOption($event.target.value)"
+                            class="form-control fw-bold @error('office_id') is-invalid @enderror">
+                            <option value="" hidden selected>@lang('site.choise', ['name' => 'مكتب التعليم /
+                                إدارة']) :</option>
+                            @foreach ($offices->where('office_type' , 1) as $office)
+                            <option class="fw-bold {{ $loop->last ? 'bg-body-tertiary text-primary' : '' }}"
+                                value="{{ $office->id }}">{{ $office->name }}</option>
+                            @endforeach
+                        </select>
 
-                            @error('office_id')
-                            <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
+                        @error('office_id')
+                        <span class="invalid-feedback d-block" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
                     @endif
 
                     <div class="table-responsive">
@@ -708,16 +762,16 @@
                             </thead>
                             <tbody>
                                 @forelse ($schoolsWithNoVisits as $school)
-                                    <tr>
-                                        <td class="align-middle">{{ $loop->iteration }}</td>
-                                        <td class="align-middle">{{ $school->name }}</span></td>
-                                        <td class="align-middle">{{ $school->level->name }}</td>
-                                        <td class="align-middle">( {{ $school->events->count() }} )</td>
-                                    </tr>
+                                <tr>
+                                    <td class="align-middle">{{ $loop->iteration }}</td>
+                                    <td class="align-middle">{{ $school->name }}</span></td>
+                                    <td class="align-middle">{{ $school->level->name }}</td>
+                                    <td class="align-middle">( {{ $school->events->count() }} )</td>
+                                </tr>
                                 @empty
-                                    <tr>
-                                        <td colspan="4" class="text-center">@lang('site.noReviews')</td>
-                                    </tr>
+                                <tr>
+                                    <td colspan="4" class="text-center">@lang('site.noReviews')</td>
+                                </tr>
                                 @endforelse
                             </tbody>
                         </table>

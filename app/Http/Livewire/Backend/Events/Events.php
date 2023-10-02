@@ -48,6 +48,7 @@ class Events extends Component
     public $byWeek = null; //filter by week_id
     public $bySectionType = null; // filter bt section_type_id
     public $byStatus = 0; // filter bt status
+    public $byOrderBy = 'start';
 
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
@@ -94,18 +95,53 @@ class Events extends Component
 
     // Updated Select Page Rows
 
+    // public function updatedSelectPageRows($value)
+    // {
+    //     if ($value) {
+
+    //         $this->selectedRows = $this->events->pluck('id')->map(function ($id) { return (string) $id; })->toArray();
+
+    //     } else {
+
+    //         $this->reset(['selectedRows', 'selectPageRows']);
+
+    //     }
+    // }
+
+    // public function updatedSelectPageRows($value)
+    // {
+    //     if ($value) {
+
+    //         $this->selectedRows = $this->events->pluck('id')->map(function ($id) {
+
+    //             return (string) $id;
+
+    //         });
+
+    //     } else {
+
+    //         $this->reset(['selectedRows', 'selectPageRows']);
+
+    //     }
+    // }
+
     public function updatedSelectPageRows($value)
     {
         if ($value) {
-
             $this->selectedRows = $this->events->pluck('id')->map(function ($id) {
                 return (string) $id;
-            });
-
+            })->toArray();
         } else {
-
             $this->reset(['selectedRows', 'selectPageRows']);
+        }
+    }
 
+    public function toggleRow($eventId)
+    {
+        if (in_array($eventId, $this->selectedRows)) {
+            $this->selectedRows = array_diff($this->selectedRows, [$eventId]);
+        } else {
+            $this->selectedRows[] = $eventId;
         }
     }
 
@@ -875,6 +911,9 @@ class Events extends Component
         $byStatus = $this->byStatus;
         $byGender   =  auth()->user()->roles[0]->name == 'admin' ? auth()->user()->gender : $this->byGender;
 
+        // to make orderBy sort by user name and in blade write value="users.name"
+        // with(['user', 'task'])->join('users', 'users.id', '=', 'events.user_id')->join('tasks', 'tasks.id', '=', 'events.task_id')->
+
         $events = Event::where('status', $byStatus)->where('semester_id', $this->semesterActive())
             ->when($byOffice, function ($query) use ($byOffice) {
                 $query->where('office_id', $byOffice);
@@ -888,7 +927,8 @@ class Events extends Component
                 });
             })
             ->search(trim(($searchString)))
-            ->orderBy('start', 'asc')
+
+            ->orderBy($this->byOrderBy, 'asc')
             ->latest('created_at')
             ->paginate($paginateValue);
 
