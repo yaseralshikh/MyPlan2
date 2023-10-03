@@ -277,7 +277,7 @@
                                             <option value="30" selected>30</option>
                                             <option value="100" selected>100</option>
                                             <option value="200" selected>200</option>
-                                            <option value="20000" selected>@lang('site.all')</option>
+                                            <option value="{{ $empty_schools->total() }}" selected>@lang('site.all')</option>
                                         </select>
                                     </div>
 
@@ -397,7 +397,7 @@
                                         <option value="20" selected>20</option>
                                         <option value="50" selected>50</option>
                                         <option value="100" selected>100</option>
-                                        <option value="10000" selected>@lang('site.all')</option>
+                                        <option value="{{ $users->total() }}" selected>@lang('site.all')</option>
                                     </select>
                                 </div>
 

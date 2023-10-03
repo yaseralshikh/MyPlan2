@@ -190,7 +190,7 @@
                                 <option value="50" selected>50</option>
                                 <option value="100" selected>100</option>
                                 <option value="150" selected>150</option>
-                                <option value="100000" selected>@lang('site.all')</option>
+                                <option value="{{ $events->total() }}" selected>@lang('site.all')</option>
                             </select>
                         </div>
 
