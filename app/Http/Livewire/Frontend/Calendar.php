@@ -399,12 +399,31 @@ class Calendar extends Component
     {
         $officeId = $this->office_id ? $this->office_id : auth()->user()->office_id;
 
+        // Count the occurrences of each value in $this->schoolsHasEvents
+        $valueCounts = array_count_values($this->schoolsHasEvents);
+
+        // Filter out values that have more than one occurrence (duplicates)
+        $duplicates = array_filter($valueCounts, function ($count) {
+            return $count > auth()->user()->office->allowed_overlap;
+        });
+
+        // Get the values with duplicates
+        $duplicateValues = array_keys($duplicates);
+
         $this->tasks = Task::where('office_id', $officeId)
-            ->whereStatus(1)->where('level_id', $this->level_id)
-            ->whereNotIn('id', array_values($this->schoolsHasEvents))
+            ->whereStatus(1)
+            ->where('level_id', $this->level_id)
+            ->whereNotIn('id', $duplicateValues)
             ->orderBy('level_id', 'asc')
             ->orderBy('name', 'asc')
             ->get();
+
+        // $this->tasks = Task::where('office_id', $officeId)
+        //     ->whereStatus(1)->where('level_id', $this->level_id)
+        //     ->whereNotIn('id', array_values($this->schoolsHasEvents))
+        //     ->orderBy('level_id', 'asc')
+        //     ->orderBy('name', 'asc')
+        //     ->get();
     }
 
     public function semesterActive()

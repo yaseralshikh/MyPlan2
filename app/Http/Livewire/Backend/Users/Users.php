@@ -12,6 +12,7 @@ use App\Models\Specialization;
 use App\Models\User;
 use App\Rules\ArabicText;
 use App\Rules\MobileNumber;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -20,7 +21,6 @@ use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
-use Illuminate\Support\Carbon;
 
 class Users extends Component
 {
@@ -153,7 +153,7 @@ class Users extends Component
 
     public function setAllAsNot_EmailVerified()
     {
-        User::whereIn('id', $this->selectedRows)->update(['email_verified_at' => Null]);
+        User::whereIn('id', $this->selectedRows)->update(['email_verified_at' => null]);
 
         $this->alert('success', __('site.inActiveSuccessfully'), [
             'position' => 'top-end',
