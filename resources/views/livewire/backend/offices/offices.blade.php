@@ -185,6 +185,18 @@
                                             </option>
                                             <option value="4" {{ $office->allowed_overlap == 4 ? 'selected' : '' }}>4
                                             </option>
+                                            <option value="5" {{ $office->allowed_overlap == 5 ? 'selected' : '' }}>5
+                                            </option>
+                                            <option value="6" {{ $office->allowed_overlap == 6 ? 'selected' : '' }}>6
+                                            </option>
+                                            <option value="7" {{ $office->allowed_overlap == 7 ? 'selected' : '' }}>7
+                                            </option>
+                                            <option value="8" {{ $office->allowed_overlap == 8 ? 'selected' : '' }}>8
+                                            </option>
+                                            <option value="9" {{ $office->allowed_overlap == 9 ? 'selected' : '' }}>9
+                                            </option>
+                                            <option value="10" {{ $office->allowed_overlap == 10 ? 'selected' : '' }}>10
+                                            </option>
                                         </select>
                                     </td>
                                     <td class="align-middle">

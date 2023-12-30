@@ -788,7 +788,7 @@ class Events extends Component
                                 ->where('week_id', $byWeek)
                                 ->where('status', true)
                                 ->whereHas('task', function ($q) {
-                                    $q->whereNotIn('name', ['إجازة']);
+                                    $q->whereNotIn('name', ['إجازة','يوم مكتبي']);
                                 })
                                 ->orderBy('start', 'asc');
                         }])

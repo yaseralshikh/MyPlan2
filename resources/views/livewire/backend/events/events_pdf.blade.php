@@ -153,7 +153,8 @@
                                 <td>{{ $index +1 }}</td>
                                 {{-- <td>{{ $event->week->title }}</td> --}}
                                 <td>{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start) }}</td>
-                                <td>{{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $event->start) }}</td>
+                                <td>{{ $event->start }}</td>
+                                {{-- <td>{{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $event->start) }}</td> --}}
                                 <td>{{ $event->task->name }} {{ $event->task->name == 'مكلف بمهمة' || $event->task->name == 'برنامج تدريبي' && $event->note ? ' : ( ' . $event->note . ' )' : '' }}</td>
                             </tr>
                             @endforeach
