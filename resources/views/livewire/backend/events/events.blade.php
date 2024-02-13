@@ -455,8 +455,8 @@
                                 <div class="form-group" wire:ignore.self>
                                     <label for="user_id" class="form-label">{{ __('site.userName') }} :</label>
 
-                                    <select name="user_id" wire:model.defer="data.user_id"
-                                        class="form-control @error('user_id') is-invalid @enderror" id="user_id">
+                                    <select wire:model.defer="data.user_id" id="user_id"
+                                        class="form-control @error('user_id') is-invalid @enderror">
                                         <option value="" selected>@lang('site.choise', ['name' => 'المشرف التربوي'])
                                         </option>
                                         @foreach ($users as $user)
@@ -521,8 +521,7 @@
                                 <div class="form-group" wire:ignore.self>
                                     <label for="task_id" class="col-form-label">@lang('site.task') :</label>
                                     <select wire:model.defer="data.task_id" id="task_id"
-                                        class="form-control select2bs4 @error('task_id') is-invalid @enderror"
-                                        id="task_id">
+                                        class="form-control select2bs4 @error('task_id') is-invalid @enderror">
                                         <option value="" selected>@lang('site.choise', ['name' => 'المهمة'])</option>
                                         @foreach ($tasks as $task)
                                         <option value="{{ $task->id }}">{{ $task->name }}</option>
